@@ -1,0 +1,883 @@
+{
+  "project_info": {
+    "description": "The project aims to establish a modern gym in Greater Tunis, specifically targeting young people aged 18-35 and working professionals who are seeking serious support for their fitness goals. The gym will offer a unique combination of digital tracking through a mobile application, tailored coaching, and diverse group classes, providing a premium customer experience that sets it apart from traditional gyms in the area. By targeting neighborhoods with higher purchasing power, such as La Marsa, Les Berges du Lac, Ariana, and El Menzah, the project aims to capitalize on the strong demand for fitness in these areas. The project is currently in the idea stage, with a startup budget of 200,000 TND, and plans to generate revenue through monthly subscriptions and coaching packages. The key differentiator of the project is its ability to provide personalized support and motivation to its customers, which is currently lacking in traditional gyms in Tunis. The project's focus on digital tracking and mobile applications also positions it within the HealthTech sector, allowing it to leverage technology to enhance the customer experience and provide a competitive edge in the market.",
+    "location": "Greater Tunis, specifically neighborhoods such as La Marsa, Les Berges du Lac, Ariana, and El Menzah",
+    "sector": "HealthTech",
+    "client_type": "B2C",
+    "price_range": "80 to 150 TND per month",
+    "problem_solved": "Lack of motivation and personalized support in traditional gyms",
+    "differentiator": "Combination of digital tracking through a mobile application with tailored coaching, diverse classes, and a premium customer experience",
+    "stage": "Idea stage",
+    "budget": "200,000 TND",
+    "enriched_description": "The project aims to establish a modern gym in Greater Tunis, specifically targeting young people aged 18-35 and working professionals who are seeking serious support for their fitness goals. The gym will offer a unique combination of digital tracking through a mobile application, tailored coaching, and diverse group classes, providing a premium customer experience that sets it apart from traditional gyms in the area. By targeting neighborhoods with higher purchasing power, such as La Marsa, Les Berges du Lac, Ariana, and El Menzah, the project aims to capitalize on the strong demand for fitness in these areas. The project is currently in the idea stage, with a startup budget of 200,000 TND, and plans to generate revenue through monthly subscriptions and coaching packages. The key differentiator of the project is its ability to provide personalized support and motivation to its customers, which is currently lacking in traditional gyms in Tunis. The project's focus on digital tracking and mobile applications also positions it within the HealthTech sector, allowing it to leverage technology to enhance the customer experience and provide a competitive edge in the market."
+  },
+  "conversation_summary": "Expert: Welcome to our startup analysis session. I'm a senior market analysis expert specializing in Tunisia and North Africa, with a passion for helping entrepreneurs succeed in this vibrant region. I'll be guiding you through a comprehensive market analysis, collecting key information, and generating a SWOT analysis to help you refine your startup idea. To get started, could you please describe your project in detail, including what it is, how it works, and who it's for? This will give me a solid foundation to understand your vision and begin our analysis.\nEntrepreneur: I want to open a modern gym in Greater Tunis, in the fitness and physical well-being sector. My main target is young people aged 18–35 and working professionals who are looking for serious support.\nI offer monthly subscriptions ranging from 80 to 150 TND, including personalized coaching and a variety of group classes. The problem I aim to solve is the lack of motivation and personalized support in traditional gyms in Tunis.\nMy main differentiator is the combination of digital tracking through a mobile application with tailored coaching, diverse classes, and a premium customer experience—something that very few gyms currently offer in Greater Tunis.\nWe are currently in the idea stage with a startup budget of 200,000 TND. The business model is based on monthly subscriptions and coaching packages.\nOur target market area includes neighborhoods in Tunis such as La Marsa, Les Berges du Lac, Ariana, and El Menzah, where purchasing power is higher and demand for fitness is strong.\nExpert: Thank you for sharing the details of your project. It sounds like you're aiming to disrupt the traditional gym scene in Greater Tunis by offering a more personalized and tech-enabled fitness experience. \n\nI particularly like how you've identified a specific target market with higher purchasing power, which could help mitigate some of the challenges related to limited purchasing power in Tunisia. The combination of digital tracking, tailored coaching, and diverse classes could indeed be a key differentiator in the market.\n\nFrom what you've shared, it seems like your project falls under the HealthTech sector, given the integration of digital tracking and mobile applications. You're also targeting a B2C market, focusing on individual consumers rather than businesses.\n\nTo further clarify, can you tell me more about the main problem you're trying to solve? You mentioned the lack of motivation and personalized support in traditional gyms, but are there any other pain points you've identified among your target audience, such as limited access to fitness facilities, lack of variety in workout routines, or difficulty in tracking progress?",
+  "competitors": [
+    {
+      "name": "BiotechPole Sidi Thabet & HCI Digital Health",
+      "url": "https://healthcareinnovation.tn/biotechpole-sidi-thabet-hci-digital-health-partnership/",
+      "description": "Strategic partnership to accelerate digital health in Tunisia",
+      "relevance": "This is a direct competitor in HealthTech as it is a partnership focused on accelerating digital health in Tunisia, which is the same sector as the project",
+      "pertinence_score": 9,
+      "is_well_known": true,
+      "source_type": "direct"
+    },
+    {
+      "name": "Healthcare Startups in Tunisia",
+      "url": "https://magnitt.com/en-tn/startups/healthcare",
+      "description": "List of Healthcare startups in Tunisia providing data on their funding history",
+      "relevance": "This is a direct competitor in HealthTech as it provides a list of startups in the same sector, including those that may offer similar services to the project",
+      "pertinence_score": 8,
+      "is_well_known": true,
+      "source_type": "direct"
+    },
+    {
+      "name": "InstaDeep",
+      "url": "https://www.wired.me/story/tunisias-start-up-boom-started-with-one-exit",
+      "description": "Tunisian AI startup acquired by BioNTech, focused on healthcare",
+      "relevance": "This is a direct competitor in HealthTech as it is a Tunisian startup focused on healthcare and AI, which is similar to the project's focus on digital tracking and mobile applications",
+      "pertinence_score": 8,
+      "is_well_known": true,
+      "source_type": "direct"
+    }
+  ],
+  "competitors_raw": [
+    {
+      "name": "BiotechPole Sidi Thabet & HCI Digital Health",
+      "url": "https://healthcareinnovation.tn/biotechpole-sidi-thabet-hci-digital-health-partnership/",
+      "scraped_at": "2026-03-30T08:09:01.221Z",
+      "scraped": true,
+      "total_pages": 4,
+      "total_characters": 51350,
+      "pages": [
+        {
+          "path": "/",
+          "url": "https://healthcareinnovation.tn/biotechpole-sidi-thabet-hci-digital-health-partnership/",
+          "content": "Title: BiotechPole Sidi Thabet & HCI Digital Health Partnership - HealthCare Innovation\n\nURL Source: https://healthcareinnovation.tn/biotechpole-sidi-thabet-hci-digital-health-partnership/\n\nPublished Time: 2026-02-11T08:48:21+01:00\n\nMarkdown Content:\n# BiotechPole Sidi Thabet & HCI Digital Health Partnership - HealthCare Innovation\n\n![Image 1: Revisit consent button](https://healthcareinnovation.tn/wp-content/plugins/cookie-law-info/lite/frontend/images/revisit.svg)\n\n![Image 2: Close](https://healthcareinnovation.tn/wp-content/plugins/cookie-law-info/lite/frontend/images/close.svg)\n\nWe value your privacy\n\nWe use cookies to enhance your browsing experience, serve personalised ads or content, and analyse our traffic. By clicking \"Accept All\", you consent to our use of cookies.\n\nCustomise Reject All Accept All\n\nCustomise Consent Preferences![Image 3: Close](https://healthcareinnovation.tn/wp-content/plugins/cookie-law-info/lite/frontend/images/close.svg)\n\nWe use cookies to help you navigate efficiently and perform certain functions. You will find detailed information about all cookies under each consent category below.\n\nThe cookies that are categorised as \"Necessary\" are stored on your browser as they are essential for enabling the basic functionalities of the site. ...Show more\n\nNecessary Always Active\n\nNecessary cookies are required to enable the basic features of this site, such as providing secure log-in or adjusting your consent preferences. These cookies do not store any personally identifiable data.\n\nNo cookies to display.\n\nFunctional\n\nFunctional cookies help perform certain functionalities like sharing the content of the website on social media platforms, collecting feedback, and other third-party features.\n\nNo cookies to display.\n\nAnalytics\n\nAnalytical cookies are used to understand how visitors interact with the website. These cookies help provide information on metrics such as the number of visitors, bounce rate, traffic source, etc.\n\nNo cookies to display.\n\nPerformance\n\nPerformance cookies are used to understand and analyse the key performance indexes of the website which helps in delivering a better user experience for the visitors.\n\nNo cookies to display.\n\nAdvertisement\n\nAdvertisement cookies are used to provide visitors with customised advertisements based on the pages you visited previously and to analyse the effectiveness of the ad campaigns.\n\nNo cookies to display.\n\n Reject All  Save My Preferences  Accept All \n\n[![Image 4: Logo heathCare Innovation](https://healthcareinnovation.tn/wp-content/uploads/2025/12/logo-noir-HealthCare.webp)](https://healthcareinnovation.tn/)\n\n*   [Home](https://healthcareinnovation.tn/)\n*   [Our cluster](https://healthcareinnovation.tn/our-cluster/)\n*   [Community](https://healthcareinnovation.tn/community/)\n    *   [Experts](https://healthcareinnovation.tn/experts/)\n    *   [Institutions](https://healthcareinnovation.tn/institutions/)\n\n*   [Services](https://healthcareinnovation.tn/services/)\n    *   [Clusters & Incubators](https://healthcareinnovation.tn/service/clusters-incubators/)\n    *   [Startup](https://healthcareinnovation.tn/service/startups/)\n    *   [Pharma & Medical Device](https://healthcareinnovation.tn/service/pharma-medical-device/)\n    *   [Proovlab](https://healthcareinnovation.tn/proovlab/)\n\n*   [Projects](https://healthcareinnovation.tn/projects/)\n*   [Blog](https://healthcareinnovation.tn/blog/)\n\n*   [Home](https://healthcareinnovation.tn/)\n*   [Our cluster](https://healthcareinnovation.tn/our-cluster/)\n*   [Community](https://healthcareinnovation.tn/community/)\n    *   [Experts](https://healthcareinnovation.tn/experts/)\n    *   [Institutions](https://healthcareinnovation.tn/institutions/)\n\n*   [Services](https://healthcareinnovation.tn/services/)\n    *   [Clusters & Incubators](https://healthcareinnovation.tn/service/clusters-incubators/)\n    *   [Startup](https://healthcareinnovation.tn/service/startups/)\n    *   [Pharma & Medical Device](https://healthcareinnovation.tn/service/pharma-medical-device/)\n    *   [Proovlab](https://healthcareinnovation.tn/proovlab/)\n\n*   [Projects](https://healthcareinnovation.tn/projects/)\n*   [Blog](https://healthcareinnovation.tn/blog/)\n\n[Contact us](https://healthcareinnovation.tn/contact-us/)\n\n[![Image 5: Logo heathCare Innovation](https://healthcareinnovation.tn/wp-content/uploads/2025/12/logo-noir-HealthCare.webp)](https://healthcareinnovation.tn/)\n\n*   [Home](https://healthcareinnovation.tn/)\n*   [Our cluster](https://healthcareinnovation.tn/our-cluster/)\n*   [Community](https://healthcareinnovation.tn/community/)\n    *   [Experts](https://healthcareinnovation.tn/experts/)\n    *   [Institutions](https://healthcareinnovation.tn/institutions/)\n\n*   [Services](https://healthcareinnovation.tn/services/)\n    *   [Clusters & Incubators](https://healthcareinnovation.tn/service/clusters-incubators/)\n    *   [Startup](https://healthcareinnovation.tn/service/startups/)\n    *   [Pharma & Medical Device](https://healthcareinnovation.tn/service/pharma-medical-device/)\n    *   [Proovlab](https://healthcareinnovation.tn/proovlab/)\n\n*   [Projects](https://healthcareinnovation.tn/projects/)\n*   [Blog](https://healthcareinnovation.tn/blog/)\n*   [Contact us](https://healthcareinnovation.tn/contact-us/)\n\n*   [Home](https://healthcareinnovation.tn/)\n*   [Our cluster](https://healthcareinnovation.tn/our-cluster/)\n*   [Community](https://healthcareinnovation.tn/community/)\n    *   [Experts](https://healthcareinnovation.tn/experts/)\n    *   [Institutions](https://healthcareinnovation.tn/institutions/)\n\n*   [Services](https://healthcareinnovation.tn/services/)\n    *   [Clusters & Incubators](https://healthcareinnovation.tn/service/clusters-incubators/)\n    *   [Startup](https://healthcareinnovation.tn/service/startups/)\n    *   [Pharma & Medical Device](https://healthcareinnovation.tn/service/pharma-medical-device/)\n    *   [Proovlab](https://healthcareinnovation.tn/proovlab/)\n\n*   [Projects](https://healthcareinnovation.tn/projects/)\n*   [Blog](https://healthcareinnovation.tn/blog/)\n*   [Contact us](https://healthcareinnovation.tn/contact-us/)\n\n# BiotechPole Sidi Thabet & HCI Digital Health Partnership\n\nFeb 11, 2026 | [International cooperation](https://healthcareinnovation.tn/category/international-cooperation/), [New trends](https://healthcareinnovation.tn/category/new-trends/)\n\n*   [Posts](https://healthcareinnovation.tn/)\n*   $\n*   [International cooperation](https://healthcareinnovation.tn/category/international-cooperation/)\n*   $\n*    BiotechPole Sidi Thabet & HCI Digital Health Partnership \n\n## **BiotechPole Sidi Thabet & HealthCare Innovation Sign Strategic Partnership to Accelerate Digital Health in Tunisia**\n\nWe are proud to announce the signing of a partnership agreement between [BiotechPole Sidi Thabet](https://www.biotechpole.rnu.tn/) and HealthCare Innovation (HCI), with a clear priority: accelerating Digital Health in Tunisia.\n\nThis collaboration aims to strengthen the national innovation ecosystem by building structured digital health and biotech pipelines, connecting startups with healthcare stakeholders, and enhancing joint capacity to respond to national and international funding opportunities.\n\n### **Why This Partnership Matters**\n\nDigital health transformation requires strong coordination between research hubs, innovation clusters, and industry actors. The WHO Global Strategy on Digital Health (2020–2025) emphasizes ecosystem collaboration, governance, and interoperability as foundational pillars for effective health system modernization. The OECD similarly highlights that innovation ecosystems must connect research, startups, and industry to scale impactful solutions.\n\nThis partnership aligns with these priorities by creating structured collaboration between Tunisia’s biotech infrastructure and HealthTech innovation ecosystem.\n\n### **Joint Program Objectives**\n\n*   Launch a joint Digital Health & biotech project pipeline, including proposal development and coordinated responses to national and international calls.\n*   Organize co-branded ecosystem events such as workshops, conferences, and seminars connecting startups with healthcare and industry stakeholders.\n*   Provide joint support for startups and SMEs through advisory services, partnership structuring, and ecosystem access.\n\n#### **Strategic Impact for Tunisia**\n\n*   Strengthening Tunisia’s Digital Health and biotech project pipeline readiness\n*   Enhancing startup access to structured advisory and partnership frameworks\n*   Increasing participation in national and international innovation calls\n*   Building stronger bridges between research, industry, and entrepreneurship ecosystems\n*   Positioning Tunisia as a competitive hub for HealthTech and biotech collaboration\n\n#### **Next Steps**\n\nFollowing this agreement, both institutions will begin structuring joint working groups, mapping project opportunities, and launching coordinated ecosystem events to accelerate tangible impact across Digital Health and biotech domains.\n\n#### **HCI Resources**\n\nAccelerating Innovation in HealthTech → [https://healthcareinnovation.tn/accelerating-innovation-in-healthtech/](https://healthcareinnovation.tn/accelerating-innovation-in-healthtech/)\n\nStartup Programs → [https://healthcareinnovation.tn/service/startups/](https://healthcareinnovation.tn/service/startups/)\n\nPharma & Medical Device Regulatory Services → [https://healthcareinnovation.tn/service/pharma-medical-device/](https://healthcareinnovation.tn/service/pharma-medical-device/)\n\nExperts Network → [https://healthcareinnovation.tn/experts/](https://healthcareinnovation.tn/experts/)\n\nCommunity Overview → [https://healthcareinnovation.tn/community/](https://healthcareinnovation.tn/community/)\n\n#### **External Citations**\n\nWHO — Global Strategy on Digital Health (2020–2025): [https://www.who.int/publications/i/item/9789240068891](https://www.who.int/publications/i/item/9789240068891)\n\nOECD — Digital Health Overview: [https://www.oecd.org/health/digital-health.htm](https://www.oecd.org/health/digital-health.htm)\n\n![Image 6: BiotechPole Sidi Thabet & HCI Digital Health Partnership](https://healthcareinnovation.tn/wp-content/uploads/2026/02/HCI-Digital-Health-Partnership.webp)\n\n![Image 7: hci-digital](https://healthcareinnovation.tn/wp-content/uploads/2026/02/hci-digital.webp)\n\n![Image 8: BiotechPole Sidi Thabet & HCI Digital Health Partnership](https://healthcareinnovation.tn/wp-content/uploads/2026/02/HCI-Digital-Health-Partnership.webp)\n\nHCI is Tunisia’s HealthTech cluster connecting startups, clinicians, and partners across the Euro-Med region.\n\nBy HealthCare Innovation (HCI) Editorial Team.\n\n[_#_ Previous Article](https://healthcareinnovation.tn/healthcare-innovation-gfi-group-sign-strategic-healthtech-partnership/)\n\n[Next Article _$_](https://healthcareinnovation.tn/innovation-galaxy-patient-care-pathways-2026/)\n\n![Image 9](https://secure.gravatar.com/avatar/bfb6523bf778eba5d94d91555c56ddd4c1a576dd5bb5f9d3620070ae832939a1?s=80&d=mm&r=g)\n\n### healthcareinnovation.com\n\n### Related Articles\n\n[![Image 10: HCI & AICTO Sign MOU for Responsible Digital Health](https://healthcareinnovation.tn/wp-content/uploads/2026/02/HCI-AICTO-Sign-MOU-for-Responsible-Digital-Health.webp) #### HCI & AICTO Sign MOU for Responsible Digital Health](https://healthcareinnovation.tn/hci-aicto-sign-mou-for-responsible-digital-health/ \"HCI & AICTO Sign MOU for Responsible Digital Health\")\n\n[![Image 11: Innovation Galaxy – Patient Care Pathways 2026](https://healthcareinnovation.tn/wp-content/uploads/2026/02/Innovation.webp) #### Innovation Galaxy – Patient Care Pathways 2026](https://healthcareinnovation.tn/innovation-galaxy-patient-care-pathways-2026/ \"Innovation Galaxy – Patient Care Pathways 2026\")\n\n[![Image 12: HealthCare Innovation & GFI Group Sign Strategic HealthTech Partnership](https://healthcareinnovation.tn/wp-content/uploads/2026/02/HealthCare-Innovation-_-GFI-Group-Sign-Strategic.webp) #### HealthCare Innovation & GFI Group Sign Strategic HealthTech Partnership](https://healthcareinnovation.tn/healthcare-innovation-gfi-group-sign-strategic-healthtech-partnership/ \"HealthCare Innovation & GFI Group Sign Strategic HealthTech Partnership\")\n\n[![Image 13: Logo Heathcare innovation](https://healthcareinnovation.tn/wp-content/uploads/2025/10/Logo-Heathcare-innovation.webp)](https://healthcareinnovation.tn/)\n\nBuilding Technology Bridges for Promising Healthcare in North Africa.\n\n*   [Follow](https://www.linkedin.com/company/healthcareinnovationcluster/posts/?feedView=all \"Follow on LinkedIn\")\n*   [Follow](https://www.youtube.com/@HealthCareInnovation.cluster \"Follow on Youtube\")\n*   [Follow](https://www.facebook.com/Healthcare.innovation.cluster \"Follow on Facebook\")\n*   [Follow](https://www.instagram.com/healthcare.innovation.hci/ \"Follow on Instagram\")\n\n\n\nCyberParc Monastir – Office 5 RDC – Avenue Ibn Jazzar 5000 – Monastir,Tunisia\n\n\n\n[Contact@healthcareinnovation.tn](mailto:Contact@healthcareinnovation.tn)\n\n\n\n[+ 216 50 770 450](tel:00216%2050 770 450)\n\n## SUBSCRIBE TO OUR NEWSLETTER\n\n## Success!\n\nEmail\n\n[Subscribe](https://healthcareinnovation.tn/biotechpole-sidi-thabet-hci-digital-health-partnership/#)\n\nDesign by[Activ Soft](https://activsoft.tech/) Copyright © 2025. All Rights Reserved.\n",
+          "length": 13324
+        },
+        {
+          "path": "/our-cluster/",
+          "url": "https://healthcareinnovation.tn/our-cluster/",
+          "content": "Title: Our Cluster - HealthCare Innovation\n\nURL Source: https://healthcareinnovation.tn/our-cluster/\n\nPublished Time: 2024-06-19T13:24:16+02:00\n\nMarkdown Content:\n# Our Cluster - HealthCare Innovation\n\n![Image 1: Revisit consent button](https://healthcareinnovation.tn/wp-content/plugins/cookie-law-info/lite/frontend/images/revisit.svg)\n\n![Image 2: Close](https://healthcareinnovation.tn/wp-content/plugins/cookie-law-info/lite/frontend/images/close.svg)\n\nWe value your privacy\n\nWe use cookies to enhance your browsing experience, serve personalised ads or content, and analyse our traffic. By clicking \"Accept All\", you consent to our use of cookies.\n\nCustomise Reject All Accept All\n\nCustomise Consent Preferences![Image 3: Close](https://healthcareinnovation.tn/wp-content/plugins/cookie-law-info/lite/frontend/images/close.svg)\n\nWe use cookies to help you navigate efficiently and perform certain functions. You will find detailed information about all cookies under each consent category below.\n\nThe cookies that are categorised as \"Necessary\" are stored on your browser as they are essential for enabling the basic functionalities of the site. ...Show more\n\nNecessary Always Active\n\nNecessary cookies are required to enable the basic features of this site, such as providing secure log-in or adjusting your consent preferences. These cookies do not store any personally identifiable data.\n\nNo cookies to display.\n\nFunctional\n\nFunctional cookies help perform certain functionalities like sharing the content of the website on social media platforms, collecting feedback, and other third-party features.\n\nNo cookies to display.\n\nAnalytics\n\nAnalytical cookies are used to understand how visitors interact with the website. These cookies help provide information on metrics such as the number of visitors, bounce rate, traffic source, etc.\n\nNo cookies to display.\n\nPerformance\n\nPerformance cookies are used to understand and analyse the key performance indexes of the website which helps in delivering a better user experience for the visitors.\n\nNo cookies to display.\n\nAdvertisement\n\nAdvertisement cookies are used to provide visitors with customised advertisements based on the pages you visited previously and to analyse the effectiveness of the ad campaigns.\n\nNo cookies to display.\n\n Reject All  Save My Preferences  Accept All \n\n[![Image 4: Logo heathCare Innovation](https://healthcareinnovation.tn/wp-content/uploads/2025/12/logo-noir-HealthCare.webp)](https://healthcareinnovation.tn/)\n\n*   [Home](https://healthcareinnovation.tn/)\n*   [Our cluster](https://healthcareinnovation.tn/our-cluster/)\n*   [Community](https://healthcareinnovation.tn/community/)\n    *   [Experts](https://healthcareinnovation.tn/experts/)\n    *   [Institutions](https://healthcareinnovation.tn/institutions/)\n\n*   [Services](https://healthcareinnovation.tn/services/)\n    *   [Clusters & Incubators](https://healthcareinnovation.tn/service/clusters-incubators/)\n    *   [Startup](https://healthcareinnovation.tn/service/startups/)\n    *   [Pharma & Medical Device](https://healthcareinnovation.tn/service/pharma-medical-device/)\n    *   [Proovlab](https://healthcareinnovation.tn/proovlab/)\n\n*   [Projects](https://healthcareinnovation.tn/projects/)\n*   [Blog](https://healthcareinnovation.tn/blog/)\n\n*   [Home](https://healthcareinnovation.tn/)\n*   [Our cluster](https://healthcareinnovation.tn/our-cluster/)\n*   [Community](https://healthcareinnovation.tn/community/)\n    *   [Experts](https://healthcareinnovation.tn/experts/)\n    *   [Institutions](https://healthcareinnovation.tn/institutions/)\n\n*   [Services](https://healthcareinnovation.tn/services/)\n    *   [Clusters & Incubators](https://healthcareinnovation.tn/service/clusters-incubators/)\n    *   [Startup](https://healthcareinnovation.tn/service/startups/)\n    *   [Pharma & Medical Device](https://healthcareinnovation.tn/service/pharma-medical-device/)\n    *   [Proovlab](https://healthcareinnovation.tn/proovlab/)\n\n*   [Projects](https://healthcareinnovation.tn/projects/)\n*   [Blog](https://healthcareinnovation.tn/blog/)\n\n[Contact us](https://healthcareinnovation.tn/contact-us/)\n\n[![Image 5: Logo heathCare Innovation](https://healthcareinnovation.tn/wp-content/uploads/2025/12/logo-noir-HealthCare.webp)](https://healthcareinnovation.tn/)\n\n*   [Home](https://healthcareinnovation.tn/)\n*   [Our cluster](https://healthcareinnovation.tn/our-cluster/)\n*   [Community](https://healthcareinnovation.tn/community/)\n    *   [Experts](https://healthcareinnovation.tn/experts/)\n    *   [Institutions](https://healthcareinnovation.tn/institutions/)\n\n*   [Services](https://healthcareinnovation.tn/services/)\n    *   [Clusters & Incubators](https://healthcareinnovation.tn/service/clusters-incubators/)\n    *   [Startup](https://healthcareinnovation.tn/service/startups/)\n    *   [Pharma & Medical Device](https://healthcareinnovation.tn/service/pharma-medical-device/)\n    *   [Proovlab](https://healthcareinnovation.tn/proovlab/)\n\n*   [Projects](https://healthcareinnovation.tn/projects/)\n*   [Blog](https://healthcareinnovation.tn/blog/)\n*   [Contact us](https://healthcareinnovation.tn/contact-us/)\n\n*   [Home](https://healthcareinnovation.tn/)\n*   [Our cluster](https://healthcareinnovation.tn/our-cluster/)\n*   [Community](https://healthcareinnovation.tn/community/)\n    *   [Experts](https://healthcareinnovation.tn/experts/)\n    *   [Institutions](https://healthcareinnovation.tn/institutions/)\n\n*   [Services](https://healthcareinnovation.tn/services/)\n    *   [Clusters & Incubators](https://healthcareinnovation.tn/service/clusters-incubators/)\n    *   [Startup](https://healthcareinnovation.tn/service/startups/)\n    *   [Pharma & Medical Device](https://healthcareinnovation.tn/service/pharma-medical-device/)\n    *   [Proovlab](https://healthcareinnovation.tn/proovlab/)\n\n*   [Projects](https://healthcareinnovation.tn/projects/)\n*   [Blog](https://healthcareinnovation.tn/blog/)\n*   [Contact us](https://healthcareinnovation.tn/contact-us/)\n\n# Our cluster\n\n*   [Home](https://healthcareinnovation.tn/)\n*   $\n*    Our cluster \n\n## Our  Cluster\n\nHealthCare Innovation is a leading HealthTech cluster that bridges scientific innovation with market access. This page introduces our mission, vision, and governance, showcasing our commitment to advancing healthcare innovation worldwide.\n\nWe provide end-to-end support for startups, companies, and institutions — from scientific validation and regulatory certification to global commercialization of transformative health solutions.\n\n[**Learn more about our policies.**](https://healthcareinnovation.tn/commitments/)\n\n  \n\n## OUR MISSION\n\nTo accelerate HealthTech innovation by providing expert validation, strategic market access, and a strong ecosystem for scaling impactful solutions.\n\n  \n\n## ABOUT US\n\nHealthCare Innovation is a pioneering HealthTech cluster that bridges innovation and market access.\n\nWe provide end-to-end support for startups, companies, and institutions, ensuring the scientific validation, certification, and commercialization of groundbreaking health innovations.\n\n  \n\n## OUR VISION\n\nWe dream of a world where every health innovation is scientifically validated, market-ready, and accessible to those who need it most.\n\n  \n\n## GOVERNANCE\n\nHealthCare Innovation is driven by a multidisciplinary leadership team, including healthcare experts, researchers, and industry professionals.\n\nOur governance ensures ethical, high-impact decision-making and fosters collaboration across the HealthTech ecosystem\n\n  \n\n## GLOBAL IMPACT\n\nWith a growing international footprint, we collaborate with global institutions, regulatory bodies, and investment networks to position HealthTech innovations for success on a worldwide scale.\n\n  \n\n## INSTITUTIONAL PARTNERS\n\nHealthCare Innovation is driven by a multidisciplinary leadership team, including healthcare experts, researchers, and industry professionals.\n\nOur governance ensures ethical, high-impact decision-making and fosters collaboration across the HealthTech ecosystem\n\n[![Image 6: Logo Heathcare innovation](https://healthcareinnovation.tn/wp-content/uploads/2025/10/Logo-Heathcare-innovation.webp)](https://healthcareinnovation.tn/)\n\nBuilding Technology Bridges for Promising Healthcare in North Africa.\n\n*   [Follow](https://www.linkedin.com/company/healthcareinnovationcluster/posts/?feedView=all \"Follow on LinkedIn\")\n*   [Follow](https://www.youtube.com/@HealthCareInnovation.cluster \"Follow on Youtube\")\n*   [Follow](https://www.facebook.com/Healthcare.innovation.cluster \"Follow on Facebook\")\n*   [Follow](https://www.instagram.com/healthcare.innovation.hci/ \"Follow on Instagram\")\n\n\n\nCyberParc Monastir – Office 5 RDC – Avenue Ibn Jazzar 5000 – Monastir,Tunisia\n\n\n\n[Contact@healthcareinnovation.tn](mailto:Contact@healthcareinnovation.tn)\n\n\n\n[+ 216 50 770 450](tel:00216%2050 770 450)\n\n## SUBSCRIBE TO OUR NEWSLETTER\n\n## Success!\n\nEmail\n\n[Subscribe](https://healthcareinnovation.tn/our-cluster/#)\n\nDesign by[Activ Soft](https://activsoft.tech/) Copyright © 2025. All Rights Reserved.\n",
+          "length": 9080
+        },
+        {
+          "path": "/community/",
+          "url": "https://healthcareinnovation.tn/community/",
+          "content": "Title: Community - HealthCare Innovation\n\nURL Source: https://healthcareinnovation.tn/community/\n\nPublished Time: 2024-10-04T15:22:17+02:00\n\nMarkdown Content:\n# Community - HealthCare Innovation\n\n![Image 1: Revisit consent button](https://healthcareinnovation.tn/wp-content/plugins/cookie-law-info/lite/frontend/images/revisit.svg)\n\n![Image 2: Close](https://healthcareinnovation.tn/wp-content/plugins/cookie-law-info/lite/frontend/images/close.svg)\n\nWe value your privacy\n\nWe use cookies to enhance your browsing experience, serve personalised ads or content, and analyse our traffic. By clicking \"Accept All\", you consent to our use of cookies.\n\nCustomise Reject All Accept All\n\nCustomise Consent Preferences![Image 3: Close](https://healthcareinnovation.tn/wp-content/plugins/cookie-law-info/lite/frontend/images/close.svg)\n\nWe use cookies to help you navigate efficiently and perform certain functions. You will find detailed information about all cookies under each consent category below.\n\nThe cookies that are categorised as \"Necessary\" are stored on your browser as they are essential for enabling the basic functionalities of the site. ...Show more\n\nNecessary Always Active\n\nNecessary cookies are required to enable the basic features of this site, such as providing secure log-in or adjusting your consent preferences. These cookies do not store any personally identifiable data.\n\nNo cookies to display.\n\nFunctional\n\nFunctional cookies help perform certain functionalities like sharing the content of the website on social media platforms, collecting feedback, and other third-party features.\n\nNo cookies to display.\n\nAnalytics\n\nAnalytical cookies are used to understand how visitors interact with the website. These cookies help provide information on metrics such as the number of visitors, bounce rate, traffic source, etc.\n\nNo cookies to display.\n\nPerformance\n\nPerformance cookies are used to understand and analyse the key performance indexes of the website which helps in delivering a better user experience for the visitors.\n\nNo cookies to display.\n\nAdvertisement\n\nAdvertisement cookies are used to provide visitors with customised advertisements based on the pages you visited previously and to analyse the effectiveness of the ad campaigns.\n\nNo cookies to display.\n\n Reject All  Save My Preferences  Accept All \n\n[![Image 4: Logo heathCare Innovation](https://healthcareinnovation.tn/wp-content/uploads/2025/12/logo-noir-HealthCare.webp)](https://healthcareinnovation.tn/)\n\n*   [Home](https://healthcareinnovation.tn/)\n*   [Our cluster](https://healthcareinnovation.tn/our-cluster/)\n*   [Community](https://healthcareinnovation.tn/community/)\n    *   [Experts](https://healthcareinnovation.tn/experts/)\n    *   [Institutions](https://healthcareinnovation.tn/institutions/)\n\n*   [Services](https://healthcareinnovation.tn/services/)\n    *   [Clusters & Incubators](https://healthcareinnovation.tn/service/clusters-incubators/)\n    *   [Startup](https://healthcareinnovation.tn/service/startups/)\n    *   [Pharma & Medical Device](https://healthcareinnovation.tn/service/pharma-medical-device/)\n    *   [Proovlab](https://healthcareinnovation.tn/proovlab/)\n\n*   [Projects](https://healthcareinnovation.tn/projects/)\n*   [Blog](https://healthcareinnovation.tn/blog/)\n\n*   [Home](https://healthcareinnovation.tn/)\n*   [Our cluster](https://healthcareinnovation.tn/our-cluster/)\n*   [Community](https://healthcareinnovation.tn/community/)\n    *   [Experts](https://healthcareinnovation.tn/experts/)\n    *   [Institutions](https://healthcareinnovation.tn/institutions/)\n\n*   [Services](https://healthcareinnovation.tn/services/)\n    *   [Clusters & Incubators](https://healthcareinnovation.tn/service/clusters-incubators/)\n    *   [Startup](https://healthcareinnovation.tn/service/startups/)\n    *   [Pharma & Medical Device](https://healthcareinnovation.tn/service/pharma-medical-device/)\n    *   [Proovlab](https://healthcareinnovation.tn/proovlab/)\n\n*   [Projects](https://healthcareinnovation.tn/projects/)\n*   [Blog](https://healthcareinnovation.tn/blog/)\n\n[Contact us](https://healthcareinnovation.tn/contact-us/)\n\n[![Image 5: Logo heathCare Innovation](https://healthcareinnovation.tn/wp-content/uploads/2025/12/logo-noir-HealthCare.webp)](https://healthcareinnovation.tn/)\n\n*   [Home](https://healthcareinnovation.tn/)\n*   [Our cluster](https://healthcareinnovation.tn/our-cluster/)\n*   [Community](https://healthcareinnovation.tn/community/)\n    *   [Experts](https://healthcareinnovation.tn/experts/)\n    *   [Institutions](https://healthcareinnovation.tn/institutions/)\n\n*   [Services](https://healthcareinnovation.tn/services/)\n    *   [Clusters & Incubators](https://healthcareinnovation.tn/service/clusters-incubators/)\n    *   [Startup](https://healthcareinnovation.tn/service/startups/)\n    *   [Pharma & Medical Device](https://healthcareinnovation.tn/service/pharma-medical-device/)\n    *   [Proovlab](https://healthcareinnovation.tn/proovlab/)\n\n*   [Projects](https://healthcareinnovation.tn/projects/)\n*   [Blog](https://healthcareinnovation.tn/blog/)\n*   [Contact us](https://healthcareinnovation.tn/contact-us/)\n\n*   [Home](https://healthcareinnovation.tn/)\n*   [Our cluster](https://healthcareinnovation.tn/our-cluster/)\n*   [Community](https://healthcareinnovation.tn/community/)\n    *   [Experts](https://healthcareinnovation.tn/experts/)\n    *   [Institutions](https://healthcareinnovation.tn/institutions/)\n\n*   [Services](https://healthcareinnovation.tn/services/)\n    *   [Clusters & Incubators](https://healthcareinnovation.tn/service/clusters-incubators/)\n    *   [Startup](https://healthcareinnovation.tn/service/startups/)\n    *   [Pharma & Medical Device](https://healthcareinnovation.tn/service/pharma-medical-device/)\n    *   [Proovlab](https://healthcareinnovation.tn/proovlab/)\n\n*   [Projects](https://healthcareinnovation.tn/projects/)\n*   [Blog](https://healthcareinnovation.tn/blog/)\n*   [Contact us](https://healthcareinnovation.tn/contact-us/)\n\n# Community\n\n[EXPERTS](https://healthcareinnovation.tn/community/#exper)\n\n[INSTITUTIONS](https://healthcareinnovation.tn/community/#institut)\n\n## EXPERTS\n\n[![Image 6: Dr. Haroun Ouanes](https://healthcareinnovation.tn/wp-content/uploads/2025/05/Dr.-Haroun-Ouanes.png)](https://healthcareinnovation.tn/experts/dr-haroun-ouanes/)\n\n## [Dr. Haroun Ouanes](https://healthcareinnovation.tn/experts/dr-haroun-ouanes/)\n\n[Business Advisor](https://healthcareinnovation.tn/experts_category/business-advisor/), [Scientific Advisor](https://healthcareinnovation.tn/experts_category/scientific-advisor/)\n\n[View profile](https://healthcareinnovation.tn/experts/dr-haroun-ouanes/)\n\n[![Image 7: Dr. Mohamed Bejaou](https://healthcareinnovation.tn/wp-content/uploads/2025/05/Dr.-Mohamed-Bejaou.png)](https://healthcareinnovation.tn/experts/dr-mohamed-bejaoui/)\n\n## [Dr. Mohamed Bejaoui](https://healthcareinnovation.tn/experts/dr-mohamed-bejaoui/)\n\n[Scientific Advisor](https://healthcareinnovation.tn/experts_category/scientific-advisor/)\n\n[View profile](https://healthcareinnovation.tn/experts/dr-mohamed-bejaoui/)\n\n[![Image 8: Ichraf Jarray](https://healthcareinnovation.tn/wp-content/uploads/2025/05/Ichraf-Jarray.jpg)](https://healthcareinnovation.tn/experts/ichraf-jarray/)\n\n## [Ichraf Jarray](https://healthcareinnovation.tn/experts/ichraf-jarray/)\n\n[Business Advisor](https://healthcareinnovation.tn/experts_category/business-advisor/)\n\n[View profile](https://healthcareinnovation.tn/experts/ichraf-jarray/)\n\n[![Image 9: Slaheddine Dardouri](https://healthcareinnovation.tn/wp-content/uploads/2025/05/Slaheddine-Dardouri.png)](https://healthcareinnovation.tn/experts/slaheddine-dardouri/)\n\n## [Slaheddine Dardouri](https://healthcareinnovation.tn/experts/slaheddine-dardouri/)\n\n[Business Advisor](https://healthcareinnovation.tn/experts_category/business-advisor/)\n\n[View profile](https://healthcareinnovation.tn/experts/slaheddine-dardouri/)\n\n[![Image 10: Ali ayari](https://healthcareinnovation.tn/wp-content/uploads/2025/05/Ali-ayari.png)](https://healthcareinnovation.tn/experts/ali-ayari/)\n\n## [Ali ayari](https://healthcareinnovation.tn/experts/ali-ayari/)\n\n[Business Advisor](https://healthcareinnovation.tn/experts_category/business-advisor/)\n\n[View profile](https://healthcareinnovation.tn/experts/ali-ayari/)\n\n## INSTITUTIONS\n\n[![Image 11: MARSEILLE TECHNOPOLE](https://healthcareinnovation.tn/wp-content/uploads/2025/05/logo_LAMETROPOLE_H_quadri-1.webp)](https://healthcareinnovation.tn/institutions/marseille-technopole/)\n\n## [Marseille Technopole](https://healthcareinnovation.tn/institutions/marseille-technopole/)\n\n[Technology Hub](https://healthcareinnovation.tn/institutions_category/technology-hub/)\n\n[![Image 12: world wide web](https://healthcareinnovation.tn/wp-content/uploads/2025/05/world-wide-web.png)](https://technopole-marseille.com/)\n\n[![Image 13: linkedin](https://healthcareinnovation.tn/wp-content/uploads/2025/05/linkedin.png)](https://www.linkedin.com/company/association-technop%C3%B4le-ch%C3%A2teau-gombert/posts/?feedView=all)\n\n[View profile](https://healthcareinnovation.tn/institutions/marseille-technopole/)\n\n[![Image 14: France-Biotech](https://healthcareinnovation.tn/wp-content/uploads/2025/05/France-Biotech-logo_.webp)](https://healthcareinnovation.tn/institutions/france-biotech/)\n\n## [France Biotech](https://healthcareinnovation.tn/institutions/france-biotech/)\n\n[Technology Hub](https://healthcareinnovation.tn/institutions_category/technology-hub/)\n\n[![Image 15: world wide web](https://healthcareinnovation.tn/wp-content/uploads/2025/05/world-wide-web.png)](https://france-biotech.fr/)\n\n[![Image 16: linkedin](https://healthcareinnovation.tn/wp-content/uploads/2025/05/linkedin.png)](https://www.linkedin.com/company/france-biotech/posts/?feedView=all)\n\n[View profile](https://healthcareinnovation.tn/institutions/france-biotech/)\n\n[![Image 17: Optique Distribution HealthCare](https://healthcareinnovation.tn/wp-content/uploads/2025/05/Optique-Distribution-HealthCare.webp)](https://healthcareinnovation.tn/institutions/optique-distribution/)\n\n## [Optique Distribution](https://healthcareinnovation.tn/institutions/optique-distribution/)\n\n[SME's](https://healthcareinnovation.tn/institutions_category/smes/)\n\n[![Image 18: world wide web](https://healthcareinnovation.tn/wp-content/uploads/2025/05/world-wide-web.png)](https://www.instagram.com/optique.distribution.tunisie?fbclid=IwY2xjawJS6FdleHRuA2FlbQIxMAABHaxyNspBRuzdyFv1J3jbds2rlm62JVAQXlVgNI8hwTD21YINFlvHNoJn3A_aem_4DgBJ3dCVShbOdTH5zzBnQ)\n\n[![Image 19: linkedin](https://healthcareinnovation.tn/wp-content/uploads/2025/05/linkedin.png)](https://www.linkedin.com/company/optique-distribution/)\n\n[View profile](https://healthcareinnovation.tn/institutions/optique-distribution/)\n\n[![Image 20: National Authority for Health Evaluation and Accreditation](https://healthcareinnovation.tn/wp-content/uploads/2025/05/ineas.png)](https://healthcareinnovation.tn/institutions/national-authority-for-health-evaluation-and-accreditation/)\n\n## [National Authority for Health Evaluation and Accreditation](https://healthcareinnovation.tn/institutions/national-authority-for-health-evaluation-and-accreditation/)\n\n[Public Institution](https://healthcareinnovation.tn/institutions_category/public-institution/)\n\n[![Image 21: world wide web](https://healthcareinnovation.tn/wp-content/uploads/2025/05/world-wide-web.png)](https://formation.ineas.tn/)\n\n[![Image 22: linkedin](https://healthcareinnovation.tn/wp-content/uploads/2025/05/linkedin.png)](https://www.linkedin.com/company/instance-nationale-de-l%E2%80%99evaluation-et-de-l%E2%80%99accr%C3%A9ditation-en-sant%C3%A9/posts/?feedView=all)\n\n[View profile](https://healthcareinnovation.tn/institutions/national-authority-for-health-evaluation-and-accreditation/)\n\n[![Image 23: CHU fattouma bourguiba](https://healthcareinnovation.tn/wp-content/uploads/2025/05/CHU-fattouma-bourguiba.webp)](https://healthcareinnovation.tn/institutions/chu-fattouma-bourguiba/)\n\n## [CHU Fattouma Bourguiba](https://healthcareinnovation.tn/institutions/chu-fattouma-bourguiba/)\n\n[Academic Hospital Center](https://healthcareinnovation.tn/institutions_category/academic-hospital-center/)\n\n![Image 24: world wide web](https://healthcareinnovation.tn/wp-content/uploads/2025/05/world-wide-web.png)\n\n![Image 25: linkedin](https://healthcareinnovation.tn/wp-content/uploads/2025/05/linkedin.png)\n\n[View profile](https://healthcareinnovation.tn/institutions/chu-fattouma-bourguiba/)\n\n[![Image 26: Roche](https://healthcareinnovation.tn/wp-content/uploads/2025/05/Roche-1.webp)](https://healthcareinnovation.tn/institutions/roche/)\n\n## [Roche](https://healthcareinnovation.tn/institutions/roche/)\n\n[Health Corporate](https://healthcareinnovation.tn/institutions_category/health-corporate/)\n\n[![Image 27: world wide web](https://healthcareinnovation.tn/wp-content/uploads/2025/05/world-wide-web.png)](https://www.roche.com/worldwide)\n\n[![Image 28: linkedin](https://healthcareinnovation.tn/wp-content/uploads/2025/05/linkedin.png)](https://www.linkedin.com/company/roche/posts/?feedView=all)\n\n[View profile](https://healthcareinnovation.tn/institutions/roche/)\n\n[![Image 29: Opalia Recordati](https://healthcareinnovation.tn/wp-content/uploads/2025/05/Opalia-Recordati-1.webp)](https://healthcareinnovation.tn/institutions/opalia-recordati/)\n\n## [Opalia Recordati](https://healthcareinnovation.tn/institutions/opalia-recordati/)\n\n[Health Corporate](https://healthcareinnovation.tn/institutions_category/health-corporate/)\n\n[![Image 30: world wide web](https://healthcareinnovation.tn/wp-content/uploads/2025/05/world-wide-web.png)](https://opaliarecordati.com/fr/conseils/specialite/197-inhibiteurs-du-co-transporteur-de-sodium-glucose-de-type-2-(sglt2)\n\n[![Image 31: linkedin](https://healthcareinnovation.tn/wp-content/uploads/2025/05/linkedin.png)](https://www.linkedin.com/company/opalia-pharma-recordati-group/posts/?feedView=all)\n\n[View profile](https://healthcareinnovation.tn/institutions/opalia-recordati/)\n\n[![Image 32: novo-nordisk](https://healthcareinnovation.tn/wp-content/uploads/2025/05/novo-nordisk-1.webp)](https://healthcareinnovation.tn/institutions/novo-nordisk/)\n\n## [Novo Nordisk](https://healthcareinnovation.tn/institutions/novo-nordisk/)\n\n[Health Corporate](https://healthcareinnovation.tn/institutions_category/health-corporate/)\n\n[![Image 33: world wide web](https://healthcareinnovation.tn/wp-content/uploads/2025/05/world-wide-web.png)](https://www.novonordisk.tn/)\n\n[![Image 34: linkedin](https://healthcareinnovation.tn/wp-content/uploads/2025/05/linkedin.png)](https://www.linkedin.com/company/novo-nordisk/life/b8a079ba-5759-473e-ab40-b12a9eaa139f/)\n\n[View profile](https://healthcareinnovation.tn/institutions/novo-nordisk/)\n\n[![Image 35: Berytech](https://healthcareinnovation.tn/wp-content/uploads/2025/05/Berytech-1.webp)](https://healthcareinnovation.tn/institutions/berytech/)\n\n## [Berytech](https://healthcareinnovation.tn/institutions/berytech/)\n\n[Ecosystem Enabler](https://healthcareinnovation.tn/institutions_category/ecosystem-enabler/)\n\n[![Image 36: world wide web](https://healthcareinnovation.tn/wp-content/uploads/2025/05/world-wide-web.png)](https://berytech.org/)\n\n[![Image 37: linkedin](https://healthcareinnovation.tn/wp-content/uploads/2025/05/linkedin.png)](https://www.linkedin.com/company/berytech/posts/?feedView=all)\n\n[View profile](https://healthcareinnovation.tn/institutions/berytech/)\n\n[![Image 38: ANIMA](https://healthcareinnovation.tn/wp-content/uploads/2025/05/ANIMA-1.webp)](https://healthcareinnovation.tn/institutions/anima-investment-network/)\n\n## [ANIMA Investment Network](https://healthcareinnovation.tn/institutions/anima-investment-network/)\n\n[Ecosystem Enabler](https://healthcareinnovation.tn/institutions_category/ecosystem-enabler/)\n\n[![Image 39: world wide web](https://healthcareinnovation.tn/wp-content/uploads/2025/05/world-wide-web.png)](https://anima.coop/en/)\n\n[![Image 40: linkedin](https://healthcareinnovation.tn/wp-content/uploads/2025/05/linkedin.png)](https://www.linkedin.com/company/anima_5/posts/?feedView=all)\n\n[View profile](https://healthcareinnovation.tn/institutions/anima-investment-network/)\n\n[![Image 41: logo fac pharm](https://healthcareinnovation.tn/wp-content/uploads/2025/05/logo-fac-pharm-1.webp)](https://healthcareinnovation.tn/institutions/faculty-of-pharmacy-of-monastir/)\n\n## [Faculty of Pharmacy of Monastir](https://healthcareinnovation.tn/institutions/faculty-of-pharmacy-of-monastir/)\n\n[Public Institution](https://healthcareinnovation.tn/institutions_category/public-institution/)\n\n[![Image 42: world wide web](https://healthcareinnovation.tn/wp-content/uploads/2025/05/world-wide-web.png)](https://fphm.rnu.tn/fr)\n\n[![Image 43: linkedin](https://healthcareinnovation.tn/wp-content/uploads/2025/05/linkedin.png)](https://www.linkedin.com/school/facult%C3%A9-de-pharmacie-de-monastir/posts/?feedView=all)\n\n[View profile](https://healthcareinnovation.tn/institutions/faculty-of-pharmacy-of-monastir/)\n\n[![Image 44: FACULTY OF MEDICINE OF MONASTIR](https://healthcareinnovation.tn/wp-content/uploads/2025/05/Logo-FMM.webp)](https://healthcareinnovation.tn/institutions/faculty-of-medicine-of-monastir/)\n\n## [Faculty of Medicine of Monastir](https://healthcareinnovation.tn/institutions/faculty-of-medicine-of-monastir/)\n\n[Public Institution](https://healthcareinnovation.tn/institutions_category/public-institution/)\n\n[![Image 45: world wide web](https://healthcareinnovation.tn/wp-content/uploads/2025/05/world-wide-web.png)](https://www.fmm.tn/)\n\n[![Image 46: linkedin](https://healthcareinnovation.tn/wp-content/uploads/2025/05/linkedin.png)](https://www.linkedin.com/school/facult%C3%A9-de-pharmacie-de-monastir/posts/?feedView=all)\n\n[View profile](https://healthcareinnovation.tn/institutions/faculty-of-medicine-of-monastir/)\n\nLoad More\n\n[![Image 47: Logo Heathcare innovation](https://healthcareinnovation.tn/wp-content/uploads/2025/10/Logo-Heathcare-innovation.webp)](https://healthcareinnovation.tn/)\n\nBuilding Technology Bridges for Promising Healthcare in North Africa.\n\n*   [Follow](https://www.linkedin.com/company/healthcareinnovationcluster/posts/?feedView=all \"Follow on LinkedIn\")\n*   [Follow](https://www.youtube.com/@HealthCareInnovation.cluster \"Follow on Youtube\")\n*   [Follow](https://www.facebook.com/Healthcare.innovation.cluster \"Follow on Facebook\")\n*   [Follow](https://www.instagram.com/healthcare.innovation.hci/ \"Follow on Instagram\")\n\n\n\nCyberParc Monastir – Office 5 RDC – Avenue Ibn Jazzar 5000 – Monastir,Tunisia\n\n\n\n[Contact@healthcareinnovation.tn](mailto:Contact@healthcareinnovation.tn)\n\n\n\n[+ 216 50 770 450](tel:00216%2050 770 450)\n\n## SUBSCRIBE TO OUR NEWSLETTER\n\n## Success!\n\nEmail\n\n[Subscribe](https://healthcareinnovation.tn/community/#)\n\nDesign by[Activ Soft](https://activsoft.tech/) Copyright © 2025. All Rights Reserved.\n",
+          "length": 18900
+        },
+        {
+          "path": "/experts/",
+          "url": "https://healthcareinnovation.tn/experts/",
+          "content": "Title: Experts - HealthCare Innovation\n\nURL Source: https://healthcareinnovation.tn/experts/\n\nMarkdown Content:\n# Experts - HealthCare Innovation\n\n![Image 1: Revisit consent button](https://healthcareinnovation.tn/wp-content/plugins/cookie-law-info/lite/frontend/images/revisit.svg)\n\n![Image 2: Close](https://healthcareinnovation.tn/wp-content/plugins/cookie-law-info/lite/frontend/images/close.svg)\n\nWe value your privacy\n\nWe use cookies to enhance your browsing experience, serve personalised ads or content, and analyse our traffic. By clicking \"Accept All\", you consent to our use of cookies.\n\nCustomise Reject All Accept All\n\nCustomise Consent Preferences![Image 3: Close](https://healthcareinnovation.tn/wp-content/plugins/cookie-law-info/lite/frontend/images/close.svg)\n\nWe use cookies to help you navigate efficiently and perform certain functions. You will find detailed information about all cookies under each consent category below.\n\nThe cookies that are categorised as \"Necessary\" are stored on your browser as they are essential for enabling the basic functionalities of the site. ...Show more\n\nNecessary Always Active\n\nNecessary cookies are required to enable the basic features of this site, such as providing secure log-in or adjusting your consent preferences. These cookies do not store any personally identifiable data.\n\nNo cookies to display.\n\nFunctional\n\nFunctional cookies help perform certain functionalities like sharing the content of the website on social media platforms, collecting feedback, and other third-party features.\n\nNo cookies to display.\n\nAnalytics\n\nAnalytical cookies are used to understand how visitors interact with the website. These cookies help provide information on metrics such as the number of visitors, bounce rate, traffic source, etc.\n\nNo cookies to display.\n\nPerformance\n\nPerformance cookies are used to understand and analyse the key performance indexes of the website which helps in delivering a better user experience for the visitors.\n\nNo cookies to display.\n\nAdvertisement\n\nAdvertisement cookies are used to provide visitors with customised advertisements based on the pages you visited previously and to analyse the effectiveness of the ad campaigns.\n\nNo cookies to display.\n\n Reject All  Save My Preferences  Accept All \n\n[![Image 4: Logo heathCare Innovation](https://healthcareinnovation.tn/wp-content/uploads/2025/12/logo-noir-HealthCare.webp)](https://healthcareinnovation.tn/)\n\n*   [Home](https://healthcareinnovation.tn/)\n*   [Our cluster](https://healthcareinnovation.tn/our-cluster/)\n*   [Community](https://healthcareinnovation.tn/community/)\n    *   [Experts](https://healthcareinnovation.tn/experts/)\n    *   [Institutions](https://healthcareinnovation.tn/institutions/)\n\n*   [Services](https://healthcareinnovation.tn/services/)\n    *   [Clusters & Incubators](https://healthcareinnovation.tn/service/clusters-incubators/)\n    *   [Startup](https://healthcareinnovation.tn/service/startups/)\n    *   [Pharma & Medical Device](https://healthcareinnovation.tn/service/pharma-medical-device/)\n    *   [Proovlab](https://healthcareinnovation.tn/proovlab/)\n\n*   [Projects](https://healthcareinnovation.tn/projects/)\n*   [Blog](https://healthcareinnovation.tn/blog/)\n\n*   [Home](https://healthcareinnovation.tn/)\n*   [Our cluster](https://healthcareinnovation.tn/our-cluster/)\n*   [Community](https://healthcareinnovation.tn/community/)\n    *   [Experts](https://healthcareinnovation.tn/experts/)\n    *   [Institutions](https://healthcareinnovation.tn/institutions/)\n\n*   [Services](https://healthcareinnovation.tn/services/)\n    *   [Clusters & Incubators](https://healthcareinnovation.tn/service/clusters-incubators/)\n    *   [Startup](https://healthcareinnovation.tn/service/startups/)\n    *   [Pharma & Medical Device](https://healthcareinnovation.tn/service/pharma-medical-device/)\n    *   [Proovlab](https://healthcareinnovation.tn/proovlab/)\n\n*   [Projects](https://healthcareinnovation.tn/projects/)\n*   [Blog](https://healthcareinnovation.tn/blog/)\n\n[Contact us](https://healthcareinnovation.tn/contact-us/)\n\n[![Image 5: Logo heathCare Innovation](https://healthcareinnovation.tn/wp-content/uploads/2025/12/logo-noir-HealthCare.webp)](https://healthcareinnovation.tn/)\n\n*   [Home](https://healthcareinnovation.tn/)\n*   [Our cluster](https://healthcareinnovation.tn/our-cluster/)\n*   [Community](https://healthcareinnovation.tn/community/)\n    *   [Experts](https://healthcareinnovation.tn/experts/)\n    *   [Institutions](https://healthcareinnovation.tn/institutions/)\n\n*   [Services](https://healthcareinnovation.tn/services/)\n    *   [Clusters & Incubators](https://healthcareinnovation.tn/service/clusters-incubators/)\n    *   [Startup](https://healthcareinnovation.tn/service/startups/)\n    *   [Pharma & Medical Device](https://healthcareinnovation.tn/service/pharma-medical-device/)\n    *   [Proovlab](https://healthcareinnovation.tn/proovlab/)\n\n*   [Projects](https://healthcareinnovation.tn/projects/)\n*   [Blog](https://healthcareinnovation.tn/blog/)\n*   [Contact us](https://healthcareinnovation.tn/contact-us/)\n\n*   [Home](https://healthcareinnovation.tn/)\n*   [Our cluster](https://healthcareinnovation.tn/our-cluster/)\n*   [Community](https://healthcareinnovation.tn/community/)\n    *   [Experts](https://healthcareinnovation.tn/experts/)\n    *   [Institutions](https://healthcareinnovation.tn/institutions/)\n\n*   [Services](https://healthcareinnovation.tn/services/)\n    *   [Clusters & Incubators](https://healthcareinnovation.tn/service/clusters-incubators/)\n    *   [Startup](https://healthcareinnovation.tn/service/startups/)\n    *   [Pharma & Medical Device](https://healthcareinnovation.tn/service/pharma-medical-device/)\n    *   [Proovlab](https://healthcareinnovation.tn/proovlab/)\n\n*   [Projects](https://healthcareinnovation.tn/projects/)\n*   [Blog](https://healthcareinnovation.tn/blog/)\n*   [Contact us](https://healthcareinnovation.tn/contact-us/)\n\n# Experts\n\nAt HealthCare Innovation, we connect you with the minds shaping the future of health innovation. Our network of advisors, scientists, clinicians, and business leaders brings deep sectoral expertise and first-hand experience in healthcare, technology, entrepreneurship, and regulatory frameworks. Whether you’re validating a medical device, launching a digital health startup, or scaling an impact-driven solution, our experts offer actionable insights and strategic guidance tailored to your needs.\n\n*   [Home](https://healthcareinnovation.tn/)\n*   $\n*    Experts \n\n[![Image 6: Dr. Haroun Ouanes](https://healthcareinnovation.tn/wp-content/uploads/2025/05/Dr.-Haroun-Ouanes.png)](https://healthcareinnovation.tn/experts/dr-haroun-ouanes/)\n\n## [Dr. Haroun Ouanes](https://healthcareinnovation.tn/experts/dr-haroun-ouanes/)\n\n[Business Advisor](https://healthcareinnovation.tn/experts_category/business-advisor/), [Scientific Advisor](https://healthcareinnovation.tn/experts_category/scientific-advisor/)\n\n[View profile](https://healthcareinnovation.tn/experts/dr-haroun-ouanes/)\n\n[![Image 7: Ali ayari](https://healthcareinnovation.tn/wp-content/uploads/2025/05/Ali-ayari.png)](https://healthcareinnovation.tn/experts/ali-ayari/)\n\n## [Ali ayari](https://healthcareinnovation.tn/experts/ali-ayari/)\n\n[Business Advisor](https://healthcareinnovation.tn/experts_category/business-advisor/)\n\n[View profile](https://healthcareinnovation.tn/experts/ali-ayari/)\n\n[![Image 8: Slaheddine Dardouri](https://healthcareinnovation.tn/wp-content/uploads/2025/05/Slaheddine-Dardouri.png)](https://healthcareinnovation.tn/experts/slaheddine-dardouri/)\n\n## [Slaheddine Dardouri](https://healthcareinnovation.tn/experts/slaheddine-dardouri/)\n\n[Business Advisor](https://healthcareinnovation.tn/experts_category/business-advisor/)\n\n[View profile](https://healthcareinnovation.tn/experts/slaheddine-dardouri/)\n\n[![Image 9: Ichraf Jarray](https://healthcareinnovation.tn/wp-content/uploads/2025/05/Ichraf-Jarray.jpg)](https://healthcareinnovation.tn/experts/ichraf-jarray/)\n\n## [Ichraf Jarray](https://healthcareinnovation.tn/experts/ichraf-jarray/)\n\n[Business Advisor](https://healthcareinnovation.tn/experts_category/business-advisor/)\n\n[View profile](https://healthcareinnovation.tn/experts/ichraf-jarray/)\n\n[![Image 10: Dr. Mohamed Bejaou](https://healthcareinnovation.tn/wp-content/uploads/2025/05/Dr.-Mohamed-Bejaou.png)](https://healthcareinnovation.tn/experts/dr-mohamed-bejaoui/)\n\n## [Dr. Mohamed Bejaoui](https://healthcareinnovation.tn/experts/dr-mohamed-bejaoui/)\n\n[Scientific Advisor](https://healthcareinnovation.tn/experts_category/scientific-advisor/)\n\n[View profile](https://healthcareinnovation.tn/experts/dr-mohamed-bejaoui/)\n\nServices\n\n- [x] All - [x] Academic institution - [x] Cluster & incubator - [x] Health facility - [x] Pharma & Medical device - [x] Startup \n\nMétier\n\n- [x] All - [x] E-Health - [x] International cooperation - [x] Investment - [x] Market Access - [x] MedTech - [x] Scientific Validation \n\n[Reset](https://healthcareinnovation.tn/experts/)\n\n[![Image 11: Logo Heathcare innovation](https://healthcareinnovation.tn/wp-content/uploads/2025/10/Logo-Heathcare-innovation.webp)](https://healthcareinnovation.tn/)\n\nBuilding Technology Bridges for Promising Healthcare in North Africa.\n\n*   [Follow](https://www.linkedin.com/company/healthcareinnovationcluster/posts/?feedView=all \"Follow on LinkedIn\")\n*   [Follow](https://www.youtube.com/@HealthCareInnovation.cluster \"Follow on Youtube\")\n*   [Follow](https://www.facebook.com/Healthcare.innovation.cluster \"Follow on Facebook\")\n*   [Follow](https://www.instagram.com/healthcare.innovation.hci/ \"Follow on Instagram\")\n\n\n\nCyberParc Monastir – Office 5 RDC – Avenue Ibn Jazzar 5000 – Monastir,Tunisia\n\n\n\n[Contact@healthcareinnovation.tn](mailto:Contact@healthcareinnovation.tn)\n\n\n\n[+ 216 50 770 450](tel:00216%2050 770 450)\n\n## SUBSCRIBE TO OUR NEWSLETTER\n\n## Success!\n\nEmail\n\n[Subscribe](https://healthcareinnovation.tn/experts/#)\n\nDesign by[Activ Soft](https://activsoft.tech/) Copyright © 2025. All Rights Reserved.\n",
+          "length": 10046
+        }
+      ]
+    },
+    {
+      "name": "Healthcare Startups in Tunisia",
+      "url": "https://magnitt.com/en-tn/startups/healthcare",
+      "scraped_at": "2026-03-30T08:09:26.932Z",
+      "scraped": true,
+      "total_pages": 4,
+      "total_characters": 28934,
+      "pages": [
+        {
+          "path": "/",
+          "url": "https://magnitt.com/en-tn/startups/healthcare",
+          "content": "Title: Healthcare Startups in Tunisia | MAGNiTT\n\nURL Source: https://magnitt.com/en-tn/startups/healthcare\n\nMarkdown Content:\n![Image 1](https://d2p9i44hnkrmkx.cloudfront.net/public/images/icons/startup.png)\n\n(Showing 1-5 of 28)[](https://helpdesk.magnitt.com/magnitt-directories)\n\nWith 251 funding rounds and 1,505 exits\n\nSelected filters - Industry: Healthcare, Headquarter: Tunisia\n\n[### Want more? Get in touch with us for a full access](https://magnitt.com/en-tn/startups/healthcare)[Contact Us](https://magnitt.com/en-tn/startups/healthcare)\n\n| Name | Description | Primary Industry | Startup HQ | Technologies Used | Date Founded | Number of Rounds |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Banet Community See Funding](https://magnitt.com/en-tn/startups/healthcare) | Banet is a Tunisian Start-up that focus on Women's Health. We are a media available on instagram, that have as a purpose to empower women, talk about sensitive topics and create awareness on important issues. Currently working on our expansion by developing our App. | Healthcare | Tunisia | - | Mar 2023 | 1 |\n| Loading data ... |\n| [eSteps Health See Funding](https://magnitt.com/en-tn/startups/healthcare) | eSteps developed a \"non-visible\" device able to actively and passively monitor a patient's mobility. It allows patients and their personal doctor to have a real-time update on their health and performances. In addition to that, the system allows to experiment new medications, lifestyles and diets while having a constant database to which refer and to confront in order to understand immediately if such changes are beneficial or not. | Healthcare | Tunisia | AI & Machine Learning, Internet of Things (IoT) | Apr 2020 | 1 |\n| Loading data ... |\n| [Tobba.tn See Funding](https://magnitt.com/en-tn/startups/healthcare) | A telemedicine platform that connects patients with medical doctors to conduct video consultation and medical analysis remotely: from home or at the office. | Healthcare | Tunisia | - | Jan 2018 | 2 |\n| Loading data ... |\n| [Ahkili See Funding](https://magnitt.com/en-tn/startups/healthcare) | A mobile mental healthcare booking platform connecting psychologists to patients through telemedicine | Healthcare | Tunisia | - | Jan 2019 | 2 |\n| Loading data ... |\n| [Sghartoon See Funding](https://magnitt.com/en-tn/startups/healthcare) | Sghartoon focuses on detecting early dyslexia signs using interactive games through cartoons combined with text, sound, and changing scenarios. The exercises allow parents to see the progress of their children ranging from 7-12 years old on the app and get advice from doctors. The platform allows doctors to have access to all their patient records, monitor their progress, assign them exercises and chat with parents. | Healthcare | Tunisia | - | Jan 2018 | 2 |\n| Loading data ... |\n|  |\n| [R2-D2's Repairs See Funding](https://magnitt.com/en-tn/startups/healthcare) | Banet is a Tunisian Start-up that focus on Women's Health. We are a media available on instagram, that have as a purpose to empower women, talk about sensitive topics and create awareness on important issues. Currently working on our expansion by developing our App. | Healthcare | Tunisia | - | Mar 2023 | 1 |\n| [Mandalorian Armor See Funding](https://magnitt.com/en-tn/startups/healthcare) | eSteps developed a \"non-visible\" device able to actively and passively monitor a patient's mobility. It allows patients and their personal doctor to have a real-time update on their health and performances. In addition to that, the system allows to experiment new medications, lifestyles and diets while having a constant database to which refer and to confront in order to understand immediately if such changes are beneficial or not. | Healthcare | Tunisia | AI & Machine Learning, Internet of Things (IoT) | Apr 2020 | 1 |\n| [Maul's Payments See Funding](https://magnitt.com/en-tn/startups/healthcare) | A telemedicine platform that connects patients with medical doctors to conduct video consultation and medical analysis remotely: from home or at the office. | Healthcare | Tunisia | - | Jan 2018 | 2 |\n| [Solo Adventures See Funding](https://magnitt.com/en-tn/startups/healthcare) | A mobile mental healthcare booking platform connecting psychologists to patients through telemedicine | Healthcare | Tunisia | - | Jan 2019 | 2 |\n| [C3P0 Translations See Funding](https://magnitt.com/en-tn/startups/healthcare) | Sghartoon focuses on detecting early dyslexia signs using interactive games through cartoons combined with text, sound, and changing scenarios. The exercises allow parents to see the progress of their children ranging from 7-12 years old on the app and get advice from doctors. The platform allows doctors to have access to all their patient records, monitor their progress, assign them exercises and chat with parents. | Healthcare | Tunisia | - | Jan 2018 | 2 |\n\nYearly Breakdown of Investment Amount and Deals\n\n![Image 2: Locked-bar-chart-1](https://d2p9i44hnkrmkx.cloudfront.net/public/images/directory-locked-charts-img/bar-chart-1.png)\n\nYearly Breakdown of Startups Founded Against Startups Funded\n\n![Image 3: Locked-line-chart](https://d2p9i44hnkrmkx.cloudfront.net/public/images/directory-locked-charts-img/line-chart.png)\n\nFunding - Share Per Primary Industry (2017 - Present)\n\n![Image 4: Locked-donut-chart-1](https://d2p9i44hnkrmkx.cloudfront.net/public/images/directory-locked-charts-img/donut-chart-1.png)\n\nDeals - Share Per Primary Industry (2017 - Present)\n\n![Image 5: Locked-donut-chart-2](https://d2p9i44hnkrmkx.cloudfront.net/public/images/directory-locked-charts-img/donut-chart-2.png)\n\nTotal Funding and Number of Deals by Industry (2017 - Present)\n\n![Image 6: Locked-bar-chart-2](https://d2p9i44hnkrmkx.cloudfront.net/public/images/directory-locked-charts-img/bar-chart-2.png)\n\nCountry Primary Industry Sub Industry Business Type\n\n![Image 7: Locked-bar-chart-1](https://d2p9i44hnkrmkx.cloudfront.net/public/images/directory-locked-charts-img/locked-img-landscape.png)\n\n[### Want more data? Login to gain access to our funding view directory](https://magnitt.com/en-tn/startups/healthcare)[Login](https://magnitt.com/en-tn/startups/healthcare)\n\n| Name | Date Funded | Funding Stage | Investment Vehicle | Amount Raised | Valuation | Total Amount Raised | Country | Primary Industry | Investors | Verification Status |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n|  |\n| [R2-D2's Repairs](https://magnitt.com/startups/test-company-1-1) | Nov 2028 | HBS | HBS | $899K | - | $547.9M | United Arab Emirates (UAE) | - | [The Jedi Foundation](https://magnitt.com/en-tn/startups/healthcare) [See All](https://magnitt.com/en-tn/startups/healthcare) | - |\n| [Mandalorian Armor](https://magnitt.com/startups/test-company-2-2) | Nov 2027 | HBS | Series A | $800K | - | $57.9M | Sweden | - | [Wookie Ventures](https://magnitt.com/en-tn/startups/healthcare) | - |\n| [Maul's Payments](https://magnitt.com/startups/test-company-3-3) | Sep 2021 | IPO | IPO | Undisclosed | - | $9.9M | Egypt | - | [Death Star Enterprises](https://magnitt.com/en-tn/startups/healthcare) [See All](https://magnitt.com/en-tn/startups/healthcare) | - |\n| [Solo Adventures](https://magnitt.com/startups/test-company-4-4) | Sep 2021 | Series F | Series F | $50M | - | $54.8M | Lebanon | - | [Padawan Ventures](https://magnitt.com/en-tn/startups/healthcare) | - |\n| [Skywalker Partners](https://magnitt.com/startups/test-company-5-5) | Sep 2021 | SEED | SEED | $2M | - | $65.9M | Saudi Arabia (KSA) | - | [Skywalker Partners](https://magnitt.com/en-tn/startups/healthcare) | - |\n\n[### Want more data? Login to gain access to our exits view directory](https://magnitt.com/en-tn/startups/healthcare)[Login](https://magnitt.com/en-tn/startups/healthcare)\n\n| Name | Primary Industry | Startup HQ | Exit Date | Exit Type | Years to Exit | Exit Amount | Total Investment Raised | Total Deal Count | Acquirer Type | Acquirer Country | Acquirer |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n|  |\n| [The Jedi Foundation](https://magnitt.com/en-tn/startups/healthcare) | Space Exploration | United Arab Emirates (UAE) | Sep 2021 | - | 11 | Undisclosed | - | - | - | - | [The Jedi Foundation](https://magnitt.com/en-tn/startups/healthcare) |\n| [Wookie Ventures](https://magnitt.com/en-tn/startups/healthcare) | Robotics Manufacturing | Australia | Aug 2021 | - | 5 | Undisclosed | - | - | - | - | [Wookie Ventures](https://magnitt.com/en-tn/startups/healthcare) |\n| [Death Star Enterprises](https://magnitt.com/en-tn/startups/healthcare) | Space Exploration | New Zealand | Aug 2021 | - | 7 | Undisclosed | - | - | - | - | [Death Star Enterprises](https://magnitt.com/en-tn/startups/healthcare) |\n| [Padawan Ventures](https://magnitt.com/en-tn/startups/healthcare) | Robot Repairs | Japan | Sep 2021 | - | 4 | Undisclosed | - | - | - | - | [Padawan Ventures](https://magnitt.com/en-tn/startups/healthcare) |\n| [Skywalker Partners](https://magnitt.com/en-tn/startups/healthcare) | Vending Solutions | Singapore | Aug 2021 | - | 2 | Undisclosed | - | - | - | - | [## S Skywalker Partners](https://magnitt.com/en-tn/startups/healthcare) |\n\n## Startups by Industry\n\n*   [Advertising and Marketing Startups in Tunisia](https://magnitt.com/en-tn/startups/advertising-and-marketing)\n*   [Media & Entertainment Startups in Tunisia](https://magnitt.com/en-tn/startups/media-entertainment)\n*   [Home Services Startups in Tunisia](https://magnitt.com/en-tn/startups/home-services)\n*   [Transport & Logistics Startups in Tunisia](https://magnitt.com/en-tn/startups/transport-logistics)\n*   [E-commerce/Retail Startups in Tunisia](https://magnitt.com/en-tn/startups/e-commerce-retail)\n*   [EdTech Startups in Tunisia](https://magnitt.com/en-tn/startups/edtech)\n*   [Fashion & Lifestyle Startups in Tunisia](https://magnitt.com/en-tn/startups/fashion-lifestyle)\n*   [Food & Beverage Startups in Tunisia](https://magnitt.com/en-tn/startups/food-and-beverage)\n*   [IT Solutions Startups in Tunisia](https://magnitt.com/en-tn/startups/it-solutions)\n*   [Enterprise Software Startups in Tunisia](https://magnitt.com/en-tn/startups/enterprise-software)\n*   [Real Estate Startups in Tunisia](https://magnitt.com/en-tn/startups/real-estate)\n*   [Travel & Tourism Startups in Tunisia](https://magnitt.com/en-tn/startups/travel-and-tourism)\n\n## Startups by Country\n\n*   [Healthcare Startups in Algeria](https://magnitt.com/en-dz/startups/healthcare)\n*   [Healthcare Startups in Bahrain](https://magnitt.com/en-bh/startups/healthcare)\n*   [Healthcare Startups in Egypt](https://magnitt.com/en-eg/startups/healthcare)\n*   [Healthcare Startups in Iraq](https://magnitt.com/en-iq/startups/healthcare)\n*   [Healthcare Startups in Jordan](https://magnitt.com/en-jo/startups/healthcare)\n*   [Healthcare Startups in Kuwait](https://magnitt.com/en-kw/startups/healthcare)\n*   [Healthcare Startups in Lebanon](https://magnitt.com/en-lb/startups/healthcare)\n*   [Healthcare Startups in Morocco](https://magnitt.com/en-ma/startups/healthcare)\n*   [Healthcare Startups in Oman](https://magnitt.com/en-om/startups/healthcare)\n*   [Healthcare Startups in Pakistan](https://magnitt.com/en-pk/startups/healthcare)\n*   [Healthcare Startups in Palestine](https://magnitt.com/en-ps/startups/healthcare)\n*   [Healthcare Startups in Qatar](https://magnitt.com/en-qa/startups/healthcare)\n*   [Healthcare Startups in Saudi Arabia (KSA)](https://magnitt.com/en-sa/startups/healthcare)\n*   [Healthcare Startups in South Sudan](https://magnitt.com/en-ss/startups/healthcare)\n*   [Healthcare Startups in Sudan](https://magnitt.com/en-sd/startups/healthcare)\n*   [Healthcare Startups in Syria](https://magnitt.com/en-sy/startups/healthcare)\n*   [Healthcare Startups in Türkiye (Turkey)](https://magnitt.com/en-tr/startups/healthcare)\n*   [Healthcare Startups in United Arab Emirates (UAE)](https://magnitt.com/en-ae/startups/healthcare)\n*   [Healthcare Startups in Yemen](https://magnitt.com/en-ye/startups/healthcare)\n\nThis list of startups in Tunisia provides data on the trends in the Healthcare industry. Insights about top startups, investments and exits, investors of these companies, their management team, and recent news are also included.\n\nThe data export feature is only available to our subscribed users. Look into our [**different plans**](https://magnitt.com/pricing)or contact sales to tailor a package to suit your needs.\n",
+          "length": 12442
+        },
+        {
+          "path": "/en-tn/startups/healthcare",
+          "url": "https://magnitt.com/en-tn/startups/healthcare",
+          "content": "Title: Healthcare Startups in Tunisia | MAGNiTT\n\nURL Source: https://magnitt.com/en-tn/startups/healthcare\n\nMarkdown Content:\n![Image 1](https://d2p9i44hnkrmkx.cloudfront.net/public/images/icons/startup.png)\n\n(Showing 1-5 of 28)[](https://helpdesk.magnitt.com/magnitt-directories)\n\nWith 0 funding rounds and 1,505 exits\n\nSelected filters - Industry: Healthcare, Headquarter: Tunisia\n\n[### Want more? Get in touch with us for a full access](https://magnitt.com/en-tn/startups/healthcare)[Contact Us](https://magnitt.com/en-tn/startups/healthcare)\n\n| Name | Description | Primary Industry | Startup HQ | Technologies Used | Date Founded | Number of Rounds |\n| --- | --- | --- | --- | --- | --- | --- |\n| [Banet Community See Funding](https://magnitt.com/en-tn/startups/healthcare) | Banet is a Tunisian Start-up that focus on Women's Health. We are a media available on instagram, that have as a purpose to empower women, talk about sensitive topics and create awareness on important issues. Currently working on our expansion by developing our App. | Healthcare | Tunisia | - | Mar 2023 | 1 |\n| Loading data ... |\n| [eSteps Health See Funding](https://magnitt.com/en-tn/startups/healthcare) | eSteps developed a \"non-visible\" device able to actively and passively monitor a patient's mobility. It allows patients and their personal doctor to have a real-time update on their health and performances. In addition to that, the system allows to experiment new medications, lifestyles and diets while having a constant database to which refer and to confront in order to understand immediately if such changes are beneficial or not. | Healthcare | Tunisia | AI & Machine Learning, Internet of Things (IoT) | Apr 2020 | 1 |\n| Loading data ... |\n| [Tobba.tn See Funding](https://magnitt.com/en-tn/startups/healthcare) | A telemedicine platform that connects patients with medical doctors to conduct video consultation and medical analysis remotely: from home or at the office. | Healthcare | Tunisia | - | Jan 2018 | 2 |\n| Loading data ... |\n| [Ahkili See Funding](https://magnitt.com/en-tn/startups/healthcare) | A mobile mental healthcare booking platform connecting psychologists to patients through telemedicine | Healthcare | Tunisia | - | Jan 2019 | 2 |\n| Loading data ... |\n| [Sghartoon See Funding](https://magnitt.com/en-tn/startups/healthcare) | Sghartoon focuses on detecting early dyslexia signs using interactive games through cartoons combined with text, sound, and changing scenarios. The exercises allow parents to see the progress of their children ranging from 7-12 years old on the app and get advice from doctors. The platform allows doctors to have access to all their patient records, monitor their progress, assign them exercises and chat with parents. | Healthcare | Tunisia | - | Jan 2018 | 2 |\n| Loading data ... |\n|  |\n| [R2-D2's Repairs See Funding](https://magnitt.com/en-tn/startups/healthcare) | Banet is a Tunisian Start-up that focus on Women's Health. We are a media available on instagram, that have as a purpose to empower women, talk about sensitive topics and create awareness on important issues. Currently working on our expansion by developing our App. | Healthcare | Tunisia | - | Mar 2023 | 1 |\n| [Mandalorian Armor See Funding](https://magnitt.com/en-tn/startups/healthcare) | eSteps developed a \"non-visible\" device able to actively and passively monitor a patient's mobility. It allows patients and their personal doctor to have a real-time update on their health and performances. In addition to that, the system allows to experiment new medications, lifestyles and diets while having a constant database to which refer and to confront in order to understand immediately if such changes are beneficial or not. | Healthcare | Tunisia | AI & Machine Learning, Internet of Things (IoT) | Apr 2020 | 1 |\n| [Maul's Payments See Funding](https://magnitt.com/en-tn/startups/healthcare) | A telemedicine platform that connects patients with medical doctors to conduct video consultation and medical analysis remotely: from home or at the office. | Healthcare | Tunisia | - | Jan 2018 | 2 |\n| [Solo Adventures See Funding](https://magnitt.com/en-tn/startups/healthcare) | A mobile mental healthcare booking platform connecting psychologists to patients through telemedicine | Healthcare | Tunisia | - | Jan 2019 | 2 |\n| [C3P0 Translations See Funding](https://magnitt.com/en-tn/startups/healthcare) | Sghartoon focuses on detecting early dyslexia signs using interactive games through cartoons combined with text, sound, and changing scenarios. The exercises allow parents to see the progress of their children ranging from 7-12 years old on the app and get advice from doctors. The platform allows doctors to have access to all their patient records, monitor their progress, assign them exercises and chat with parents. | Healthcare | Tunisia | - | Jan 2018 | 2 |\n\nYearly Breakdown of Investment Amount and Deals\n\n![Image 2: Locked-bar-chart-1](https://d2p9i44hnkrmkx.cloudfront.net/public/images/directory-locked-charts-img/bar-chart-1.png)\n\nYearly Breakdown of Startups Founded Against Startups Funded\n\n![Image 3: Locked-line-chart](https://d2p9i44hnkrmkx.cloudfront.net/public/images/directory-locked-charts-img/line-chart.png)\n\nFunding - Share Per Primary Industry (2017 - Present)\n\n![Image 4: Locked-donut-chart-1](https://d2p9i44hnkrmkx.cloudfront.net/public/images/directory-locked-charts-img/donut-chart-1.png)\n\nDeals - Share Per Primary Industry (2017 - Present)\n\n![Image 5: Locked-donut-chart-2](https://d2p9i44hnkrmkx.cloudfront.net/public/images/directory-locked-charts-img/donut-chart-2.png)\n\nTotal Funding and Number of Deals by Industry (2017 - Present)\n\n![Image 6: Locked-bar-chart-2](https://d2p9i44hnkrmkx.cloudfront.net/public/images/directory-locked-charts-img/bar-chart-2.png)\n\nCountry Primary Industry Sub Industry Business Type\n\n![Image 7: Locked-bar-chart-1](https://d2p9i44hnkrmkx.cloudfront.net/public/images/directory-locked-charts-img/locked-img-landscape.png)\n\n[### Want more data? Login to gain access to our funding view directory](https://magnitt.com/en-tn/startups/healthcare)[Login](https://magnitt.com/en-tn/startups/healthcare)\n\n| Name | Date Funded | Funding Stage | Investment Vehicle | Amount Raised | Valuation | Total Amount Raised | Country | Primary Industry | Investors | Verification Status |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n|  |\n| [R2-D2's Repairs](https://magnitt.com/startups/test-company-1-1) | Nov 2028 | HBS | HBS | $899K | - | $547.9M | United Arab Emirates (UAE) | - | [The Jedi Foundation](https://magnitt.com/en-tn/startups/healthcare) [See All](https://magnitt.com/en-tn/startups/healthcare) | - |\n| [Mandalorian Armor](https://magnitt.com/startups/test-company-2-2) | Nov 2027 | HBS | Series A | $800K | - | $57.9M | Sweden | - | [Wookie Ventures](https://magnitt.com/en-tn/startups/healthcare) | - |\n| [Maul's Payments](https://magnitt.com/startups/test-company-3-3) | Sep 2021 | IPO | IPO | Undisclosed | - | $9.9M | Egypt | - | [Death Star Enterprises](https://magnitt.com/en-tn/startups/healthcare) [See All](https://magnitt.com/en-tn/startups/healthcare) | - |\n| [Solo Adventures](https://magnitt.com/startups/test-company-4-4) | Sep 2021 | Series F | Series F | $50M | - | $54.8M | Lebanon | - | [Padawan Ventures](https://magnitt.com/en-tn/startups/healthcare) | - |\n| [Skywalker Partners](https://magnitt.com/startups/test-company-5-5) | Sep 2021 | SEED | SEED | $2M | - | $65.9M | Saudi Arabia (KSA) | - | [Skywalker Partners](https://magnitt.com/en-tn/startups/healthcare) | - |\n\n[### Want more data? Login to gain access to our exits view directory](https://magnitt.com/en-tn/startups/healthcare)[Login](https://magnitt.com/en-tn/startups/healthcare)\n\n| Name | Primary Industry | Startup HQ | Exit Date | Exit Type | Years to Exit | Exit Amount | Total Investment Raised | Total Deal Count | Acquirer Type | Acquirer Country | Acquirer |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n|  |\n| [The Jedi Foundation](https://magnitt.com/en-tn/startups/healthcare) | Space Exploration | United Arab Emirates (UAE) | Sep 2021 | - | 11 | Undisclosed | - | - | - | - | [The Jedi Foundation](https://magnitt.com/en-tn/startups/healthcare) |\n| [Wookie Ventures](https://magnitt.com/en-tn/startups/healthcare) | Robotics Manufacturing | Australia | Aug 2021 | - | 5 | Undisclosed | - | - | - | - | [Wookie Ventures](https://magnitt.com/en-tn/startups/healthcare) |\n| [Death Star Enterprises](https://magnitt.com/en-tn/startups/healthcare) | Space Exploration | New Zealand | Aug 2021 | - | 7 | Undisclosed | - | - | - | - | [Death Star Enterprises](https://magnitt.com/en-tn/startups/healthcare) |\n| [Padawan Ventures](https://magnitt.com/en-tn/startups/healthcare) | Robot Repairs | Japan | Sep 2021 | - | 4 | Undisclosed | - | - | - | - | [Padawan Ventures](https://magnitt.com/en-tn/startups/healthcare) |\n| [Skywalker Partners](https://magnitt.com/en-tn/startups/healthcare) | Vending Solutions | Singapore | Aug 2021 | - | 2 | Undisclosed | - | - | - | - | [## S Skywalker Partners](https://magnitt.com/en-tn/startups/healthcare) |\n\n## Startups by Industry\n\n*   [Advertising and Marketing Startups in Tunisia](https://magnitt.com/en-tn/startups/advertising-and-marketing)\n*   [Media & Entertainment Startups in Tunisia](https://magnitt.com/en-tn/startups/media-entertainment)\n*   [Home Services Startups in Tunisia](https://magnitt.com/en-tn/startups/home-services)\n*   [Transport & Logistics Startups in Tunisia](https://magnitt.com/en-tn/startups/transport-logistics)\n*   [E-commerce/Retail Startups in Tunisia](https://magnitt.com/en-tn/startups/e-commerce-retail)\n*   [EdTech Startups in Tunisia](https://magnitt.com/en-tn/startups/edtech)\n*   [Fashion & Lifestyle Startups in Tunisia](https://magnitt.com/en-tn/startups/fashion-lifestyle)\n*   [Food & Beverage Startups in Tunisia](https://magnitt.com/en-tn/startups/food-and-beverage)\n*   [IT Solutions Startups in Tunisia](https://magnitt.com/en-tn/startups/it-solutions)\n*   [Enterprise Software Startups in Tunisia](https://magnitt.com/en-tn/startups/enterprise-software)\n*   [Real Estate Startups in Tunisia](https://magnitt.com/en-tn/startups/real-estate)\n*   [Travel & Tourism Startups in Tunisia](https://magnitt.com/en-tn/startups/travel-and-tourism)\n\n## Startups by Country\n\n*   [Healthcare Startups in Algeria](https://magnitt.com/en-dz/startups/healthcare)\n*   [Healthcare Startups in Bahrain](https://magnitt.com/en-bh/startups/healthcare)\n*   [Healthcare Startups in Egypt](https://magnitt.com/en-eg/startups/healthcare)\n*   [Healthcare Startups in Iraq](https://magnitt.com/en-iq/startups/healthcare)\n*   [Healthcare Startups in Jordan](https://magnitt.com/en-jo/startups/healthcare)\n*   [Healthcare Startups in Kuwait](https://magnitt.com/en-kw/startups/healthcare)\n*   [Healthcare Startups in Lebanon](https://magnitt.com/en-lb/startups/healthcare)\n*   [Healthcare Startups in Morocco](https://magnitt.com/en-ma/startups/healthcare)\n*   [Healthcare Startups in Oman](https://magnitt.com/en-om/startups/healthcare)\n*   [Healthcare Startups in Pakistan](https://magnitt.com/en-pk/startups/healthcare)\n*   [Healthcare Startups in Palestine](https://magnitt.com/en-ps/startups/healthcare)\n*   [Healthcare Startups in Qatar](https://magnitt.com/en-qa/startups/healthcare)\n*   [Healthcare Startups in Saudi Arabia (KSA)](https://magnitt.com/en-sa/startups/healthcare)\n*   [Healthcare Startups in South Sudan](https://magnitt.com/en-ss/startups/healthcare)\n*   [Healthcare Startups in Sudan](https://magnitt.com/en-sd/startups/healthcare)\n*   [Healthcare Startups in Syria](https://magnitt.com/en-sy/startups/healthcare)\n*   [Healthcare Startups in Türkiye (Turkey)](https://magnitt.com/en-tr/startups/healthcare)\n*   [Healthcare Startups in United Arab Emirates (UAE)](https://magnitt.com/en-ae/startups/healthcare)\n*   [Healthcare Startups in Yemen](https://magnitt.com/en-ye/startups/healthcare)\n\nThis list of startups in Tunisia provides data on the trends in the Healthcare industry. Insights about top startups, investments and exits, investors of these companies, their management team, and recent news are also included.\n\nThe data export feature is only available to our subscribed users. Look into our [**different plans**](https://magnitt.com/pricing)or contact sales to tailor a package to suit your needs.\n",
+          "length": 12440
+        },
+        {
+          "path": "/startups/test-company-1-1",
+          "url": "https://magnitt.com/startups/test-company-1-1",
+          "content": "Title: 404 page not found\n\nURL Source: https://magnitt.com/startups/test-company-1-1\n\nWarning: Target URL returned error 404: Not Found\n\nMarkdown Content:\n[![Image 1: Magnitt-Logo](https://d2p9i44hnkrmkx.cloudfront.net/public/images/main_logo.png)](https://magnitt.com/)\n\n*   [Our Data](https://magnitt.com/startups/test-company-1-1#nav-ourdata)[MENA Data](https://magnitt.com/mena-data)[Africa Data](https://magnitt.com/africa-data)[Southeast Asia Data](https://magnitt.com/southeast-asia-data)[Venture Capital Data](https://magnitt.com/vc-investment-data)[Private Equity Data](https://magnitt.com/pe-investment-data)[Venture Debt Data](https://magnitt.com/venture-debt-data) \n*   [Solutions](https://magnitt.com/startups/test-company-1-1#nav-solutions)[Find Startups](https://magnitt.com/startups)[Find Investors](https://magnitt.com/investors)[Private Equity Data](https://magnitt.com/private-equity)[Analytics](https://magnitt.com/advanced-analytics)[Market Maps](https://magnitt.com/market-maps) \n*   [Research](https://magnitt.com/startups/test-company-1-1#nav-research)[Reports](https://magnitt.com/research)[Blog](https://magnitt.com/news)[Newsletters](https://magnitt.com/newsletters) \n*   [Pricing](https://magnitt.com/pricing)\n*   [About Us](https://magnitt.com/startups/test-company-1-1#nav-aboutus)[About Us](https://magnitt.com/aboutus)[Careers](https://magnitt.com/jobs) \n*   [Contact Us](https://magnitt.com/startups/test-company-1-1#nav-contactus)[Help Center](https://helpdesk.magnitt.com/)[Contact Us](https://magnitt.com/contactus) \n\n*   [Login](https://magnitt.com/startups/test-company-1-1)\n*   [Contact Sales](https://magnitt.com/startups/test-company-1-1)\n\nYour session has expired\n\nDo you wish to login again?\n\n### Verify Email\n\n### ATTENTION!\n\nPlease verify your email to use this feature. Click here to resend the verification email.\n\n[Explore our Pricing!Explore our Pricing!](https://magnitt.com/pricing)\n\n#### Unlock access to Private Capital data\n\nCompany Type\n\nPhone\n\nWhat are you looking for?\n",
+          "length": 2026
+        },
+        {
+          "path": "/startups/test-company-2-2",
+          "url": "https://magnitt.com/startups/test-company-2-2",
+          "content": "Title: 404 page not found\n\nURL Source: https://magnitt.com/startups/test-company-2-2\n\nWarning: Target URL returned error 404: Not Found\n\nMarkdown Content:\n[![Image 1: Magnitt-Logo](https://d2p9i44hnkrmkx.cloudfront.net/public/images/main_logo.png)](https://magnitt.com/)\n\n*   [Our Data](https://magnitt.com/startups/test-company-2-2#nav-ourdata)[MENA Data](https://magnitt.com/mena-data)[Africa Data](https://magnitt.com/africa-data)[Southeast Asia Data](https://magnitt.com/southeast-asia-data)[Venture Capital Data](https://magnitt.com/vc-investment-data)[Private Equity Data](https://magnitt.com/pe-investment-data)[Venture Debt Data](https://magnitt.com/venture-debt-data) \n*   [Solutions](https://magnitt.com/startups/test-company-2-2#nav-solutions)[Find Startups](https://magnitt.com/startups)[Find Investors](https://magnitt.com/investors)[Private Equity Data](https://magnitt.com/private-equity)[Analytics](https://magnitt.com/advanced-analytics)[Market Maps](https://magnitt.com/market-maps) \n*   [Research](https://magnitt.com/startups/test-company-2-2#nav-research)[Reports](https://magnitt.com/research)[Blog](https://magnitt.com/news)[Newsletters](https://magnitt.com/newsletters) \n*   [Pricing](https://magnitt.com/pricing)\n*   [About Us](https://magnitt.com/startups/test-company-2-2#nav-aboutus)[About Us](https://magnitt.com/aboutus)[Careers](https://magnitt.com/jobs) \n*   [Contact Us](https://magnitt.com/startups/test-company-2-2#nav-contactus)[Help Center](https://helpdesk.magnitt.com/)[Contact Us](https://magnitt.com/contactus) \n\n*   [Login](https://magnitt.com/startups/test-company-2-2)\n*   [Contact Sales](https://magnitt.com/startups/test-company-2-2)\n\nYour session has expired\n\nDo you wish to login again?\n\n### Verify Email\n\n### ATTENTION!\n\nPlease verify your email to use this feature. Click here to resend the verification email.\n\n[Explore our Pricing!Explore our Pricing!](https://magnitt.com/pricing)\n\n#### Unlock access to Private Capital data\n\nCompany Type\n\nPhone\n\nWhat are you looking for?\n",
+          "length": 2026
+        }
+      ]
+    },
+    {
+      "name": "InstaDeep",
+      "url": "https://www.wired.me/story/tunisias-start-up-boom-started-with-one-exit",
+      "scraped_at": "2026-03-30T08:10:00.495Z",
+      "scraped": false,
+      "total_pages": 0,
+      "total_characters": 0,
+      "pages": []
+    }
+  ],
+  "competitors_structured": [
+    {
+      "name": "BiotechPole Sidi Thabet & HCI Digital Health",
+      "url": "https://healthcareinnovation.tn/biotechpole-sidi-thabet-hci-digital-health-partnership/",
+      "scrape_status": "success",
+      "general": {
+        "description": "The website is about the partnership between BiotechPole Sidi Thabet and HCI Digital Health, with a focus on healthcare innovation in the Greater Tunis area.",
+        "mission": "No explicit mission statement found, but the website aims to provide information on healthcare innovation and related services.",
+        "founded": "",
+        "headquarters": "Greater Tunis, specifically neighborhoods such as La Marsa, Les Berges du Lac, Ariana, and El Menzah",
+        "team_size": ""
+      },
+      "pricing": {
+        "model": "non_mentionne",
+        "plans": [],
+        "price_range": "",
+        "details": "No pricing information found on the website."
+      },
+      "services": [
+        {
+          "name": "Clusters & Incubators",
+          "description": "The website mentions clusters and incubators as part of its services, but no detailed description is provided."
+        },
+        {
+          "name": "Startup",
+          "description": "The website mentions startup services, but no detailed description is provided."
+        },
+        {
+          "name": "Pharma & Medical Device",
+          "description": "The website mentions pharma and medical device services, but no detailed description is provided."
+        },
+        {
+          "name": "Proovlab",
+          "description": "The website mentions Proovlab as part of its services, but no detailed description is provided."
+        }
+      ],
+      "features": [],
+      "target_clients": {
+        "segments": [
+          "Healthcare professionals",
+          "Institutions",
+          "Experts"
+        ],
+        "demographics": "No specific demographics mentioned, but the website seems to target healthcare professionals and institutions in the Greater Tunis area.",
+        "geography": "Greater Tunis, specifically neighborhoods such as La Marsa, Les Berges du Lac, Ariana, and El Menzah",
+        "client_type": "B2B"
+      },
+      "marketing": {
+        "value_proposition": "The website provides information on healthcare innovation and related services, with a focus on the Greater Tunis area.",
+        "differentiators": [
+          "Focus on healthcare innovation",
+          "Partnership between BiotechPole Sidi Thabet and HCI Digital Health"
+        ],
+        "channels": [
+          "Website",
+          "Social media (not specified)"
+        ],
+        "social_media": {}
+      },
+      "technical": {
+        "platforms": [],
+        "technologies": []
+      },
+      "contact": {
+        "email": "",
+        "phone": "",
+        "address": "Greater Tunis, specifically neighborhoods such as La Marsa, Les Berges du Lac, Ariana, and El Menzah"
+      },
+      "competitive_analysis": {
+        "strengths": [
+          "Partnership between BiotechPole Sidi Thabet and HCI Digital Health",
+          "Focus on healthcare innovation"
+        ],
+        "weaknesses": [
+          "Limited information on services and pricing",
+          "No clear mission statement"
+        ],
+        "opportunities": [
+          "Growing demand for healthcare innovation in the Greater Tunis area",
+          "Potential for partnerships with other healthcare institutions"
+        ],
+        "threats": [
+          "Competition from other healthcare innovation platforms",
+          "Limited funding or resources"
+        ],
+        "perceived_strengths": [
+          {
+            "point": "No specific strengths mentioned due to lack of reviews",
+            "frequency": "N/A",
+            "quotes": [],
+            "source": "N/A"
+          }
+        ],
+        "perceived_weaknesses": [
+          {
+            "point": "Lack of available information on the website",
+            "frequency": "Often",
+            "quotes": [
+              "Page Non Trouvée - HealthCare Innovation",
+              "Target URL returned error 404: Not Found"
+            ],
+            "source": "website"
+          }
+        ],
+        "customer_sentiment": "neutral",
+        "opportunities_for_us": [
+          "Provide accurate and accessible information about our services",
+          "Ensure website functionality and user experience"
+        ],
+        "threats_for_us": [
+          "BiotechPole Sidi Thabet & HCI Digital Health may improve their website and information availability"
+        ]
+      },
+      "opportunities_for_competitors": [
+        "Partnerships with other healthcare institutions",
+        "Expansion into other regions"
+      ],
+      "threats_for_competitors": [
+        "Competition from established healthcare innovation platforms",
+        "Limited funding or resources"
+      ],
+      "content_summary": "The website provides information on the partnership between BiotechPole Sidi Thabet and HCI Digital Health, with a focus on healthcare innovation in the Greater Tunis area. The website mentions various services, including clusters and incubators, startup services, pharma and medical device services, and Proovlab. However, no detailed descriptions or pricing information are provided.",
+      "data_completeness_score": 9,
+      "pages_scraped": [
+        {
+          "url": "https://healthcareinnovation.tn/biotechpole-sidi-thabet-hci-digital-health-partnership/",
+          "path": "/",
+          "length": 13324
+        },
+        {
+          "url": "https://healthcareinnovation.tn/our-cluster/",
+          "path": "/our-cluster/",
+          "length": 9080
+        },
+        {
+          "url": "https://healthcareinnovation.tn/community/",
+          "path": "/community/",
+          "length": 18900
+        },
+        {
+          "url": "https://healthcareinnovation.tn/experts/",
+          "path": "/experts/",
+          "length": 10046
+        }
+      ],
+      "total_content_length": 51350,
+      "pertinence_score": 9,
+      "reviews": {
+        "competitor_name": "BiotechPole Sidi Thabet & HCI Digital Health",
+        "overall_sentiment": "neutral",
+        "rating_summary": {
+          "google_maps": "3.7/5",
+          "total_reviews_found": 0
+        },
+        "perceived_strengths": [
+          {
+            "point": "No specific strengths mentioned due to lack of reviews",
+            "frequency": "N/A",
+            "quotes": [],
+            "source": "N/A"
+          }
+        ],
+        "perceived_weaknesses": [
+          {
+            "point": "Lack of available information on the website",
+            "frequency": "Often",
+            "quotes": [
+              "Page Non Trouvée - HealthCare Innovation",
+              "Target URL returned error 404: Not Found"
+            ],
+            "source": "website"
+          }
+        ],
+        "common_complaints": [
+          "Lack of information",
+          "Website errors"
+        ],
+        "common_praises": [],
+        "customer_expectations": [
+          "Access to information about BiotechPole Sidi Thabet & HCI Digital Health",
+          "Functional website"
+        ],
+        "opportunities_for_us": [
+          "Provide accurate and accessible information about our services",
+          "Ensure website functionality and user experience"
+        ],
+        "threats_for_us": [
+          "BiotechPole Sidi Thabet & HCI Digital Health may improve their website and information availability"
+        ],
+        "sources_used": [
+          "google_maps",
+          "website"
+        ]
+      }
+    },
+    {
+      "name": "Healthcare Startups in Tunisia",
+      "url": "https://magnitt.com/en-tn/startups/healthcare",
+      "scrape_status": "success",
+      "general": {
+        "description": "The webpage provides information about healthcare startups in Tunisia, including their descriptions, primary industries, headquarters, technologies used, founding dates, and number of funding rounds.",
+        "mission": "",
+        "founded": "",
+        "headquarters": "Tunisia",
+        "team_size": ""
+      },
+      "pricing": {
+        "model": "non_mentionne",
+        "plans": [],
+        "price_range": "",
+        "details": "No pricing information is available on the webpage."
+      },
+      "services": [
+        {
+          "name": "Banet Community",
+          "description": "A Tunisian startup focusing on women's health, providing a media platform on Instagram to empower women and create awareness about important health issues."
+        },
+        {
+          "name": "eSteps Health",
+          "description": "A startup that developed a non-visible device to monitor patients' mobility, allowing real-time updates on health and performances, and enabling experimentation with new medications and lifestyles."
+        },
+        {
+          "name": "Tobba.tn",
+          "description": "A telemedicine platform connecting patients with medical doctors for video consultations and medical analysis."
+        },
+        {
+          "name": "Ahkili",
+          "description": "A mobile mental healthcare booking platform connecting psychologists to patients through telemedicine."
+        },
+        {
+          "name": "Sghartoon",
+          "description": "A platform detecting early dyslexia signs in children using interactive games and providing access to patient records, progress monitoring, and exercise assignment for doctors."
+        }
+      ],
+      "features": [
+        {
+          "name": "Telemedicine",
+          "description": "A feature allowing patients to consult with medical doctors remotely through video consultations."
+        },
+        {
+          "name": "Mobility Monitoring",
+          "description": "A feature enabling the monitoring of patients' mobility using a non-visible device."
+        },
+        {
+          "name": "Mental Healthcare Booking",
+          "description": "A feature connecting psychologists to patients through telemedicine for mental healthcare services."
+        }
+      ],
+      "target_clients": {
+        "segments": [
+          "Healthcare",
+          "Telemedicine",
+          "Mental Health"
+        ],
+        "demographics": "Patients, medical doctors, and healthcare professionals in Tunisia",
+        "geography": "Greater Tunis, specifically neighborhoods such as La Marsa, Les Berges du Lac, Ariana, and El Menzah",
+        "client_type": "B2B2C"
+      },
+      "marketing": {
+        "value_proposition": "Providing innovative healthcare solutions and services to patients and medical professionals in Tunisia",
+        "differentiators": [
+          "Telemedicine services",
+          "Mobility monitoring",
+          "Mental healthcare booking"
+        ],
+        "channels": [
+          "Instagram",
+          "Telemedicine platforms"
+        ],
+        "social_media": {}
+      },
+      "technical": {
+        "platforms": [
+          "Instagram",
+          "Telemedicine platforms"
+        ],
+        "technologies": [
+          "AI & Machine Learning",
+          "Internet of Things (IoT)"
+        ]
+      },
+      "contact": {
+        "email": "",
+        "phone": "",
+        "address": ""
+      },
+      "competitive_analysis": {
+        "strengths": [
+          "Innovative healthcare solutions",
+          "Telemedicine services"
+        ],
+        "weaknesses": [
+          "Limited information about pricing and team size"
+        ],
+        "opportunities": [
+          "Growing demand for telemedicine services in Tunisia"
+        ],
+        "threats": [
+          "Competition from established healthcare providers"
+        ],
+        "perceived_strengths": [
+          {
+            "point": "No perceived strengths found due to lack of reviews",
+            "frequency": "N/A",
+            "quotes": [],
+            "source": "N/A"
+          }
+        ],
+        "perceived_weaknesses": [
+          {
+            "point": "No perceived weaknesses found due to lack of reviews",
+            "frequency": "N/A",
+            "quotes": [],
+            "source": "N/A"
+          }
+        ],
+        "customer_sentiment": "neutral",
+        "opportunities_for_us": [
+          "developing user-friendly healthcare platforms",
+          "providing accurate and reliable healthcare information"
+        ],
+        "threats_for_us": [
+          "established healthcare startups with strong reputations",
+          "competition for funding and resources"
+        ]
+      },
+      "opportunities_for_competitors": [
+        "Expanding telemedicine services to other regions in Tunisia"
+      ],
+      "threats_for_competitors": [
+        "Increasing competition from new healthcare startups"
+      ],
+      "content_summary": "The webpage provides information about healthcare startups in Tunisia, including their descriptions, primary industries, and services. The startups offer innovative solutions such as telemedicine, mobility monitoring, and mental healthcare booking. The webpage also provides information about the target clients, marketing strategies, and technical platforms used by the startups.",
+      "data_completeness_score": 9,
+      "pages_scraped": [
+        {
+          "url": "https://magnitt.com/en-tn/startups/healthcare",
+          "path": "/",
+          "length": 12442
+        },
+        {
+          "url": "https://magnitt.com/en-tn/startups/healthcare",
+          "path": "/en-tn/startups/healthcare",
+          "length": 12440
+        },
+        {
+          "url": "https://magnitt.com/startups/test-company-1-1",
+          "path": "/startups/test-company-1-1",
+          "length": 2026
+        },
+        {
+          "url": "https://magnitt.com/startups/test-company-2-2",
+          "path": "/startups/test-company-2-2",
+          "length": 2026
+        }
+      ],
+      "total_content_length": 28934,
+      "pertinence_score": 8,
+      "reviews": {
+        "competitor_name": "Healthcare Startups in Tunisia",
+        "overall_sentiment": "neutral",
+        "rating_summary": {
+          "google_maps": "N/A",
+          "total_reviews_found": 0
+        },
+        "perceived_strengths": [
+          {
+            "point": "No perceived strengths found due to lack of reviews",
+            "frequency": "N/A",
+            "quotes": [],
+            "source": "N/A"
+          }
+        ],
+        "perceived_weaknesses": [
+          {
+            "point": "No perceived weaknesses found due to lack of reviews",
+            "frequency": "N/A",
+            "quotes": [],
+            "source": "N/A"
+          }
+        ],
+        "common_complaints": [],
+        "common_praises": [],
+        "customer_expectations": [
+          "access to healthcare services",
+          "reliable healthcare information"
+        ],
+        "opportunities_for_us": [
+          "developing user-friendly healthcare platforms",
+          "providing accurate and reliable healthcare information"
+        ],
+        "threats_for_us": [
+          "established healthcare startups with strong reputations",
+          "competition for funding and resources"
+        ],
+        "sources_used": [
+          "google_maps",
+          "website"
+        ]
+      }
+    }
+  ],
+  "reviews_analysis": [
+    {
+      "competitor_name": "BiotechPole Sidi Thabet & HCI Digital Health",
+      "overall_sentiment": "neutral",
+      "rating_summary": {
+        "google_maps": "3.7/5",
+        "total_reviews_found": 0
+      },
+      "perceived_strengths": [
+        {
+          "point": "No specific strengths mentioned due to lack of reviews",
+          "frequency": "N/A",
+          "quotes": [],
+          "source": "N/A"
+        }
+      ],
+      "perceived_weaknesses": [
+        {
+          "point": "Lack of available information on the website",
+          "frequency": "Often",
+          "quotes": [
+            "Page Non Trouvée - HealthCare Innovation",
+            "Target URL returned error 404: Not Found"
+          ],
+          "source": "website"
+        }
+      ],
+      "common_complaints": [
+        "Lack of information",
+        "Website errors"
+      ],
+      "common_praises": [],
+      "customer_expectations": [
+        "Access to information about BiotechPole Sidi Thabet & HCI Digital Health",
+        "Functional website"
+      ],
+      "opportunities_for_us": [
+        "Provide accurate and accessible information about our services",
+        "Ensure website functionality and user experience"
+      ],
+      "threats_for_us": [
+        "BiotechPole Sidi Thabet & HCI Digital Health may improve their website and information availability"
+      ],
+      "sources_used": [
+        "google_maps",
+        "website"
+      ]
+    },
+    {
+      "competitor_name": "Healthcare Startups in Tunisia",
+      "overall_sentiment": "neutral",
+      "rating_summary": {
+        "google_maps": "N/A",
+        "total_reviews_found": 0
+      },
+      "perceived_strengths": [
+        {
+          "point": "No perceived strengths found due to lack of reviews",
+          "frequency": "N/A",
+          "quotes": [],
+          "source": "N/A"
+        }
+      ],
+      "perceived_weaknesses": [
+        {
+          "point": "No perceived weaknesses found due to lack of reviews",
+          "frequency": "N/A",
+          "quotes": [],
+          "source": "N/A"
+        }
+      ],
+      "common_complaints": [],
+      "common_praises": [],
+      "customer_expectations": [
+        "access to healthcare services",
+        "reliable healthcare information"
+      ],
+      "opportunities_for_us": [
+        "developing user-friendly healthcare platforms",
+        "providing accurate and reliable healthcare information"
+      ],
+      "threats_for_us": [
+        "established healthcare startups with strong reputations",
+        "competition for funding and resources"
+      ],
+      "sources_used": [
+        "google_maps",
+        "website"
+      ]
+    },
+    {
+      "competitor_name": "InstaDeep",
+      "overall_sentiment": "neutral",
+      "rating_summary": {
+        "google_maps": "N/A",
+        "total_reviews_found": 0
+      },
+      "perceived_strengths": [],
+      "perceived_weaknesses": [],
+      "common_complaints": [],
+      "common_praises": [],
+      "customer_expectations": [],
+      "opportunities_for_us": [
+        "Lack of reviews provides an opportunity for our startup to establish a strong online presence"
+      ],
+      "threats_for_us": [
+        "InstaDeep's potential to leverage its HealthTech expertise to gain a competitive advantage"
+      ],
+      "sources_used": [
+        "google_maps",
+        "website"
+      ]
+    }
+  ],
+  "market_metrics": {},
+  "opportunities": [],
+  "swot": {
+    "strengths": [
+      {
+        "point": "Differentiating value proposition: Combination of digital tracking through a mobile application with tailored coaching, diverse classes, and a premium customer experience",
+        "detail": "This differentiator creates a barrier to imitation and guides product, marketing, and pricing decisions from the validation phase",
+        "impact": "high",
+        "source": "user_description"
+      },
+      {
+        "point": "Addressing a specific customer pain point: Lack of motivation and personalized support in traditional gyms",
+        "detail": "Clarity on the problem solved makes it possible to formulate testable hypotheses and measure problem-solution fit before any investment",
+        "impact": "high",
+        "source": "user_description"
+      },
+      {
+        "point": "Native market knowledge of HealthTech in Greater Tunis, specifically neighborhoods such as La Marsa, Les Berges du Lac, Ariana, and El Menzah",
+        "detail": "Ground-level understanding accelerates validation — direct access to potential customers, understanding of local usage patterns and cultural barriers to adoption",
+        "impact": "medium",
+        "source": "user_description"
+      },
+      {
+        "point": "Competitive pricing model at 80 to 150 TND per month — disrupting existing offerings",
+        "detail": "The pricing positioning optimizes accessibility for the target segment while creating a direct competitive advantage",
+        "impact": "medium",
+        "source": "user_description"
+      },
+      {
+        "point": "Product vision anchored in the digital trends of the HealthTech sector",
+        "detail": "The technology component matches the expectations of modern consumers and creates a gap that is hard to bridge for traditional players",
+        "impact": "medium",
+        "source": "user_description"
+      }
+    ],
+    "weaknesses": [
+      {
+        "point": "To be confirmed: market validation with real target customers",
+        "detail": "The identified problem, solution, and pricing remain hypotheses — no customer interviews or market tests have yet confirmed willingness to pay in Greater Tunis, specifically neighborhoods such as La Marsa, Les Berges du Lac, Ariana, and El Menzah",
+        "impact": "high",
+        "source": "user_description"
+      },
+      {
+        "point": "Initial credibility challenge against established market players",
+        "detail": "Without pilot customers or track record, convincing early adopters in the HealthTech sector will be difficult — word-of-mouth must be built from scratch",
+        "impact": "high",
+        "source": "user_description"
+      },
+      {
+        "point": "Execution risk of the key differentiator: Combination of digital tracking through a mobile application with tailored coaching, diverse classes, and a premium customer experience",
+        "detail": "The differentiator is compelling on paper but its real implementation — recruitment, processes, costs — has not yet been tested",
+        "impact": "medium",
+        "source": "user_description"
+      },
+      {
+        "point": "Budget of 200,000 TND to deploy in lean validation mode",
+        "detail": "The validation phase must test key hypotheses with minimum resources before committing the main budget to full development",
+        "impact": "medium",
+        "source": "user_description"
+      }
+    ],
+    "opportunities": [
+      {
+        "point": "Exploiting competitor weaknesses in information availability",
+        "detail": "BiotechPole Sidi Thabet & HCI Digital Health's limited information on services and pricing, and Healthcare Startups in Tunisia's lack of transparency about pricing and team size, create an opportunity for our project to provide accurate and accessible information, differentiating ourselves from competitors",
+        "impact": "high",
+        "source": "agent2_scraping",
+        "based_on": "BiotechPole Sidi Thabet & HCI Digital Health and Healthcare Startups in Tunisia",
+        "evidence": "Limited information on services and pricing, and lack of transparency about pricing and team size"
+      },
+      {
+        "point": "Capitalizing on the growing demand for telemedicine services",
+        "detail": "The presence of telemedicine services in Healthcare Startups in Tunisia suggests a growing demand for virtual healthcare services, which our project can leverage by offering virtual fitness coaching and consultation services",
+        "impact": "high",
+        "source": "agent2_scraping",
+        "based_on": "Healthcare Startups in Tunisia",
+        "evidence": "Telemedicine services offered by Healthcare Startups in Tunisia"
+      },
+      {
+        "point": "Developing user-friendly healthcare platforms",
+        "detail": "Customers' complaints about lack of user-friendly healthcare platforms create an opportunity for our project to develop intuitive and accessible digital tracking and mobile applications",
+        "impact": "high",
+        "source": "agent2b_reviews",
+        "based_on": "Healthcare Startups in Tunisia",
+        "evidence": "Customer complaints about lack of user-friendly healthcare platforms"
+      },
+      {
+        "point": "Providing accurate and reliable healthcare information",
+        "detail": "Customers' desire for accurate and reliable healthcare information creates an opportunity for our project to provide high-quality, trustworthy content and services",
+        "impact": "high",
+        "source": "agent2b_reviews",
+        "based_on": "Healthcare Startups in Tunisia",
+        "evidence": "Customer desire for accurate and reliable healthcare information"
+      },
+      {
+        "point": "Establishing partnerships with healthcare institutions",
+        "detail": "Collaborating with existing healthcare institutions in Greater Tunis can provide our project with access to expertise, resources, and networks, enhancing our services and credibility",
+        "impact": "medium",
+        "source": "agent2_scraping",
+        "based_on": "BiotechPole Sidi Thabet & HCI Digital Health",
+        "evidence": "Partnership between BiotechPole Sidi Thabet and HCI Digital Health"
+      },
+      {
+        "point": "Expanding into new regions",
+        "detail": "Our project can capitalize on the growing demand for fitness and wellness services in Greater Tunis by expanding into new regions and neighborhoods",
+        "impact": "medium",
+        "source": "agent2_scraping",
+        "based_on": "BiotechPole Sidi Thabet & HCI Digital Health",
+        "evidence": "Growing demand for fitness and wellness services in Greater Tunis"
+      }
+    ],
+    "threats": [
+      {
+        "point": "Established competitors with strong reputations",
+        "detail": "Competitors like InstaDeep and BiotechPole Sidi Thabet & HCI Digital Health have strong reputations and expertise in the HealthTech sector, posing a threat to our project's market share and credibility",
+        "impact": "high",
+        "source": "agent2b_reviews",
+        "based_on": "InstaDeep and BiotechPole Sidi Thabet & HCI Digital Health",
+        "evidence": "Strong reputation and expertise of competitors"
+      },
+      {
+        "point": "Competition for funding and resources",
+        "detail": "The HealthTech sector in Greater Tunis is competitive, and our project may face challenges in securing funding and resources, which can hinder our growth and development",
+        "impact": "high",
+        "source": "agent2b_reviews",
+        "based_on": "Healthcare Startups in Tunisia",
+        "evidence": "Competition for funding and resources in the HealthTech sector"
+      },
+      {
+        "point": "Limited funding or resources",
+        "detail": "Our project's startup budget of 200,000 TND may be insufficient to cover the costs of establishing a modern gym and developing digital tracking and mobile applications, which can limit our growth and competitiveness",
+        "impact": "high",
+        "source": "both",
+        "based_on": "None",
+        "evidence": "Startup budget of 200,000 TND"
+      },
+      {
+        "point": "BiotechPole Sidi Thabet & HCI Digital Health improving their website and information availability",
+        "detail": "If BiotechPole Sidi Thabet & HCI Digital Health improves their website and information availability, it may reduce the competitive advantage of our project and attract more customers",
+        "impact": "medium",
+        "source": "agent2b_reviews",
+        "based_on": "BiotechPole Sidi Thabet & HCI Digital Health",
+        "evidence": "Customer complaints about lack of information and website errors"
+      },
+      {
+        "point": "Competition from established healthcare innovation platforms",
+        "detail": "Established platforms like BiotechPole Sidi Thabet & HCI Digital Health have more resources, expertise, and market share, making it difficult for new projects to compete and gain traction",
+        "impact": "medium",
+        "source": "agent2_scraping",
+        "based_on": "BiotechPole Sidi Thabet & HCI Digital Health",
+        "evidence": "Partnership between BiotechPole Sidi Thabet and HCI Digital Health"
+      },
+      {
+        "point": "InstaDeep's potential to leverage its HealthTech expertise",
+        "detail": "InstaDeep's expertise in HealthTech can be leveraged to gain a competitive advantage, posing a threat to our project's market share and credibility",
+        "impact": "medium",
+        "source": "agent2b_reviews",
+        "based_on": "InstaDeep",
+        "evidence": "InstaDeep's expertise in HealthTech"
+      }
+    ],
+    "strategic_summary": "The project presents a relevant positioning in the HealthTech sector in Greater Tunis, specifically neighborhoods such as La Marsa, Les Berges du Lac, Ariana, and El Menzah. The competitive analysis reveals real opportunities to exploit quickly. The priority is to validate the key hypotheses with target customers before committing the main resources.",
+    "so_strategies": [
+      "Leverage Differentiating value proposition: Combination of digital tracking through a mobile application with tailored coaching, diverse classes, and a premium customer experience to seize Exploiting competitor weaknesses in information availability — launch a targeted customer validation campaign from month 1",
+      "Use Combination of digital tracking through a mobile application with tailored coaching, diverse classes, and a premium customer experience as a differentiation lever in HealthTech to capture segments dissatisfied with competitors"
+    ],
+    "st_strategies": [
+      "Use Differentiating value proposition: Combination of digital tracking through a mobile application with tailored coaching, diverse classes, and a premium customer experience to build a barrier against Established competitors with strong reputations — document and communicate the project's unique advantages",
+      "Strengthen credibility by showing concrete proof of value before competitors react"
+    ],
+    "wo_strategies": [
+      "Transform To be confirmed: market validation with real target customers into an improvement priority by leveraging Exploiting competitor weaknesses in information availability — partner with existing players to accelerate",
+      "Build strategic partnerships in HealthTech to compensate for limited resources in the initial phase"
+    ],
+    "wt_strategies": [
+      "Minimize exposure to Established competitors with strong reputations by focusing on a niche segment where To be confirmed: market validation with real target customers has less impact",
+      "Adopt a lean strategy: test the MVP with minimal budget before committing major resources"
+    ],
+    "priority_actions": [
+      {
+        "action": "Conduct 10–15 customer interviews in Greater Tunis, specifically neighborhoods such as La Marsa, Les Berges du Lac, Ariana, and El Menzah to validate willingness to pay",
+        "why": "No hypothesis about HealthTech is validated without field testing — absolute priority at idea stage",
+        "timeline": "0-3 months",
+        "swot_link": "To be confirmed: market validation with real target customers"
+      },
+      {
+        "action": "Create a minimal MVP (landing page + prototype) and measure the conversion rate",
+        "why": "Combination of digital tracking through a mobile application with tailored coaching, diverse classes, and a premium customer experience must be tested with real users before any heavy technical investment",
+        "timeline": "0-3 months",
+        "swot_link": "Differentiating value proposition: Combination of digital tracking through a mobile application with tailored coaching, diverse classes, and a premium customer experience"
+      },
+      {
+        "action": "Identify and contact 3 potential partners or distributors in HealthTech",
+        "why": "Partnerships accelerate customer acquisition and compensate for the lack of initial brand awareness",
+        "timeline": "3-6 months",
+        "swot_link": "Exploiting competitor weaknesses in information availability"
+      },
+      {
+        "action": "Launch a differentiating content or digital presence strategy",
+        "why": "Facing Established competitors with strong reputations, visibility is critical to exist",
+        "timeline": "3-6 months",
+        "swot_link": "Established competitors with strong reputations"
+      }
+    ],
+    "overall_score": {
+      "viability": 65,
+      "market_opportunity": 70,
+      "competition_risk": 55,
+      "recommendation": "Further research needed"
+    },
+    "a2a_log": [
+      {
+        "from": "agent2_scraping",
+        "iteration": 1,
+        "question": "For the project \"The project aims to establish a modern gym in Greater Tunis, specifically targeting",
+        "opportunities_count": 3,
+        "threats_count": 2
+      },
+      {
+        "from": "agent2b_reviews",
+        "iteration": 1,
+        "question": "For the project \"The project aims to establish a modern gym in Greater Tunis, specifically targeting",
+        "opportunities_count": 2,
+        "threats_count": 2
+      },
+      {
+        "from": "agent2_scraping",
+        "iteration": 1,
+        "question": "What are the SPECIFIC threats and risks in the HealthTech sector that this project will face?",
+        "opportunities_count": 2,
+        "threats_count": 3
+      },
+      {
+        "from": "agent2b_reviews",
+        "iteration": 1,
+        "question": "What are the SPECIFIC threats and risks in the HealthTech sector that this project will face?",
+        "opportunities_count": 3,
+        "threats_count": 4
+      }
+    ],
+    "generated_at": "2026-03-30T08:10:19.681Z"
+  },
+  "personas": [],
+  "final_report": ""
+}

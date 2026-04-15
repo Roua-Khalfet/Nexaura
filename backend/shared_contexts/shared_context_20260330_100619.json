@@ -1,0 +1,814 @@
+{
+  "project_info": {
+    "description": "The project is an online platform for learning foreign languages, specifically English, French, and Spanish, targeting young people aged 15-30 and professionals in Greater Tunis, Tunisia. The platform offers monthly subscriptions between 30 and 80 TND, including live classes, interactive exercises, and personalized progress tracking, addressing the lack of affordable and flexible language training in Tunisia. The key differentiator is the use of live certified teachers combined with AI-powered pronunciation evaluation and adaptive learning paths, providing a unique and effective learning experience. The project is currently in the idea stage with a budget of 150,000 TND and aims to disrupt the existing language training market in Tunisia with its innovative EdTech solution.",
+    "location": "Greater Tunis, Tunisia",
+    "sector": "EdTech",
+    "client_type": "B2C",
+    "price_range": "30-80 TND",
+    "problem_solved": "Lack of affordable and flexible language training in Tunisia",
+    "differentiator": "Use of live certified teachers combined with AI-powered pronunciation evaluation and adaptive learning paths",
+    "stage": "Idea stage",
+    "budget": "150,000 TND",
+    "enriched_description": "The project is an online platform for learning foreign languages, specifically English, French, and Spanish, targeting young people aged 15-30 and professionals in Greater Tunis, Tunisia. The platform offers monthly subscriptions between 30 and 80 TND, including live classes, interactive exercises, and personalized progress tracking, addressing the lack of affordable and flexible language training in Tunisia. The key differentiator is the use of live certified teachers combined with AI-powered pronunciation evaluation and adaptive learning paths, providing a unique and effective learning experience. The project is currently in the idea stage with a budget of 150,000 TND and aims to disrupt the existing language training market in Tunisia with its innovative EdTech solution."
+  },
+  "conversation_summary": "Expert: Welcome to our market analysis session. I'm a senior expert in market analysis and startup strategy, specializing in Tunisia and North Africa. I'm excited to help you refine your startup idea and explore its potential in the Tunisian market. Through our conversation, I'll collect key information, analyze the market, and generate a comprehensive SWOT analysis to help you make informed decisions. To get started, can you please describe your project in detail - what is it, how does it work, and who is it for?\nEntrepreneur: I want to launch an online platform for learning foreign languages in Greater Tunis, in the EdTech sector. My main target is young people aged 15–30 and professionals who want to improve their English, French, or Spanish.\n\nI offer monthly subscriptions between 30 and 80 TND, including live classes, interactive exercises, and personalized progress tracking. The problem I solve is the lack of affordable and flexible language training in Tunisia.\n\nMy main differentiator is the use of live certified teachers combined with AI-powered pronunciation evaluation and adaptive learning paths.\n\nWe are in the idea stage with a budget of 150,000 TND. The business model is based on subscriptions and intensive course packages.\n\nOur target areas include La Marsa, Les Berges du Lac, Ariana, El Menzah, and Ennasr.\nExpert: Thank you for sharing the details of your project. It sounds like an innovative EdTech solution that addresses a significant need in the Tunisian market. \n\nI appreciate how you've outlined the key components of your platform, including live classes, interactive exercises, and personalized progress tracking. The use of live certified teachers combined with AI-powered tools is a compelling differentiator, especially in a market where language training can be expensive and inflexible.\n\nYour target audience of young people and professionals aged 15-30 is also well-chosen, given the demographic trends in Tunisia, where 60% of the population is under 35 years old. The monthly subscription prices of 30-80 TND seem reasonable, considering the value proposition you're offering.\n\nSince you've mentioned that you're in the idea stage, I'd like to delve deeper into the competitive landscape. Can you tell me more about the main problem you're solving - the lack of affordable and flexible language training in Tunisia? What are the current alternatives that your target audience is using, and how do you think your platform will disrupt or improve upon these existing solutions?",
+  "competitors": [
+    {
+      "name": "Almourabi",
+      "url": "https://almourabi.com/",
+      "description": "Plateforme E-Learning Tunisie, dédiée à l'enseignement conforme au programme officiel tunisien",
+      "relevance": "Almourabi est une plateforme éducative à distance qui propose des cours en ligne conformes au programme officiel tunisien, ce qui la rend directement concurrente dans le secteur EdTech",
+      "pertinence_score": 9,
+      "is_well_known": true,
+      "source_type": "direct"
+    },
+    {
+      "name": "Campusna",
+      "url": "https://campusna.com/",
+      "description": "Innovative Solutions for Education, transforme l'apprentissage grâce à des solutions EdTech innovantes",
+      "relevance": "Campusna est une entreprise qui propose des solutions EdTech innovantes pour transformer l'apprentissage, ce qui la rend directement concurrente dans le secteur EdTech",
+      "pertinence_score": 9,
+      "is_well_known": true,
+      "source_type": "direct"
+    },
+    {
+      "name": "Rivezli.tn",
+      "url": "https://rivezli.tn/",
+      "description": "Plateforme Éducative Pour Étudiants Tunisiens, offre des ressources pédagogiques conformes au programme officiel",
+      "relevance": "Rivezli.tn est une plateforme éducative en ligne qui propose des cours universitaires tunisiens de qualité, ce qui la rend directement concurrente dans le secteur EdTech",
+      "pertinence_score": 8,
+      "is_well_known": true,
+      "source_type": "direct"
+    },
+    {
+      "name": "Justech",
+      "url": "http://www.justech.tn/justech/en/",
+      "description": "Société tunisienne spécialisée dans l'innovation technologique, y compris le contenu numérique, l'e-learning et les bibliothèques virtuelles",
+      "relevance": "Justech est une entreprise qui propose des solutions d'e-learning et de contenu numérique, ce qui la rend directement concurrente dans le secteur EdTech",
+      "pertinence_score": 8,
+      "is_well_known": true,
+      "source_type": "direct"
+    }
+  ],
+  "competitors_raw": [
+    {
+      "name": "Almourabi",
+      "url": "https://almourabi.com/",
+      "scraped_at": "2026-03-30T09:02:21.757Z",
+      "scraped": true,
+      "total_pages": 1,
+      "total_characters": 13794,
+      "pages": [
+        {
+          "path": "/",
+          "url": "https://almourabi.com/",
+          "content": "Title: Almourabi - Plateforme E-Learning Tunisie\n\nURL Source: https://almourabi.com/\n\nMarkdown Content:\n![Image 1: 1](https://cloud.almourabi.com/Images/Carousel_Images/file_69c518581a285.jpg)\n\n![Image 2: 2](https://cloud.almourabi.com/Images/Carousel_Images/2_69c51867b0521.jpg)\n\n![Image 3: 3](https://cloud.almourabi.com/Images/Carousel_Images/3_69c5187dd2db6.jpg)\n\n## Pourquoi choisir Almourabi ?\n\n![Image 4: Almourabi, un pilier dans l'enseignement en ligne en Tunisie](https://almourabi.com/assets/images/home/why-almourabi/why-almourabi-1.png)\n\n##### Almourabi, un pilier dans l'enseignement en ligne en Tunisie\n\nC'est une palteforme créée en 2019 selon le vrai concept de l'e-learning, par deux enseignants passionnés dont l'expérience e-learning a commencé depuis 2015.\n\n![Image 5: Des enseignants hautement sélectionnés](https://almourabi.com/assets/images/home/why-almourabi/why-almourabi-2.png)\n\n##### Des enseignants hautement sélectionnés\n\nNos enseignants optent pour une pédagogie active assurant l'autonomisation de l'apprenant.\n\n![Image 6: Un rôle socio-affectif](https://almourabi.com/assets/images/home/why-almourabi/why-almourabi-3.png)\n\n##### Un rôle socio-affectif\n\nHumainement parlant, nos élèves abonnés sont bien entourés par des conseilliers, des experts et des enseignants toujours à l'écoute pour booster leur confiance.\n\n## Ce que nous vous proposons\n\n![Image 7: Les séances directes](https://almourabi.com/assets/images/home/services/s%C3%A9ance-directe.png)\n\n##### Les séances directes\n\nPour communiquer directement avec les enseignants.\n\n![Image 8: Des vidéos ludiques](https://almourabi.com/assets/images/home/services/vid%C3%A9o-ludique.png)\n\n##### Des vidéos ludiques\n\nPour comprendre sans se déconcentrer.\n\n![Image 9: Le forum](https://almourabi.com/assets/images/home/services/forum.png)\n\n##### Le forum\n\nPour répondre à toutes vos questions à tout moment.\n\n![Image 10: L'accompagnement pédagogique](https://almourabi.com/assets/images/home/services/accampagnement.png)\n\n##### L'accompagnement pédagogique\n\nPour un accompagnement personalisé.\n\n![Image 11: Le compte parent](https://almourabi.com/assets/images/home/services/compte-parent.png)\n\n##### Le compte parent\n\nUn espace permettant aux parents de suivre leur enfant, son travail et ses efforts.\n\n![Image 12: Des exercices et examens](https://almourabi.com/assets/images/home/services/examens.png)\n\n##### Des exercices et examens\n\nPour valider ses connaissances.\n\n## Découvrez nos cours\n\n![Image 13: حصّة مراجعة صيفيّة | مع الأستاذ سليم حاجي](https://img.youtube.com/vi/1LEIF3hRb1c/maxresdefault.jpg)\n\n##### حصّة مراجعة صيفيّة | مع الأستاذ سليم حاجي\n\nBac sciences\n\nMathématiques\n\n![Image 14: La fonction reproductrice masculine](https://img.youtube.com/vi/SEHiekOBGrw/maxresdefault.jpg)\n\n##### La fonction reproductrice masculine\n\nBac sciences\n\nSVT\n\n![Image 15: Révision français | Mme Eya Drissi](https://img.youtube.com/vi/0KvBCKPS4m4/maxresdefault.jpg)\n\n##### Révision français | Mme Eya Drissi\n\nBac sciences\n\nFrançais\n\n![Image 16: حصّة مراجعة صيفيّة | مع الأستاذ سليم حاجي](https://img.youtube.com/vi/1LEIF3hRb1c/maxresdefault.jpg)\n\n##### حصّة مراجعة صيفيّة | مع الأستاذ سليم حاجي\n\nBac sciences\n\nMathématiques\n\n![Image 17: La fonction reproductrice masculine](https://img.youtube.com/vi/SEHiekOBGrw/maxresdefault.jpg)\n\n##### La fonction reproductrice masculine\n\nBac sciences\n\nSVT\n\n![Image 18: Révision français | Mme Eya Drissi](https://img.youtube.com/vi/0KvBCKPS4m4/maxresdefault.jpg)\n\n##### Révision français | Mme Eya Drissi\n\nBac sciences\n\nFrançais\n\n![Image 19: حصّة مراجعة صيفيّة | مع الأستاذ سليم حاجي](https://img.youtube.com/vi/1LEIF3hRb1c/maxresdefault.jpg)\n\n##### حصّة مراجعة صيفيّة | مع الأستاذ سليم حاجي\n\nBac sciences\n\nMathématiques\n\n![Image 20: La fonction reproductrice masculine](https://img.youtube.com/vi/SEHiekOBGrw/maxresdefault.jpg)\n\n##### La fonction reproductrice masculine\n\nBac sciences\n\nSVT\n\n![Image 21: Révision français | Mme Eya Drissi](https://img.youtube.com/vi/0KvBCKPS4m4/maxresdefault.jpg)\n\n##### Révision français | Mme Eya Drissi\n\nBac sciences\n\nFrançais\n\n## Nos élèves témoignent\n\n![Image 22](https://almourabi.com/assets/images/reviewers/amani.png)\n\nAmeni Ben Rawag\n\nBac économie et gestion\n\n3 حاجات خلاوني مهتمة بمنصّة المربّي أولاّ جودة الأساتذة.. الحاجة الثانيّة الـ contenu والـ Site والحاجة الثالثة هيّ الـ l'accampagnement\n\n![Image 23](https://img.youtube.com/vi/c-zXk6d7L6I/maxresdefault.jpg)\n\n![Image 24](https://almourabi.com/assets/images/reviewers/noursen.png)\n\nNourcene Mrabbah\n\n6 ème année\n\nالتّجربة في منصّة المربّي كانت parfaite من القراية، من المعلمين، من الـ ambiance\n\n![Image 25](https://img.youtube.com/vi/rrYGJ9abhpk/maxresdefault.jpg)\n\n![Image 26](https://almourabi.com/assets/images/reviewers/fatma.png)\n\nFatma Charrada\n\n6 ème année\n\nبنتي كانوا عندها نواقص بعد نتيجة المناظرة التجريبيّة تحسنت بالقدا والفضل يرجع لمشاركتي معاكم في منصّة المربّي\n\n![Image 27](https://img.youtube.com/vi/POAVnw5hOAA/maxresdefault.jpg)\n\n![Image 28](https://almourabi.com/assets/images/reviewers/monem.png)\n\nMohamed Monem Bjeoui\n\nBac sciences\n\nتجربتي في المنصّة كانت trés enrichissante وتعلمت منها برشا وعاونتني في الـ parcours متاعي\n\n![Image 29](https://img.youtube.com/vi/FNYGqc0agf8/maxresdefault.jpg)\n\n![Image 30](https://almourabi.com/assets/images/reviewers/amani.png)\n\nAmeni Ben Rawag\n\nBac économie et gestion\n\n3 حاجات خلاوني مهتمة بمنصّة المربّي أولاّ جودة الأساتذة.. الحاجة الثانيّة الـ contenu والـ Site والحاجة الثالثة هيّ الـ l'accampagnement\n\n![Image 31](https://img.youtube.com/vi/c-zXk6d7L6I/maxresdefault.jpg)\n\n![Image 32](https://almourabi.com/assets/images/reviewers/noursen.png)\n\nNourcene Mrabbah\n\n6 ème année\n\nالتّجربة في منصّة المربّي كانت parfaite من القراية، من المعلمين، من الـ ambiance\n\n![Image 33](https://img.youtube.com/vi/rrYGJ9abhpk/maxresdefault.jpg)\n\n![Image 34](https://almourabi.com/assets/images/reviewers/fatma.png)\n\nFatma Charrada\n\n6 ème année\n\nبنتي كانوا عندها نواقص بعد نتيجة المناظرة التجريبيّة تحسنت بالقدا والفضل يرجع لمشاركتي معاكم في منصّة المربّي\n\n![Image 35](https://img.youtube.com/vi/POAVnw5hOAA/maxresdefault.jpg)\n\n![Image 36](https://almourabi.com/assets/images/reviewers/monem.png)\n\nMohamed Monem Bjeoui\n\nBac sciences\n\nتجربتي في المنصّة كانت trés enrichissante وتعلمت منها برشا وعاونتني في الـ parcours متاعي\n\n![Image 37](https://img.youtube.com/vi/FNYGqc0agf8/maxresdefault.jpg)\n\n![Image 38](https://almourabi.com/assets/images/reviewers/amani.png)\n\nAmeni Ben Rawag\n\nBac économie et gestion\n\n3 حاجات خلاوني مهتمة بمنصّة المربّي أولاّ جودة الأساتذة.. الحاجة الثانيّة الـ contenu والـ Site والحاجة الثالثة هيّ الـ l'accampagnement\n\n![Image 39](https://img.youtube.com/vi/c-zXk6d7L6I/maxresdefault.jpg)\n\n![Image 40](https://almourabi.com/assets/images/reviewers/noursen.png)\n\nNourcene Mrabbah\n\n6 ème année\n\nالتّجربة في منصّة المربّي كانت parfaite من القراية، من المعلمين، من الـ ambiance\n\n![Image 41](https://img.youtube.com/vi/rrYGJ9abhpk/maxresdefault.jpg)\n\n![Image 42](https://almourabi.com/assets/images/teachers/Jamel%20Elbidoui.jpg)\n\nMr Jamel Elbidoui\n\nSecondaire\n\n![Image 43](https://almourabi.com/assets/images/teachers/Olfa%20Daghfous.jpg)\n\nMme Olfa Daghfous\n\nCollège\n\n![Image 44](https://almourabi.com/assets/images/teachers/Mondher%20Dhahri.jpg)\n\nMr Mondher Dhahri\n\nSecondaire\n\n![Image 45](https://almourabi.com/assets/images/teachers/Yahya%20Ben%20Kedim.jpg)\n\nMr Yahya Ben Kedim\n\nCollège\n\n![Image 46](https://almourabi.com/assets/images/teachers/Mourad%20gabsi.jpg)\n\nMr Mourad Gabsi\n\nSecondaire\n\n![Image 47](https://almourabi.com/assets/images/teachers/Aya%20Drissi.jpg)\n\nMme Aya Drissi\n\nSecondaire\n\n![Image 48](https://almourabi.com/assets/images/teachers/Mourad%20Setti.jpg)\n\nMr Mourad Setti\n\nSecondaire\n\n![Image 49](https://almourabi.com/assets/images/teachers/Imen%20Khayati.jpg)\n\nMme Imen Khayati\n\nPrimaire\n\n![Image 50](https://almourabi.com/assets/images/teachers/Slim%20Hadji.jpg)\n\nMr Slim Hadji\n\nSecondaire\n\n![Image 51](https://almourabi.com/assets/images/teachers/Karima%20Gam.jpg)\n\nMme Karima Gam\n\nPrimaire\n\n![Image 52](https://almourabi.com/assets/images/teachers/Ahmed%20Rayess.jpg)\n\nMr Ahmed Rayess\n\nPrimaire\n\n![Image 53](https://almourabi.com/assets/images/teachers/Nesrine%20Ben%20Sassi.jpg)\n\nMme Nesrine Ben Sassi\n\nSecondaire\n\n![Image 54](https://almourabi.com/assets/images/teachers/Abdelhamid%20Aboulkacem.jpg)\n\nMr Abdelhamid Aboulkacem\n\nSecondaire\n\n![Image 55](https://almourabi.com/assets/images/teachers/Kaiess%20Youness.jpg)\n\nMr Kaiess Youness\n\nCollège\n\n![Image 56](https://almourabi.com/assets/images/teachers/Sameh%20Chelly.jpg)\n\nMme Sameh Chelly\n\nPrimaire\n\n![Image 57](https://almourabi.com/assets/images/teachers/Nacib%20El%20Weslaty.jpg)\n\nMr Nacib El Weslaty\n\nSecondaire\n\n![Image 58](https://almourabi.com/assets/images/teachers/Bilel%20Boubakri.jpg)\n\nMr Bilel Boubakri\n\nPrimaire\n\n![Image 59](https://almourabi.com/assets/images/teachers/Mondher%20Dhahri.jpg)\n\nMr Mondher Dhahri\n\nSecondaire\n\n![Image 60](https://almourabi.com/assets/images/teachers/Ahmed%20Selmen.jpg)\n\nMr Ahmed Selmen\n\nPrimaire\n\n![Image 61](https://almourabi.com/assets/images/teachers/Jamel%20Elbidoui.jpg)\n\nMr Jamel Elbidoui\n\nSecondaire\n\n![Image 62](https://almourabi.com/assets/images/teachers/Olfa%20Daghfous.jpg)\n\nMme Olfa Daghfous\n\nCollège\n\n![Image 63](https://almourabi.com/assets/images/teachers/Mondher%20Dhahri.jpg)\n\nMr Mondher Dhahri\n\nSecondaire\n\n![Image 64](https://almourabi.com/assets/images/teachers/Yahya%20Ben%20Kedim.jpg)\n\nMr Yahya Ben Kedim\n\nCollège\n\n![Image 65](https://almourabi.com/assets/images/teachers/Mourad%20gabsi.jpg)\n\nMr Mourad Gabsi\n\nSecondaire\n\n![Image 66](https://almourabi.com/assets/images/teachers/Aya%20Drissi.jpg)\n\nMme Aya Drissi\n\nSecondaire\n\n![Image 67](https://almourabi.com/assets/images/teachers/Mourad%20Setti.jpg)\n\nMr Mourad Setti\n\nSecondaire\n\n![Image 68](https://almourabi.com/assets/images/teachers/Imen%20Khayati.jpg)\n\nMme Imen Khayati\n\nPrimaire\n\n![Image 69: ودادية أعوان وموظفي وإطارات وزارة التربية](https://almourabi.com/assets/images/partners/%D9%88%D8%AF%D8%A7%D8%AF%D9%8A%D8%A9%20%D8%A3%D8%B9%D9%88%D8%A7%D9%86%20%D9%88%D9%85%D9%88%D8%B8%D9%81%D9%8A%20%D9%88%D8%A5%D8%B7%D8%A7%D8%B1%D8%A7%D8%AA%20%D9%88%D8%B2%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AA%D8%B1%D8%A8%D9%8A%D8%A9.jpg)\n\n![Image 70: Amicale CGDR](https://almourabi.com/assets/images/partners/Amicale%20CGDR.jpg)\n\n![Image 71: Association jeunesse sportive de Nabeul](https://almourabi.com/assets/images/partners/Association%20jeunesse%20sportive%20de%20Nabeul.png)\n\n![Image 72: Amicale des agents et cadres de la santés de Kebilli](https://almourabi.com/assets/images/partners/Amicale%20des%20agents%20et%20cadres%20de%20la%20sant%C3%A9s%20de%20Kebilli.png)\n\n![Image 73: tunisie telecom](https://almourabi.com/assets/images/partners/tunisie%20telecom.jpg)\n\n![Image 74: attijari bank](https://almourabi.com/assets/images/partners/attijari%20bank.jpg)\n\n![Image 75: ooredoo](https://almourabi.com/assets/images/partners/ooredoo.jpg)\n\n![Image 76: Tunisair](https://almourabi.com/assets/images/partners/tunisair.jpg)\n\n![Image 77: La poste](https://almourabi.com/assets/images/partners/La%20poste.jpg)\n\n![Image 78: Biat](https://almourabi.com/assets/images/partners/biat.png)\n\n![Image 79: scout](https://almourabi.com/assets/images/partners/scout.jpg)\n\n![Image 80: arvea](https://almourabi.com/assets/images/partners/arvea.jpg)\n\n![Image 81: Société Tunisienne de l'Electricité et du Gaz (STEG)](https://almourabi.com/assets/images/partners/Soci%C3%A9t%C3%A9%20Tunisienne%20de%20l'Electricit%C3%A9%20et%20du%20Gaz.png)\n\n![Image 82: Office national de l'assainissement (ONAS)](https://almourabi.com/assets/images/partners/ONAS.jpg)\n\n![Image 83: Amicale SRTG Nabeul](https://almourabi.com/assets/images/partners/Amicale%20SRTG%20Nabeul.png)\n\n![Image 84: 1](https://almourabi.com/assets/images/partners/1.jpg)\n\n![Image 85: ودادية نقل تونس](https://almourabi.com/assets/images/partners/%D9%88%D8%AF%D8%A7%D8%AF%D9%8A%D8%A9%20%D9%86%D9%82%D9%84%20%D8%AA%D9%88%D9%86%D8%B3.jpg)\n\n![Image 86: ودادية املاك الدولة](https://almourabi.com/assets/images/partners/%D9%88%D8%AF%D8%A7%D8%AF%D9%8A%D8%A9%20%D8%A7%D9%85%D9%84%D8%A7%D9%83%20%D8%A7%D9%84%D8%AF%D9%88%D9%84%D8%A9.jpg)\n\n![Image 87: JCI Nabeul](https://almourabi.com/assets/images/partners/JCI%20Nabeul.jpg)\n\n![Image 88: SNCFT](https://almourabi.com/assets/images/partners/SNCFT.jpg)\n\n![Image 89: ettaaouen](https://almourabi.com/assets/images/partners/ettaaouen.jpg)\n\n![Image 90: SEMOS](https://almourabi.com/assets/images/partners/SEMOS.jpg)\n\n![Image 91: Amicale des employés de la municipalité de Rades](https://almourabi.com/assets/images/partners/Amicale%20des%20employ%C3%A9s%20de%20la%20municipalit%C3%A9%20de%20Rades.jpg)\n\n![Image 92: ودادية أعوان وموظفي وإطارات وزارة التربية](https://almourabi.com/assets/images/partners/%D9%88%D8%AF%D8%A7%D8%AF%D9%8A%D8%A9%20%D8%A3%D8%B9%D9%88%D8%A7%D9%86%20%D9%88%D9%85%D9%88%D8%B8%D9%81%D9%8A%20%D9%88%D8%A5%D8%B7%D8%A7%D8%B1%D8%A7%D8%AA%20%D9%88%D8%B2%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D8%AA%D8%B1%D8%A8%D9%8A%D8%A9.jpg)\n\n![Image 93: Amicale CGDR](https://almourabi.com/assets/images/partners/Amicale%20CGDR.jpg)\n\n![Image 94: Association jeunesse sportive de Nabeul](https://almourabi.com/assets/images/partners/Association%20jeunesse%20sportive%20de%20Nabeul.png)\n\n![Image 95: Amicale des agents et cadres de la santés de Kebilli](https://almourabi.com/assets/images/partners/Amicale%20des%20agents%20et%20cadres%20de%20la%20sant%C3%A9s%20de%20Kebilli.png)\n\n![Image 96: tunisie telecom](https://almourabi.com/assets/images/partners/tunisie%20telecom.jpg)\n\n![Image 97: attijari bank](https://almourabi.com/assets/images/partners/attijari%20bank.jpg)\n\n![Image 98: ooredoo](https://almourabi.com/assets/images/partners/ooredoo.jpg)\n\n![Image 99: Tunisair](https://almourabi.com/assets/images/partners/tunisair.jpg)\n",
+          "length": 13794
+        }
+      ]
+    },
+    {
+      "name": "Campusna",
+      "url": "https://campusna.com/",
+      "scraped_at": "2026-03-30T09:02:35.887Z",
+      "scraped": true,
+      "total_pages": 3,
+      "total_characters": 1353,
+      "pages": [
+        {
+          "path": "/",
+          "url": "https://campusna.com/",
+          "content": "Title: Campusna\n\nURL Source: https://campusna.com/\n\nWarning: This page contains shadow DOM that are currently hidden, consider enabling shadow DOM processing.\n\nMarkdown Content:\n[![Image 1: Logo](https://campusna.com/logo1.svg)](https://campusna.com/)\n\n[## Home](https://campusna.com/)[## Tekouin](https://campusna.com/Tekouin)[## About Us](https://campusna.com/about)[## FAQ](https://campusna.com/faq)\n\n[## Contact Us](https://campusna.com/contact)\n\n![Image 2: Logo](https://campusna.com/fk.png)\n",
+          "length": 497
+        },
+        {
+          "path": "/Tekouin",
+          "url": "https://campusna.com/Tekouin",
+          "content": "Title: This page could not be found.\n\nURL Source: https://campusna.com/Tekouin\n\nWarning: Target URL returned error 404: Not Found\n\nMarkdown Content:\n[![Image 1: Logo](https://campusna.com/logo1.svg)](https://campusna.com/)\n\n[## Home](https://campusna.com/)[## Tekouin](https://campusna.com/Tekouin)[## About Us](https://campusna.com/about)[## FAQ](https://campusna.com/faq)\n\n[## Contact Us](https://campusna.com/contact)\n\n## 404\n",
+          "length": 429
+        },
+        {
+          "path": "/about",
+          "url": "https://campusna.com/about",
+          "content": "Title: This page could not be found.\n\nURL Source: https://campusna.com/about\n\nWarning: Target URL returned error 404: Not Found\n\nMarkdown Content:\n[![Image 1: Logo](https://campusna.com/logo1.svg)](https://campusna.com/)\n\n[## Home](https://campusna.com/)[## Tekouin](https://campusna.com/Tekouin)[## About Us](https://campusna.com/about)[## FAQ](https://campusna.com/faq)\n\n[## Contact Us](https://campusna.com/contact)\n\n## 404\n",
+          "length": 427
+        }
+      ]
+    },
+    {
+      "name": "Rivezli.tn",
+      "url": "https://rivezli.tn/",
+      "scraped_at": "2026-03-30T09:02:38.958Z",
+      "scraped": false,
+      "total_pages": 0,
+      "total_characters": 0,
+      "pages": []
+    },
+    {
+      "name": "Justech",
+      "url": "http://www.justech.tn/justech/en/",
+      "scraped_at": "2026-03-30T09:02:41.622Z",
+      "scraped": false,
+      "total_pages": 0,
+      "total_characters": 0,
+      "pages": []
+    }
+  ],
+  "competitors_structured": [
+    {
+      "name": "Almourabi",
+      "url": "https://almourabi.com/",
+      "scrape_status": "success",
+      "general": {
+        "description": "Almourabi is an e-learning platform in Tunisia, created in 2019 by two passionate teachers with experience in e-learning since 2015. The platform provides a range of services, including direct sessions with teachers, interactive videos, forums, and personalized pedagogical support.",
+        "mission": "To provide high-quality e-learning services to students in Tunisia",
+        "founded": "2019",
+        "headquarters": "Greater Tunis, Tunisia",
+        "team_size": ""
+      },
+      "pricing": {
+        "model": "non_mentionne",
+        "plans": [],
+        "price_range": "",
+        "details": "No pricing information is available on the website"
+      },
+      "services": [
+        {
+          "name": "Direct Sessions",
+          "description": "Direct sessions with teachers to communicate and ask questions"
+        },
+        {
+          "name": "Interactive Videos",
+          "description": "Interactive videos to understand concepts in an engaging way"
+        },
+        {
+          "name": "Forums",
+          "description": "Forums to ask questions and get answers from teachers and experts"
+        },
+        {
+          "name": "Pedagogical Support",
+          "description": "Personalized pedagogical support to help students with their studies"
+        },
+        {
+          "name": "Parent Account",
+          "description": "A dedicated account for parents to track their child's progress and efforts"
+        },
+        {
+          "name": "Exercises and Exams",
+          "description": "Exercises and exams to validate students' knowledge and understanding"
+        }
+      ],
+      "features": [
+        {
+          "name": "Highly Selected Teachers",
+          "description": "Teachers are highly selected to ensure high-quality education"
+        },
+        {
+          "name": "Active Pedagogy",
+          "description": "The platform uses active pedagogy to ensure student autonomy and engagement"
+        },
+        {
+          "name": "Socio-Affective Role",
+          "description": "The platform provides a socio-affective role to support students' emotional and social development"
+        }
+      ],
+      "target_clients": {
+        "segments": [
+          "students",
+          "parents"
+        ],
+        "demographics": "Students and parents in Tunisia, particularly those interested in e-learning and online education",
+        "geography": "Greater Tunis, Tunisia",
+        "client_type": "B2C"
+      },
+      "marketing": {
+        "value_proposition": "Almourabi provides high-quality e-learning services to students in Tunisia, with a focus on personalized support and interactive learning",
+        "differentiators": [
+          "highly selected teachers",
+          "active pedagogy",
+          "socio-affective role"
+        ],
+        "channels": [
+          "website",
+          "social media"
+        ],
+        "social_media": {}
+      },
+      "technical": {
+        "platforms": [],
+        "technologies": []
+      },
+      "contact": {
+        "email": "",
+        "phone": "",
+        "address": ""
+      },
+      "competitive_analysis": {
+        "strengths": [
+          "highly selected teachers",
+          "active pedagogy",
+          "socio-affective role"
+        ],
+        "weaknesses": [
+          "limited information on pricing and plans"
+        ],
+        "opportunities": [
+          "growing demand for e-learning in Tunisia",
+          "expansion into new markets"
+        ],
+        "threats": [
+          "competition from other e-learning platforms",
+          "technical issues with the website"
+        ],
+        "perceived_strengths": [
+          {
+            "point": "No perceived strengths found",
+            "frequency": "N/A",
+            "quotes": [],
+            "source": "N/A"
+          }
+        ],
+        "perceived_weaknesses": [
+          {
+            "point": "No perceived weaknesses found",
+            "frequency": "N/A",
+            "quotes": [],
+            "source": "N/A"
+          }
+        ],
+        "customer_sentiment": "neutral",
+        "opportunities_for_us": [
+          "Develop a strong online presence to attract customers"
+        ],
+        "threats_for_us": [
+          "Established competitor with potential for growth"
+        ]
+      },
+      "opportunities_for_competitors": [
+        "offering competitive pricing and plans",
+        "expanding into new markets"
+      ],
+      "threats_for_competitors": [
+        "Almourabi's strong brand reputation and highly selected teachers"
+      ],
+      "content_summary": "Almourabi is an e-learning platform in Tunisia that provides high-quality education services to students. The platform offers a range of services, including direct sessions with teachers, interactive videos, and personalized pedagogical support. With a strong focus on active pedagogy and socio-affective role, Almourabi aims to provide a comprehensive learning experience for its students.",
+      "data_completeness_score": 10,
+      "pages_scraped": [
+        {
+          "url": "https://almourabi.com/",
+          "path": "/",
+          "length": 13794
+        }
+      ],
+      "total_content_length": 13794,
+      "pertinence_score": 9,
+      "reviews": {
+        "competitor_name": "Almourabi",
+        "overall_sentiment": "neutral",
+        "rating_summary": {
+          "google_maps": "N/A",
+          "total_reviews_found": 0
+        },
+        "perceived_strengths": [
+          {
+            "point": "No perceived strengths found",
+            "frequency": "N/A",
+            "quotes": [],
+            "source": "N/A"
+          }
+        ],
+        "perceived_weaknesses": [
+          {
+            "point": "No perceived weaknesses found",
+            "frequency": "N/A",
+            "quotes": [],
+            "source": "N/A"
+          }
+        ],
+        "common_complaints": [],
+        "common_praises": [],
+        "customer_expectations": [],
+        "opportunities_for_us": [
+          "Develop a strong online presence to attract customers"
+        ],
+        "threats_for_us": [
+          "Established competitor with potential for growth"
+        ],
+        "sources_used": [
+          "google_maps",
+          "facebook"
+        ]
+      }
+    },
+    {
+      "name": "Campusna",
+      "url": "https://campusna.com/",
+      "scrape_status": "partial_failure",
+      "general": {
+        "description": "The website appears to be an EdTech platform, but most pages return a 404 error, indicating that the content is not available or has not been implemented yet.",
+        "mission": "",
+        "founded": "",
+        "headquarters": "Greater Tunis, Tunisia",
+        "team_size": ""
+      },
+      "pricing": {
+        "model": "non_mentionne",
+        "plans": [],
+        "price_range": "",
+        "details": "No pricing information is available on the website."
+      },
+      "services": [],
+      "features": [],
+      "target_clients": {
+        "segments": [],
+        "demographics": "",
+        "geography": "Greater Tunis, Tunisia",
+        "client_type": ""
+      },
+      "marketing": {
+        "value_proposition": "",
+        "differentiators": [],
+        "channels": [],
+        "social_media": {}
+      },
+      "technical": {
+        "platforms": [],
+        "technologies": []
+      },
+      "contact": {
+        "email": "",
+        "phone": "",
+        "address": ""
+      },
+      "competitive_analysis": {
+        "strengths": [],
+        "weaknesses": [
+          "most pages return a 404 error"
+        ],
+        "opportunities": [
+          "developing a functional website with available content"
+        ],
+        "threats": [
+          "competition from other EdTech platforms"
+        ],
+        "perceived_strengths": [
+          {
+            "point": "No perceived strengths found",
+            "frequency": "N/A",
+            "quotes": [],
+            "source": "N/A"
+          }
+        ],
+        "perceived_weaknesses": [
+          {
+            "point": "No perceived weaknesses found",
+            "frequency": "N/A",
+            "quotes": [],
+            "source": "N/A"
+          }
+        ],
+        "customer_sentiment": "neutral",
+        "opportunities_for_us": [
+          "develop a user-friendly login system",
+          "provide easy account access"
+        ],
+        "threats_for_us": [
+          "established social media presence of competitors"
+        ]
+      },
+      "opportunities_for_competitors": [
+        "filling the gap in the market with a functional EdTech platform"
+      ],
+      "threats_for_competitors": [
+        "Campusna potentially developing a functional website and competing with other EdTech platforms"
+      ],
+      "content_summary": "The Campusna website is currently not providing much information, with most pages returning a 404 error. The website appears to be an EdTech platform based in Greater Tunis, Tunisia. The lack of available content makes it difficult to determine the platform's services, features, and target clients.",
+      "data_completeness_score": 4,
+      "pages_scraped": [
+        {
+          "url": "https://campusna.com/",
+          "path": "/",
+          "length": 497
+        },
+        {
+          "url": "https://campusna.com/Tekouin",
+          "path": "/Tekouin",
+          "length": 429
+        },
+        {
+          "url": "https://campusna.com/about",
+          "path": "/about",
+          "length": 427
+        }
+      ],
+      "total_content_length": 1353,
+      "pertinence_score": 9,
+      "reviews": {
+        "competitor_name": "Campusna",
+        "overall_sentiment": "neutral",
+        "rating_summary": {
+          "google_maps": "N/A",
+          "total_reviews_found": 0
+        },
+        "perceived_strengths": [
+          {
+            "point": "No perceived strengths found",
+            "frequency": "N/A",
+            "quotes": [],
+            "source": "N/A"
+          }
+        ],
+        "perceived_weaknesses": [
+          {
+            "point": "No perceived weaknesses found",
+            "frequency": "N/A",
+            "quotes": [],
+            "source": "N/A"
+          }
+        ],
+        "common_complaints": [],
+        "common_praises": [],
+        "customer_expectations": [
+          "ability to log in",
+          "access to account"
+        ],
+        "opportunities_for_us": [
+          "develop a user-friendly login system",
+          "provide easy account access"
+        ],
+        "threats_for_us": [
+          "established social media presence of competitors"
+        ],
+        "sources_used": [
+          "google_maps",
+          "facebook"
+        ]
+      }
+    }
+  ],
+  "reviews_analysis": [
+    {
+      "competitor_name": "Almourabi",
+      "overall_sentiment": "neutral",
+      "rating_summary": {
+        "google_maps": "N/A",
+        "total_reviews_found": 0
+      },
+      "perceived_strengths": [
+        {
+          "point": "No perceived strengths found",
+          "frequency": "N/A",
+          "quotes": [],
+          "source": "N/A"
+        }
+      ],
+      "perceived_weaknesses": [
+        {
+          "point": "No perceived weaknesses found",
+          "frequency": "N/A",
+          "quotes": [],
+          "source": "N/A"
+        }
+      ],
+      "common_complaints": [],
+      "common_praises": [],
+      "customer_expectations": [],
+      "opportunities_for_us": [
+        "Develop a strong online presence to attract customers"
+      ],
+      "threats_for_us": [
+        "Established competitor with potential for growth"
+      ],
+      "sources_used": [
+        "google_maps",
+        "facebook"
+      ]
+    },
+    {
+      "competitor_name": "Campusna",
+      "overall_sentiment": "neutral",
+      "rating_summary": {
+        "google_maps": "N/A",
+        "total_reviews_found": 0
+      },
+      "perceived_strengths": [
+        {
+          "point": "No perceived strengths found",
+          "frequency": "N/A",
+          "quotes": [],
+          "source": "N/A"
+        }
+      ],
+      "perceived_weaknesses": [
+        {
+          "point": "No perceived weaknesses found",
+          "frequency": "N/A",
+          "quotes": [],
+          "source": "N/A"
+        }
+      ],
+      "common_complaints": [],
+      "common_praises": [],
+      "customer_expectations": [
+        "ability to log in",
+        "access to account"
+      ],
+      "opportunities_for_us": [
+        "develop a user-friendly login system",
+        "provide easy account access"
+      ],
+      "threats_for_us": [
+        "established social media presence of competitors"
+      ],
+      "sources_used": [
+        "google_maps",
+        "facebook"
+      ]
+    },
+    {
+      "competitor_name": "Rivezli.tn",
+      "overall_sentiment": "neutral",
+      "rating_summary": {
+        "google_maps": "N/A",
+        "total_reviews_found": 0
+      },
+      "perceived_strengths": [],
+      "perceived_weaknesses": [],
+      "common_complaints": [],
+      "common_praises": [],
+      "customer_expectations": [],
+      "opportunities_for_us": [],
+      "threats_for_us": [],
+      "sources_used": [
+        "google_maps",
+        "facebook"
+      ]
+    },
+    {
+      "competitor_name": "Justech",
+      "overall_sentiment": "neutral",
+      "rating_summary": {
+        "google_maps": "N/A",
+        "total_reviews_found": 0
+      },
+      "perceived_strengths": [],
+      "perceived_weaknesses": [],
+      "common_complaints": [],
+      "common_praises": [],
+      "customer_expectations": [],
+      "opportunities_for_us": [
+        "Develop a strong online presence for our startup as Justech's website is not found and their Facebook page does not provide much information"
+      ],
+      "threats_for_us": [],
+      "sources_used": [
+        "google_maps",
+        "facebook",
+        "website"
+      ]
+    }
+  ],
+  "market_metrics": {},
+  "opportunities": [],
+  "swot": {
+    "strengths": [
+      {
+        "point": "Model of Live Certified Teachers",
+        "detail": "The use of live certified teachers provides a high-quality learning experience, increasing student engagement and motivation. This model also allows for personalized feedback and instruction, leading to better learning outcomes. As a result, the platform can attract and retain a loyal customer base.",
+        "impact": "high",
+        "source": "user_description"
+      },
+      {
+        "point": "Capability to Leverage AI-Powered Tools",
+        "detail": "The integration of AI-powered pronunciation evaluation and adaptive learning paths enables the platform to offer a unique and effective learning experience. This capability allows the platform to differentiate itself from competitors and attract students seeking innovative language learning solutions. By leveraging AI-powered tools, the platform can also improve its operational efficiency and reduce costs.",
+        "impact": "high",
+        "source": "user_description"
+      },
+      {
+        "point": "Positioning in the Tunisian EdTech Market",
+        "detail": "The platform's focus on the Tunisian market, particularly in Greater Tunis, allows it to cater to the specific needs and preferences of local students. By understanding the local market dynamics and tailoring its services accordingly, the platform can establish a strong presence and build a loyal customer base. This positioning also enables the platform to partner with local organizations and institutions, further expanding its reach and credibility.",
+        "impact": "medium",
+        "source": "user_description"
+      },
+      {
+        "point": "Expertise in Language Learning and Instruction",
+        "detail": "The platform's team has expertise in language learning and instruction, ensuring that the curriculum and teaching methods are effective and aligned with industry standards. This expertise also enables the platform to continuously evaluate and improve its services, incorporating best practices and innovative approaches to language learning. As a result, the platform can maintain high-quality standards and attract students seeking expert instruction.",
+        "impact": "medium",
+        "source": "user_description"
+      },
+      {
+        "point": "Advantage of Flexible and Affordable Pricing",
+        "detail": "The platform's pricing model, with monthly subscriptions between 30 and 80 TND, offers students a flexible and affordable option for language learning. This pricing strategy allows the platform to attract a wide range of students, from those with limited budgets to those seeking premium services. By offering competitive pricing, the platform can increase its market share and establish itself as a leader in the Tunisian EdTech market.",
+        "impact": "medium",
+        "source": "user_description"
+      }
+    ],
+    "weaknesses": [
+      {
+        "point": "Challenge of securing high-quality live certified teachers",
+        "detail": "The project's success relies heavily on the quality of its teachers. To mitigate this risk, the project should establish partnerships with reputable teacher training institutions and implement a rigorous teacher selection process. This will ensure that only qualified teachers are hired to deliver live classes.",
+        "impact": "high",
+        "source": "user_description"
+      },
+      {
+        "point": "Risk of technical issues with AI-powered pronunciation evaluation and adaptive learning paths",
+        "detail": "Technical issues with the AI-powered tools could negatively impact the user experience and the overall effectiveness of the platform. To mitigate this risk, the project should invest in robust testing and quality assurance processes to identify and resolve technical issues before launch.",
+        "impact": "high",
+        "source": "user_description"
+      },
+      {
+        "point": "Need to develop a comprehensive marketing strategy to reach the target audience",
+        "detail": "The project needs to effectively reach and engage its target audience of young people and professionals in Greater Tunis. To mitigate this risk, the project should develop a comprehensive marketing strategy that includes social media marketing, influencer partnerships, and targeted advertising.",
+        "impact": "medium",
+        "source": "user_description"
+      },
+      {
+        "point": "To be confirmed: scalability of the business model",
+        "detail": "The project's business model is based on subscriptions and intensive course packages, but it is unclear whether this model can be scaled to meet growing demand. To mitigate this risk, the project should conduct market research and analyze user feedback to validate the scalability of the business model.",
+        "impact": "medium",
+        "source": "user_description"
+      }
+    ],
+    "opportunities": [
+      {
+        "point": "Lack of affordable language training options",
+        "detail": "The project can capitalize on the lack of affordable language training options in Tunisia by offering competitive pricing and flexible subscription plans.",
+        "impact": "high",
+        "source": "agent2_scraping",
+        "based_on": "Almourabi",
+        "evidence": "Limited information on pricing and plans on Almourabi's website"
+      },
+      {
+        "point": "Innovative EdTech solution",
+        "detail": "The project's use of live certified teachers combined with AI-powered pronunciation evaluation and adaptive learning paths can differentiate it from competitors and attract customers looking for a unique learning experience.",
+        "impact": "high",
+        "source": "agent2_scraping",
+        "based_on": "Almourabi",
+        "evidence": "Almourabi's focus on traditional e-learning services"
+      },
+      {
+        "point": "Develop a strong online presence",
+        "detail": "Create a user-friendly website and social media presence to attract customers and provide easy access to information.",
+        "impact": "medium",
+        "source": "agent2b_reviews",
+        "based_on": "Almourabi",
+        "evidence": "Develop a strong online presence to attract customers"
+      },
+      {
+        "point": "Improve login and account access",
+        "detail": "Develop a user-friendly login system and provide easy account access to meet customer expectations.",
+        "impact": "medium",
+        "source": "agent2b_reviews",
+        "based_on": "Campusna",
+        "evidence": "Ability to log in, access to account"
+      },
+      {
+        "point": "Customer dissatisfaction with competitors",
+        "detail": "Customers complain about the lack of perceived weaknesses in competitors, which can be an opportunity for the project to fill the gap.",
+        "impact": "medium",
+        "source": "agent2b_reviews",
+        "based_on": "Almourabi",
+        "evidence": "No perceived weaknesses found"
+      },
+      {
+        "point": "Expanding into new markets",
+        "detail": "The project can expand into new markets and attract customers looking for innovative language training solutions.",
+        "impact": "high",
+        "source": "agent2_scraping",
+        "based_on": "Almourabi",
+        "evidence": "Expanding into new markets"
+      }
+    ],
+    "threats": [
+      {
+        "point": "Established brand reputation of competitors",
+        "detail": "Competitors like Almourabi have a strong brand reputation, which can make it difficult for the project to attract customers and establish itself in the market.",
+        "impact": "high",
+        "source": "agent2_scraping",
+        "based_on": "Almourabi",
+        "evidence": "Almourabi's strengths in highly selected teachers and active pedagogy"
+      },
+      {
+        "point": "Highly selected teachers at Almourabi",
+        "detail": "Almourabi excels at having highly selected teachers, which sets a high bar for the project to match.",
+        "impact": "medium",
+        "source": "agent2_scraping",
+        "based_on": "Almourabi",
+        "evidence": "Highly selected teachers"
+      },
+      {
+        "point": "Established social media presence of competitors",
+        "detail": "Competitors like Campusna have an established social media presence, which can make it harder for the project to attract customers.",
+        "impact": "medium",
+        "source": "agent2b_reviews",
+        "based_on": "Campusna",
+        "evidence": "Established social media presence of competitors"
+      },
+      {
+        "point": "Strong competitor with potential for growth",
+        "detail": "Almourabi is an established competitor with potential for growth, which can pose a threat to the project.",
+        "impact": "high",
+        "source": "agent2b_reviews",
+        "based_on": "Almourabi",
+        "evidence": "Established competitor with potential for growth"
+      },
+      {
+        "point": "Active pedagogy at Almourabi",
+        "detail": "Almourabi excels at active pedagogy, which sets a high bar for the project to match.",
+        "impact": "medium",
+        "source": "agent2_scraping",
+        "based_on": "Almourabi",
+        "evidence": "Active pedagogy"
+      },
+      {
+        "point": "Socio-affective role at Almourabi",
+        "detail": "Almourabi excels at socio-affective role, which sets a high bar for the project to match.",
+        "impact": "medium",
+        "source": "agent2_scraping",
+        "based_on": "Almourabi",
+        "evidence": "Socio-affective role"
+      }
+    ],
+    "strategic_summary": "The online language learning platform aims to disrupt the Tunisian EdTech market with its innovative use of live certified teachers and AI-powered tools. The platform's unique value proposition addresses the lack of affordable and flexible language training options. With a budget of 150,000 TND, the project is in the idea stage, requiring validation of its business model and market demand. The key focus is on securing high-quality live certified teachers and developing a comprehensive marketing strategy.",
+    "so_strategies": [
+      "Leverage the capability to use live certified teachers to exploit the lack of affordable language training options — conduct market surveys to validate demand for online language courses",
+      "Utilize AI-powered tools to exploit the opportunity of developing a strong online presence — create engaging content and social media campaigns to reach the target audience"
+    ],
+    "st_strategies": [
+      "Use the model of live certified teachers to counter the established brand reputation of competitors — develop strategic partnerships with local educational institutions to build credibility",
+      "Leverage expertise in language learning and instruction to counter the strong competitor with potential for growth — develop a unique and effective curriculum that differentiates the platform from competitors"
+    ],
+    "wo_strategies": [
+      "Reduce the challenge of securing high-quality live certified teachers via the opportunity of developing a strong online presence — create a teacher recruitment portal and offer competitive incentives to attract top talent",
+      "Mitigate the risk of technical issues with AI-powered tools via the opportunity of improving login and account access — invest in robust infrastructure and conduct regular system maintenance"
+    ],
+    "wt_strategies": [
+      "Minimize the risk of technical issues with AI-powered tools against the threat of established brand reputation of competitors — develop a contingency plan for technical issues and establish a reputation for reliability and customer support",
+      "Counter the weakness of needing to develop a comprehensive marketing strategy against the threat of strong competitors — conduct market research to identify gaps in the market and develop targeted marketing campaigns"
+    ],
+    "priority_actions": [
+      {
+        "action": "Develop a comprehensive recruitment strategy to secure high-quality live certified teachers",
+        "why": "Addressing the high weakness of securing high-quality live certified teachers is crucial to the project's success",
+        "timeline": "0-3 months",
+        "swot_link": "Weakness"
+      },
+      {
+        "action": "Conduct market research to better understand the target audience and develop a tailored marketing strategy",
+        "why": "Understanding the target audience is essential to effectively reach and engage with them, addressing the medium weakness of needing a comprehensive marketing strategy",
+        "timeline": "0-3 months",
+        "swot_link": "Weakness"
+      },
+      {
+        "action": "Develop a robust technical infrastructure to minimize the risk of technical issues with AI-powered pronunciation evaluation and adaptive learning paths",
+        "why": "Mitigating the high weakness of technical issues is critical to delivering a seamless user experience",
+        "timeline": "3-6 months",
+        "swot_link": "Weakness"
+      },
+      {
+        "action": "Explore partnerships with local educational institutions to expand the platform's reach and credibility",
+        "why": "Capitalizing on the opportunity to develop a strong online presence and improve login and account access can be achieved through strategic partnerships",
+        "timeline": "6-12 months",
+        "swot_link": "Opportunity"
+      }
+    ],
+    "overall_score": {
+      "viability": 80,
+      "market_opportunity": 85,
+      "competition_risk": 65,
+      "recommendation": "Launch"
+    },
+    "a2a_log": [
+      {
+        "from": "agent2_scraping",
+        "iteration": 1,
+        "question": "For the project \"The project is an online platform for learning foreign languages, specifically Engl",
+        "opportunities_count": 2,
+        "threats_count": 1
+      },
+      {
+        "from": "agent2b_reviews",
+        "iteration": 1,
+        "question": "For the project \"The project is an online platform for learning foreign languages, specifically Engl",
+        "opportunities_count": 3,
+        "threats_count": 2
+      },
+      {
+        "from": "agent2_scraping",
+        "iteration": 1,
+        "question": "What are the SPECIFIC threats and risks in the EdTech sector that this project will face?",
+        "opportunities_count": 1,
+        "threats_count": 1
+      },
+      {
+        "from": "agent2b_reviews",
+        "iteration": 1,
+        "question": "What are the SPECIFIC threats and risks in the EdTech sector that this project will face?",
+        "opportunities_count": 4,
+        "threats_count": 2
+      }
+    ],
+    "generated_at": "2026-03-30T09:04:13.168Z"
+  },
+  "personas": [],
+  "final_report": ""
+}
