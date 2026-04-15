@@ -112,7 +112,6 @@ startup-analyzer/
 
 ```bash
 git clone https://github.com/your-username/startup-analyzer.git
-cd startup-analyzer
 ```
 
 ---
@@ -162,8 +161,13 @@ npm run dev
 Créer un fichier `.env` à la racine :
 
 ```env
-GOOGLE_API_KEY=your_google_api_key_here
-GROQ_API_KEY=your_groq_api_key_here
+VITE_GROQ_API_KEY=your_groq_api_key_here
+VITE_SERPER_API_KEY=your_serper_api_key
+VITE_VLLM_API_KEY=your-vllm_api_key   
+HF_TOKEN=your_hugging_face_token            
+
+DJANGO_SECRET_KEY=your_django_api_key
+DJANGO_PORT=8000
 ```
 
 ---
@@ -206,7 +210,6 @@ Projet réalisé dans le cadre d'un projet académique en Intelligence Artificie
 ## 💡 Améliorations futures
 
 - Intégration de plus de sources de données
-- Amélioration des modèles LLM
 - Dashboard interactif avancé
 - Déploiement cloud
 
