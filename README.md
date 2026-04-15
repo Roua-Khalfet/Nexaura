@@ -1,45 +1,97 @@
-# 🚀 Startup Analyzer
+# 🚀 MarketScout
 
-## 📌 Description du projet
+> Axe **Analyse Concurrentielle & Marketing** du projet **Startify**
 
-**Startup Analyzer** est une application intelligente dédiée à l'**analyse concurrentielle des projets startup** d'un point de vue marketing.
-
-Le système permet d'explorer un projet, d'analyser ses concurrents et de générer automatiquement des insights stratégiques grâce à des agents intelligents basés sur des modèles LLM.
+**MarketScout** est un système multi-agents intelligent dédié à l'analyse concurrentielle des startups d'un point de vue marketing. À partir d'une simple description de projet, il génère automatiquement une étude concurrentielle complète : SWOT, personas, actions prioritaires, présentation et pitch audio.
 
 ---
 
 ## 🎯 Objectifs
 
-- 🔍 Analyser un projet et son marché
-- 🏢 Identifier et afficher les concurrents
-- 📊 Générer une analyse SWOT individuelle
-- 🔀 Créer un SWOT combiné (multi-concurrents)
-- ⚡ Définir des actions prioritaires
-- 🧠 Générer des personas clients
-- 📑 Produire une présentation automatique (PPT/PDF)
+- 🔍 Identifier et analyser les concurrents directs et indirects
+- 📊 Générer un SWOT individuel + un SWOT combiné multi-concurrents
+- ⚡ Définir des stratégies dérivées et des actions prioritaires
+- 🧠 Créer des personas clients complets avec image générée par IA
+- 📑 Exporter l'étude en présentation PowerPoint ou PDF
 - 🎤 Générer un pitch audio du projet
 
 ---
 
 ## 🧠 Architecture Multi-Agents
 
-Le projet repose sur une architecture **multi-agents intelligents** orchestrée via LangChain :
+Le système repose sur un **pipeline séquentiel** d'agents intelligents orchestrés via LangChain, avec deux modules transversaux.
 
-| Agent | Rôle |
-|---|---|
-| `agent1_search.js` | Recherche d'informations sur le projet |
-| `agent2_scraper.js` | Extraction de données web |
-| `agent2b_reviews.js` | Analyse des avis clients |
-| `agent3_swot.js` | Génération de l'analyse SWOT |
-| `agent4_persona.js` | Génération des personas clients |
-| `chatbot_agent.js` | Interaction utilisateur |
-| `llmRouter.js` | Routage intelligent entre les modèles LLM |
-| `sharedContext.js` | Contexte partagé entre les agents |
+### 🔄 Pipeline séquentiel
 
-### 🤖 Modèles LLM utilisés
+```
+[Utilisateur] ──► chatbot_agent
+                      │
+                      ▼
+               sharedContext.js  ◄─── (stockage partagé de tous les agents)
+                      │
+                      ▼
+               agent1_search
+               Scraping des URLs concurrents via Serper API
+                      │
+          ┌───────────┴───────────┐
+          ▼                       ▼
+   agent2_scraper          agent2b_reviews
+   Contenu des pages       Avis, ratings, commentaires
+   (LLM Groq)              (Jina / Groq / Serper)
+   Maps, réseaux sociaux
+          └───────────┬───────────┘
+                      ▼
+               agent3_swot
+               SWOT individuel + SWOT combiné
+               Stratégies dérivées + Actions prioritaires
+               Affichage des concurrents directs
+                      │
+                      ▼
+            Dashboard · PPT/PDF · Pitch audio
+```
 
-- **LLaMA 3.1 Instruct** — Génération précise et structurée
-- **LLaMA 3.3 Versatile** — Analyse créative et synthèse
+### 🔀 Modules indépendants
+
+| Module | Rôle | Déclenchement |
+|---|---|---|
+| `agent4_persona.js` | Génère une fiche persona complète + image via Hugging Face API | Indépendant — depuis la description initiale uniquement |
+| `llmRouter.js` | Bascule automatiquement entre LLaMA 3.1 et LLaMA 3.3 si une clé API atteint sa limite | Transversal — actif sur tous les agents |
+| `sharedContext.js` | Base de données en mémoire partagée — stocke toutes les données extraites par les agents 1, 2, 2b et 3 | Persistant tout au long du pipeline |
+
+---
+
+## 🤖 Détail des agents
+
+### `chatbot_agent.js`
+Dialogue avec l'utilisateur pour collecter toutes les informations nécessaires à l'analyse : secteur, cible, différenciateurs, budget, zone géographique, etc.
+
+### `agent1_search.js`
+Utilise l'API **Serper** pour effectuer des recherches Google et extraire les URLs des concurrents potentiels. C'est le point d'entrée du pipeline de collecte de données.
+
+### `agent2_scraper.js`
+Scrape le contenu textuel des pages web identifiées par agent1. Utilise **LLM Groq** pour extraire et structurer les informations pertinentes (offre, positionnement, prix...).
+
+### `agent2b_reviews.js`
+En **parallèle** de agent2, il scrape les avis clients, notes et commentaires depuis les réseaux sociaux, Google Maps et autres plateformes. Utilise **Jina + Groq + Serper**.
+
+### `agent3_swot.js`
+Agrège toutes les données des agents précédents pour produire :
+- Un **SWOT individuel** par concurrent
+- Un **SWOT combiné** croisant le projet avec ses concurrents
+- Des **stratégies dérivées** actionnables
+- Un **plan d'actions prioritaires**
+- Une **liste des concurrents directs** illustrée
+
+### `agent4_persona.js`
+Fonctionne **indépendamment** du pipeline principal. À partir de la description initiale du projet, génère :
+- Une fiche persona complète (démographie, motivations, comportements, douleurs)
+- Une **image du persona** générée via l'API **Hugging Face**
+
+### `llmRouter.js`
+Gère le routage intelligent entre les modèles LLM. Si une clé Groq atteint sa limite de débit, il bascule automatiquement vers une autre clé ou un autre modèle (LLaMA 3.1 ↔ LLaMA 3.3).
+
+### `sharedContext.js`
+Joue le rôle de **base de données en mémoire partagée** entre tous les agents. Stocke les URLs, le contenu scrappé, les avis et les analyses pour éviter les appels redondants.
 
 ---
 
@@ -47,11 +99,14 @@ Le projet repose sur une architecture **multi-agents intelligents** orchestrée 
 
 | Couche | Technologie |
 |---|---|
-| Frontend | React.js (Vite) |
+| Frontend | React.js + Vite |
 | Backend | Django + Django REST Framework |
 | Orchestration IA | LangChain |
-| LLM | LLaMA 3.1 / 3.3 via Groq API |
-| Génération PPT | pptxgenjs |
+| LLM | LLaMA 3.1 Instruct + LLaMA 3.3 Versatile via Groq API |
+| Recherche web | Serper API |
+| Scraping enrichi | Jina AI |
+| Génération d'images | Hugging Face API |
+| Export présentation | pptxgenjs |
 | Export PDF | jsPDF + html2canvas |
 
 ---
@@ -76,14 +131,14 @@ startup-analyzer/
 │
 ├── src/
 │   ├── agents/
-│   │   ├── agent1_search.js
-│   │   ├── agent2_scraper.js
-│   │   ├── agent2b_reviews.js
-│   │   ├── agent3_swot.js
-│   │   ├── agent4_persona.js
-│   │   ├── chatbot_agent.js
-│   │   ├── llmRouter.js
-│   │   └── sharedContext.js
+│   │   ├── agent1_search.js       # Recherche URLs via Serper
+│   │   ├── agent2_scraper.js      # Scraping contenu pages (Groq)
+│   │   ├── agent2b_reviews.js     # Scraping avis (Jina + Groq + Serper)
+│   │   ├── agent3_swot.js         # SWOT + stratégies + actions
+│   │   ├── agent4_persona.js      # Persona + image (Hugging Face)
+│   │   ├── chatbot_agent.js       # Dialogue utilisateur
+│   │   ├── llmRouter.js           # Routage LLaMA 3.1 ↔ 3.3
+│   │   └── sharedContext.js       # Contexte partagé
 │   ├── components/
 │   ├── hooks/
 │   └── utils/
@@ -104,14 +159,17 @@ startup-analyzer/
 - Python 3.10+
 - Node.js 18+
 - Clé API Groq
-- Clé API Google (Serper ou Custom Search)
+- Clé API Serper
+- Token Hugging Face
 
 ---
 
 ### 1. Cloner le projet
 
 ```bash
-git clone https://github.com/your-username/startup-analyzer.git
+git clone https://github.com/Roua-Khalfet/Startify.git
+cd Startify
+git checkout MarketScout
 ```
 
 ---
@@ -121,10 +179,9 @@ git clone https://github.com/your-username/startup-analyzer.git
 ```bash
 cd backend
 
-# Créer l'environnement virtuel
+# Créer et activer l'environnement virtuel
 python -m venv venv
 
-# Activer l'environnement
 # Windows :
 venv\Scripts\activate
 # Mac/Linux :
@@ -136,10 +193,8 @@ pip install -r requirements.txt
 # Générer une clé Django secrète
 python -c "import secrets; print(secrets.token_urlsafe(50))"
 
-# Appliquer les migrations
+# Appliquer les migrations et lancer
 python manage.py migrate
-
-# Lancer le serveur
 python manage.py runserver 8000
 ```
 
@@ -162,42 +217,31 @@ Créer un fichier `.env` à la racine :
 
 ```env
 VITE_GROQ_API_KEY=your_groq_api_key_here
-VITE_SERPER_API_KEY=your_serper_api_key
-VITE_VLLM_API_KEY=your-vllm_api_key   
-HF_TOKEN=your_hugging_face_token            
+VITE_SERPER_API_KEY=your_serper_api_key_here
+VITE_VLLM_API_KEY=your_vllm_api_key_here
+HF_TOKEN=your_hugging_face_token_here
 
-DJANGO_SECRET_KEY=your_django_api_key
+DJANGO_SECRET_KEY=your_django_secret_key
 DJANGO_PORT=8000
 ```
 
 ---
 
-## 🚀 Fonctionnalités détaillées
+## 💡 Exemple de prompt
 
-### 🔍 Analyse concurrentielle automatique
-Identification et affichage des concurrents directs et indirects du projet sur le marché cible.
-
-### 📊 Génération SWOT
-Analyse des Forces, Faiblesses, Opportunités et Menaces du projet ainsi qu'un **SWOT combiné** croisant le projet avec ses concurrents.
-
-### ⚡ Actions prioritaires
-Recommandations stratégiques générées automatiquement à partir de l'analyse SWOT.
-
-### 🧠 Personas clients
-Création de profils utilisateurs cibles détaillés (démographie, motivations, comportements).
-
-### 📑 Génération de présentation
-Export automatique de l'analyse complète en **PowerPoint** ou **PDF** prêt à partager.
-
-### 🎤 Pitch audio
-Synthèse vocale du pitch projet pour une présentation orale du résultat.
+> Je souhaite ouvrir une salle de sport moderne dans le Grand Tunis, dans le secteur du fitness et du bien-être physique. Ma cible principale sont les jeunes de 18-35 ans et les actifs qui cherchent un accompagnement sérieux. Je propose des abonnements mensuels entre 80 et 150 TND incluant du coaching personnalisé et des cours collectifs variés. Mon différenciateur principal est la combinaison d'un suivi digital via application mobile avec un coaching sur mesure. Nous sommes en phase d'idée avec un budget de démarrage de 200 000 TND.
 
 ---
 
-## 💡 Exemple de prompt
+## 🚀 Fonctionnalités
 
-Je souhaite ouvrir une salle de sport moderne dans le Grand Tunis, dans le secteur du fitness et du bien-être physique. Ma cible principale sont les jeunes de 18-35 ans et les actifs qui cherchent un accompagnement sérieux. Je propose des abonnements mensuels entre 80 et 150 TND incluant du coaching personnalisé et des cours collectifs variés. Le problème que je résous est le manque de motivation et d'accompagnement personnalisé dans les salles de sport classiques de Tunis. Mon différenciateur principal est la combinaison d'un suivi digital via application mobile avec un coaching sur mesure, des cours variés et une expérience client premium — ce que très peu de salles proposent actuellement dans le Grand Tunis. Nous sommes en phase d'idée avec un budget de démarrage de 200 000 TND. Le modèle économique repose sur des abonnements mensuels et des packages coaching. Notre zone de chalandise cible les quartiers de Tunis comme La Marsa, Les Berges du Lac, Ariana et El Menzah où le pouvoir d'achat est plus élevé et la demande en fitness est forte.
+**Analyse concurrentielle automatique** — identification des concurrents via recherche web intelligente avec filtrage par marché cible.
 
+**SWOT & Stratégies** — analyse des Forces, Faiblesses, Opportunités et Menaces, SWOT combiné inter-concurrents, et plan d'actions prioritaires classées par impact.
+
+**Personas clients** — fiche persona détaillée (démographie, motivations, comportements, douleurs) avec portrait généré par IA.
+
+**Export & Pitch** — présentation PowerPoint ou PDF générée automatiquement, et synthèse vocale du pitch projet.
 
 ---
 
@@ -209,8 +253,8 @@ Projet réalisé dans le cadre d'un projet académique en Intelligence Artificie
 
 ## 💡 Améliorations futures
 
-- Intégration de plus de sources de données
-- Dashboard interactif avancé
+- Intégration de plus de sources de données (LinkedIn, TripAdvisor...)
+- Dashboard interactif avancé avec comparaison en temps réel
 - Déploiement cloud
 
 ---
