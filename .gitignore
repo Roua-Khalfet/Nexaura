@@ -46,3 +46,6 @@ Data/*
 
 # Nested repository metadata
 complianceguard/.git/
+
+# Neo4j database data and logs
+.neo4j/

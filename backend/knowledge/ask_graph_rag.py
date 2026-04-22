@@ -3,6 +3,7 @@ import json
 import os
 import re
 import subprocess
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -148,18 +149,22 @@ class AzureChat:
         if explicit:
             return [explicit]
 
-        base = self.api_base.rstrip("/") + "/openai/v1/chat/completions"
         candidates: list[str] = []
+        
+        # 1. Standard Azure OpenAI Deployment format (Most likely for provided key)
+        deployment_base = self.api_base.rstrip("/") + f"/openai/deployments/{self.model}/chat/completions"
         if self.api_version:
-            candidates.append(base + "?" + urllib.parse.urlencode({"api-version": self.api_version}))
+            candidates.append(deployment_base + "?" + urllib.parse.urlencode({"api-version": self.api_version}))
+        
+        # 2. Generic OpenAI-compatible format (Kimi / Proxies)
+        candidates.append(self.api_base.rstrip("/") + "/v1/chat/completions")
+        candidates.append(self.api_base.rstrip("/") + "/openai/v1/chat/completions")
 
+        # 3. Versioned variants
         for version in ["2024-10-21", "2024-08-01-preview", "2024-06-01", "2024-05-01-preview"]:
-            url = base + "?" + urllib.parse.urlencode({"api-version": version})
+            url = deployment_base + "?" + urllib.parse.urlencode({"api-version": version})
             if url not in candidates:
                 candidates.append(url)
-
-        if base not in candidates:
-            candidates.append(base)
 
         return candidates
 
@@ -242,65 +247,156 @@ class GroqChat:
         ]
 
         max_tokens = int(os.getenv("GROQ_MAX_COMPLETION_TOKENS", "1024"))
-
-        # Preferred path: stream chunks exactly as Groq SDK docs.
-        completion = client.chat.completions.create(
-            model=self.model,
-            messages=messages,
-            temperature=0.1,
-            max_completion_tokens=max_tokens,
-            top_p=1,
-            stream=True,
-            stop=None,
-        )
-
-        parts: list[str] = []
-        for chunk in completion:
+        
+        last_error = ""
+        # Retry loop for 429
+        for attempt in range(2):
             try:
-                delta = chunk.choices[0].delta.content or ""
-            except Exception:  # noqa: BLE001
-                delta = ""
-            if delta:
-                parts.append(delta)
+                # Preferred path: stream chunks exactly as Groq SDK docs.
+                completion = client.chat.completions.create(
+                    model=self.model,
+                    messages=messages,
+                    temperature=0.1,
+                    max_completion_tokens=max_tokens,
+                    top_p=1,
+                    stream=True,
+                    stop=None,
+                )
 
-        content = "".join(parts).strip()
-        if content:
-            return content
+                parts: list[str] = []
+                for chunk in completion:
+                    try:
+                        delta = chunk.choices[0].delta.content or ""
+                    except Exception:  # noqa: BLE001
+                        delta = ""
+                    if delta:
+                        parts.append(delta)
 
-        # Fallback to non-streaming if streaming yields no text.
-        non_stream = client.chat.completions.create(
-            model=self.model,
-            messages=messages,
-            temperature=0.1,
-            max_completion_tokens=max_tokens,
-            top_p=1,
-            stream=False,
-            stop=None,
+                content = "".join(parts).strip()
+                if content:
+                    return content
+
+                # Fallback to non-streaming if streaming yields no text.
+                non_stream = client.chat.completions.create(
+                    model=self.model,
+                    messages=messages,
+                    temperature=0.1,
+                    max_completion_tokens=max_tokens,
+                    top_p=1,
+                    stream=False,
+                    stop=None,
+                )
+                fallback_content = ""
+                if getattr(non_stream, "choices", None):
+                    choice = non_stream.choices[0]
+                    message = getattr(choice, "message", None)
+                    fallback_content = getattr(message, "content", "") or ""
+
+                if fallback_content.strip():
+                    return fallback_content.strip()
+            except Exception as e:
+                last_error = str(e)
+                if "429" in last_error or "rate_limit" in last_error.lower():
+                    if attempt == 0:
+                        time.sleep(2)
+                        continue
+                raise
+
+        raise RuntimeError(f"Groq synthesis failed: {last_error}")
+
+
+class OpenRouterChat:
+    def __init__(self, timeout_seconds: int) -> None:
+        self.api_key = os.getenv("OPENROUTER_API_KEY", "").strip()
+        self.model = os.getenv("OPENROUTER_MODEL", "qwen/qwen-2.5-72b-instruct").strip()
+        self.timeout_seconds = timeout_seconds
+
+    def is_enabled(self) -> bool:
+        return bool(self.api_key)
+
+    def complete(self, system_prompt: str, user_prompt: str) -> str:
+        if not self.is_enabled():
+            raise RuntimeError("OpenRouter is not configured (OPENROUTER_API_KEY).")
+
+        payload = {
+            "model": self.model,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            "temperature": 0.1,
+        }
+        status, data = http_json(
+            "POST",
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json",
+                "HTTP-Referer": "http://localhost:3000",
+                "X-Title": "ComplianceGuard",
+            },
+            payload=payload,
+            timeout=self.timeout_seconds,
         )
-        fallback_content = ""
-        if getattr(non_stream, "choices", None):
-            choice = non_stream.choices[0]
-            message = getattr(choice, "message", None)
-            fallback_content = getattr(message, "content", "") or ""
+        if status < 300 and isinstance(data, dict):
+            choices = data.get("choices")
+            if isinstance(choices, list) and choices:
+                return str(choices[0].get("message", {}).get("content", "")).strip()
 
-        if not fallback_content.strip():
-            raise RuntimeError("Groq empty content from both stream and non-stream responses.")
+        raise RuntimeError(f"OpenRouter error {status}: {data}")
 
-        return fallback_content.strip()
+
+class VLLMChat:
+    def __init__(self, timeout_seconds: int) -> None:
+        self.api_key = os.getenv("NEXT_PUBLIC_VLLM_API_KEY", "").strip()
+        self.base_url = os.getenv("VLLM_BASE_URL", "http://localhost:8000/v1").strip()
+        self.model = os.getenv("VLLM_MODEL", "local-model").strip()
+        self.timeout_seconds = timeout_seconds
+
+    def is_enabled(self) -> bool:
+        return bool(self.api_key and self.base_url)
+
+    def complete(self, system_prompt: str, user_prompt: str) -> str:
+        if not self.is_enabled():
+            raise RuntimeError("vLLM is not configured (VLLM_BASE_URL / NEXT_PUBLIC_VLLM_API_KEY).")
+
+        payload = {
+            "model": self.model,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            "temperature": 0.1,
+        }
+        status, data = http_json(
+            "POST",
+            self.base_url.rstrip("/") + "/chat/completions",
+            headers={"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"},
+            payload=payload,
+            timeout=self.timeout_seconds,
+        )
+        if status < 300 and isinstance(data, dict):
+            choices = data.get("choices")
+            if isinstance(choices, list) and choices:
+                return str(choices[0].get("message", {}).get("content", "")).strip()
+
+        raise RuntimeError(f"vLLM error {status}: {data}")
 
 
 def resolve_llm_provider(provider_arg: str) -> str:
     lowered = provider_arg.strip().lower()
-    if lowered in {"azure", "groq"}:
+    if lowered in {"azure", "groq", "openrouter", "vllm"}:
         return lowered
 
     env_pref = os.getenv("LLM_PROVIDER", "").strip().lower()
-    if env_pref in {"azure", "groq"}:
+    if env_pref in {"azure", "groq", "openrouter", "vllm"}:
         return env_pref
 
     if os.getenv("GROQ_API_KEY", "").strip():
         return "groq"
-    return "azure"
+    if os.getenv("AZURE_API_KEY", "").strip():
+        return "azure"
+    return "openrouter"
 
 
 def embed_query(ollama_url: str, model: str, question: str, timeout: int) -> list[float]:
@@ -1302,10 +1398,22 @@ def run_local_graph_rag(
     )
 
     resolved_provider = resolve_llm_provider(llm_provider)
+    
+    # NEW: Multi-provider fallback orchestration
+    providers = []
     if resolved_provider == "groq":
-        chat = GroqChat(timeout_seconds=resolved_timeout)
+        providers = [GroqChat(resolved_timeout), AzureChat(resolved_timeout), OpenRouterChat(resolved_timeout)]
+    elif resolved_provider == "azure":
+        providers = [AzureChat(resolved_timeout), GroqChat(resolved_timeout), OpenRouterChat(resolved_timeout)]
+    elif resolved_provider == "openrouter":
+        providers = [OpenRouterChat(resolved_timeout), AzureChat(resolved_timeout), GroqChat(resolved_timeout)]
     else:
-        chat = AzureChat(timeout_seconds=resolved_timeout)
+        # Default sequence
+        providers = [GroqChat(resolved_timeout), AzureChat(resolved_timeout), OpenRouterChat(resolved_timeout)]
+
+    chat_backends = [p for p in providers if p.is_enabled()]
+    if not chat_backends:
+        chat_backends = [AzureChat(resolved_timeout)] # Final attempt if nothing enabled
 
     resolved_qdrant_url = (qdrant_url or os.getenv("QDRANT_URL", "http://localhost:6333")).strip()
     resolved_qdrant_api_key = (qdrant_api_key or os.getenv("QDRANT_API_KEY", "")).strip()
@@ -1460,19 +1568,34 @@ def run_local_graph_rag(
     if show_debug_context:
         metadata["debug_prompt_user"] = user_prompt
 
-    try:
-        answer = chat.complete(system_prompt, user_prompt)
-    except Exception as error:  # noqa: BLE001
+    answer = None
+    last_llm_error = "No LLM backends available"
+    source_type = "GraphRAG Local"
+
+    for chat in chat_backends:
+        try:
+            answer = chat.complete(system_prompt, user_prompt)
+            if answer:
+                # Store which provider succeeded
+                metadata["provider"] = chat.__class__.__name__.replace("Chat", "")
+                break
+        except Exception as error:  # noqa: BLE001
+            last_llm_error = str(error)
+            # If 429 specifically or generic failure, try next
+            continue
+
+    if not answer:
         if strict_llm:
-            raise
+            raise RuntimeError(f"All LLMs failed: {last_llm_error}")
+        
         answer = fallback_human_answer(
             question=question,
             source_cards=source_cards,
             response_mode=resolved_response_mode,
             language_code=language_code,
-            llm_error=str(error),
+            llm_error=last_llm_error,
         )
-        metadata["llm_error"] = str(error)
+        metadata["llm_error"] = last_llm_error
 
     sources: list[str] = []
     for card in source_cards[:effective_max_sources]:

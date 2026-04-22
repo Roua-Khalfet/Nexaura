@@ -98,11 +98,121 @@ def is_simple_greeting_or_non_question(text: str) -> bool:
 
     words = text_lower.split()
     if len(words) < 3:
-        if any(greeting in text_lower for greeting in greetings):
-            return True
-        if "?" not in text and len(text_lower) < 20:
-            return True
+        return True
     return False
+
+
+# ============================================================================
+# LLM Multi-Provider Fallback Helper
+# ============================================================================
+
+def call_llm_with_fallback(system_prompt, user_prompt, temperature=0.3):
+    """
+    Tries multiple LLM providers in sequence to ensure reliability:
+    1. Groq (Fastest)
+    2. Azure (Premium)
+    3. OpenRouter (Wide catalog)
+    4. vLLM (Local/Dedicated)
+    """
+    import httpx as http_req
+    import time
+    import re
+
+    # 1. GROQ
+    groq_key = os.environ.get("GROQ_API_KEY") or os.environ.get("NEXT_PUBLIC_GROQ_API_KEY")
+    if groq_key:
+        for model in ["llama-3.1-8b-instant", "llama-3.3-70b-versatile"]:
+            try:
+                resp = http_req.post(
+                    "https://api.groq.com/openai/v1/chat/completions",
+                    headers={"Authorization": f"Bearer {groq_key}", "Content-Type": "application/json"},
+                    json={
+                        "model": model,
+                        "messages": [
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": user_prompt},
+                        ],
+                        "temperature": temperature,
+                        "max_tokens": 4000,
+                    },
+                    timeout=20
+                )
+                if resp.status_code == 200:
+                    return resp.json()["choices"][0]["message"]["content"]
+                if resp.status_code == 429: # Rate limit
+                    time.sleep(2)
+                    continue
+            except Exception as e:
+                print(f"Groq ({model}) failed: {e}")
+                continue
+
+    # 2. AZURE (Kimi-K2.5 or defined in config)
+    azure_key = os.environ.get("AZURE_API_KEY")
+    azure_base = os.environ.get("AZURE_API_BASE")
+    if azure_key and azure_base:
+        try:
+            # Azure OpenAI format usually requires deployment name in URL
+            # but Kimi-K2.5 in .env seems to be handled via standard OpenAI-compatible API if not specified
+            # We'll try the chat completion endpoint
+            endpoint = f"{azure_base.rstrip('/')}/openai/deployments/gpt-4o/chat/completions?api-version=2024-05-01-preview"
+            if "kimi" in os.environ.get("model", "").lower():
+                # If it's a custom Azure-compatible endpoint like Kimi
+                endpoint = f"{azure_base.rstrip('/')}/v1/chat/completions"
+            
+            resp = http_req.post(
+                endpoint,
+                headers={"api-key": azure_key, "Content-Type": "application/json", "Authorization": f"Bearer {azure_key}"},
+                json={
+                    "messages": [
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                    "temperature": temperature,
+                },
+                timeout=30
+            )
+            if resp.status_code == 200:
+                return resp.json()["choices"][0]["message"]["content"]
+        except Exception as e:
+            print(f"Azure LLM failed: {e}")
+
+    # 3. OPENROUTER
+    or_key = os.environ.get("OPENROUTER_API_KEY")
+    or_model = os.environ.get("OPENROUTER_MODEL") or "qwen/qwen3-next-80b-a3b-instruct:free"
+    if or_key:
+        try:
+            resp = http_req.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {or_key}",
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": "http://localhost:3000",
+                    "X-Title": "ComplianceGuard"
+                },
+                json={
+                    "model": or_model,
+                    "messages": [
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                    "temperature": temperature,
+                },
+                timeout=40
+            )
+            if resp.status_code == 200:
+                return resp.json()["choices"][0]["message"]["content"]
+        except Exception as e:
+            print(f"OpenRouter failed: {e}")
+
+    # 4. vLLM (Local / Dedicated)
+    vllm_key = os.environ.get("NEXT_PUBLIC_VLLM_API_KEY")
+    if vllm_key:
+        # Assuming vLLM is at a standard location if not specified, 
+        # or we might need an environment variable for its base URL.
+        # Since it's missing, let's assume it's at a placeholder for now or skip.
+        pass
+
+    raise RuntimeError("Tous les fournisseurs LLM ont échoué ou ne sont pas configurés.")
 
 # ============================================================================
 # Advanced Conformité Scoring System
@@ -785,8 +895,8 @@ def chat_knowledge(request):
     try:
         answer, sources, metadata = graphrag_func(
             enriched_question,
-            llm_provider="azure",
-            timeout=45,
+            llm_provider="auto",
+            timeout=resolved_timeout if 'resolved_timeout' in locals() else 60,
             top_k=4,
             max_sources=6,
         )
@@ -1040,3 +1150,229 @@ def get_suggestions(request):
     )
     
     return Response({"questions": questions})
+
+
+# ============================================================================
+# Contextual Quiz Generation
+# ============================================================================
+
+@api_view(["POST"])
+def generate_questionnaire(request):
+    """Génère un questionnaire de conformité contextuel et professionnel."""
+    try:
+        project = request.data
+        description = project.get("description", "")
+        sector = project.get("sector", "")
+        capital = project.get("capital", "")
+        budget = project.get("budget", "")
+        type_societe = project.get("typeSociete", "SUARL")
+        location = project.get("location", "Tunisie")
+        activite = project.get("activite", "")
+
+        capital_display = capital or budget or "non précisé"
+
+        system_prompt = "Tu es un expert juridique tunisien spécialisé dans l'audit de conformité. Réponds uniquement en JSON valide."
+        user_prompt = f"""CONTEXTE DU PROJET:
+- Description: {description}
+- Secteur: {sector}
+- Activité: {activite}
+- Localisation: {location}
+- Capital/Budget: {capital_display} TND
+- Forme juridique: {type_societe}
+
+MISSION: Génère un QUESTIONNAIRE D'AUDIT DE CONFORMITÉ composé de exactement 10 questions précises.
+Ce questionnaire doit servir à affiner le score de conformité du projet après lecture de sa description.
+
+RÈGLES:
+1. Les questions doivent être techniques et professionnelles (pas de ton ludique).
+2. Les questions doivent porter sur des obligations réelles : registres obligatoires, protection des données (INPDP), fiscalité, droit du travail, assurances spécifiques, licences sectorielles.
+3. Chaque question doit proposer des options structurées. La première option (index 0) doit être celle qui représente la conformité totale.
+4. Poids (weight): 3=Critique/Bloquant, 2=Important, 1=Recommandé.
+
+Réponds UNIQUEMENT en JSON valide, un tableau de 10 objets avec cette structure exacte:
+[
+  {{
+    "id": 1,
+    "question": "Libellé de la question technique",
+    "options": ["Option conforme", "Option partielle", "Option non conforme", "Je ne sais pas"],
+    "compliantAnswer": 0,
+    "explanation": "Détail juridique expliquant l'obligation",
+    "article": "Référence à la loi ou au décret tunisien",
+    "category": "Domaine (ex: Fiscalité, Protection des données...)",
+    "weight": 3
+  }}
+]"""
+
+        content = call_llm_with_fallback(system_prompt, user_prompt)
+        
+        # Extract JSON from response
+        import re
+        import json
+        json_match = re.search(r'\[[\s\S]*\]', content)
+        if json_match:
+            questions = json.loads(json_match.group())
+        else:
+            questions = json.loads(content)
+
+        # Sanity check and defaults
+        for i, q in enumerate(questions):
+            q.setdefault("id", i + 1)
+            q.setdefault("compliantAnswer", 0)
+            q.setdefault("weight", 2)
+            if "options" not in q or len(q["options"]) < 2:
+                q["options"] = ["Oui, totalement conforme", "Partiellement", "Non, pas encore", "Je ne sais pas"]
+
+        return Response({"questions": questions})
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return Response(
+            {"error": str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+
+# ============================================================================
+# MarketScout Endpoints
+# ============================================================================
+
+import json
+import base64
+import httpx as http_requests
+
+CONTEXTS_DIR = PROJECT_ROOT / "backend" / "saved_contexts"
+CONTEXTS_DIR.mkdir(parents=True, exist_ok=True)
+
+
+@api_view(["POST"])
+def save_context(request):
+    """Sauvegarde le contexte MarketScout en fichier JSON."""
+    try:
+        context_data = request.data
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        project_name = (
+            context_data.get("project_info", {})
+            .get("description", "projet")[:30]
+            .replace(" ", "_")
+        )
+        filename = f"context_{project_name}_{timestamp}.json"
+        filepath = CONTEXTS_DIR / filename
+
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(context_data, f, ensure_ascii=False, indent=2)
+
+        return Response({
+            "success": True,
+            "filename": filename,
+            "filepath": str(filepath),
+            "size": filepath.stat().st_size,
+        })
+    except Exception as e:
+        return Response(
+            {"error": str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+
+@api_view(["GET"])
+def download_context(request, filename=None):
+    """Télécharge un fichier de contexte MarketScout."""
+    from django.http import FileResponse
+
+    try:
+        if filename:
+            filepath = CONTEXTS_DIR / filename
+        else:
+            # Download most recent
+            files = sorted(CONTEXTS_DIR.glob("context_*.json"), reverse=True)
+            if not files:
+                return Response(
+                    {"error": "Aucun fichier de contexte trouvé"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+            filepath = files[0]
+
+        if not filepath.exists():
+            return Response(
+                {"error": "Fichier non trouvé"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        return FileResponse(
+            open(filepath, "rb"),
+            content_type="application/json",
+            as_attachment=True,
+            filename=filepath.name,
+        )
+    except Exception as e:
+        return Response(
+            {"error": str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+
+@api_view(["GET"])
+def list_contexts(request):
+    """Liste les fichiers de contexte sauvegardés."""
+    try:
+        files = sorted(CONTEXTS_DIR.glob("context_*.json"), reverse=True)
+        return Response([
+            {
+                "filename": f.name,
+                "size": f.stat().st_size,
+                "created_at": datetime.fromtimestamp(f.stat().st_ctime).isoformat(),
+            }
+            for f in files[:20]
+        ])
+    except Exception as e:
+        return Response(
+            {"error": str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+
+@api_view(["POST"])
+def generate_avatar(request):
+    """Proxy HuggingFace pour générer des avatars de persona."""
+    try:
+        prompt = request.data.get("prompt", "")
+        seed = request.data.get("seed", 42)
+
+        hf_token = os.environ.get("HF_TOKEN", "")
+        if not hf_token:
+            return Response(
+                {"error": "HF_TOKEN non configuré"},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+
+        models = [
+            "stabilityai/stable-diffusion-xl-base-1.0",
+            "Lykon/dreamshaper-8",
+            "runwayml/stable-diffusion-v1-5",
+        ]
+
+        for model in models:
+            try:
+                resp = http_requests.post(
+                    f"https://api-inference.huggingface.co/models/{model}",
+                    headers={"Authorization": f"Bearer {hf_token}"},
+                    json={"inputs": prompt, "parameters": {"seed": seed}},
+                    timeout=30,
+                )
+                if resp.status_code == 200:
+                    img_b64 = base64.b64encode(resp.content).decode("utf-8")
+                    data_url = f"data:image/png;base64,{img_b64}"
+                    return Response({"dataUrl": data_url})
+            except Exception:
+                continue
+
+        return Response(
+            {"error": "Tous les modèles HF ont échoué"},
+            status=status.HTTP_503_SERVICE_UNAVAILABLE,
+        )
+    except Exception as e:
+        return Response(
+            {"error": str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )

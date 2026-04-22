@@ -1,80 +1,38 @@
 'use client'
 
-import { useState, useCallback } from 'react'
-import { Brain, ChevronRight, Trophy, RotateCcw, CheckCircle2, XCircle, Sparkles, AlertTriangle, ArrowRight } from 'lucide-react'
+import { useState, useCallback, useEffect } from 'react'
+import { Brain, ChevronRight, Trophy, RotateCcw, CheckCircle2, XCircle, Sparkles, AlertTriangle, ArrowRight, Loader2, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
+import { generateContextualQuiz, type QuizQuestion } from '@/lib/api'
 
-interface QuizQuestion {
-  id: number
-  question: string
-  options: string[]
-  /** Index of the "compliant" answer. null means scoring depends on weights. */
-  compliantAnswer: number
-  explanation: string
-  article: string
-  category: string
-  /** Weight of this question in the final score (1-3) */
-  weight: number
-}
-
-const QUESTION_POOL: QuizQuestion[] = [
-  // ── Startup Act eligibility ──
+/* ── Fallback generic pool (used when no project data) ── */
+const GENERIC_POOL: QuizQuestion[] = [
   { id: 1, question: "Votre entreprise a-t-elle été créée il y a moins de 8 ans ?", options: ["Oui", "Non", "Pas encore créée", "Je ne sais pas"], compliantAnswer: 0, explanation: "Pour obtenir le label Startup, l'entreprise doit avoir été constituée depuis moins de 8 ans.", article: "Loi n° 2018-20, Art. 3 al. 1", category: "Startup Act", weight: 3 },
   { id: 2, question: "Votre modèle économique repose-t-il sur l'innovation technologique ?", options: ["Oui, fortement", "Partiellement", "Non, activité traditionnelle", "Je ne sais pas"], compliantAnswer: 0, explanation: "Le caractère innovant et le fort potentiel de croissance sont des critères obligatoires du label.", article: "Loi n° 2018-20, Art. 3 al. 2", category: "Startup Act", weight: 3 },
-  { id: 3, question: "Votre entreprise est-elle indépendante (pas une filiale ou issue d'une restructuration) ?", options: ["Oui, totalement indépendante", "Non, c'est une filiale", "Issue d'une restructuration", "Je ne sais pas"], compliantAnswer: 0, explanation: "L'entreprise ne doit pas être une filiale ou résulter d'une opération de restructuration.", article: "Loi n° 2018-20, Art. 3 al. 3", category: "Startup Act", weight: 2 },
-  { id: 4, question: "Le siège social de votre entreprise est-il situé en Tunisie ?", options: ["Oui", "Non", "En cours de domiciliation", "Je ne sais pas"], compliantAnswer: 0, explanation: "Le siège social doit être en Tunisie pour bénéficier du label Startup Act.", article: "Loi n° 2018-20, Art. 3 al. 4", category: "Startup Act", weight: 2 },
-  { id: 5, question: "Le capital de votre société est-il détenu à au moins 2/3 par des personnes physiques ?", options: ["Oui (≥ 66%)", "Non", "Je ne connais pas la répartition", "Non applicable (auto-entrepreneur)"], compliantAnswer: 0, explanation: "Le capital doit être détenu à 2/3 par des personnes physiques ou des fonds d'investissement.", article: "Loi n° 2018-20, Art. 3 al. 5", category: "Startup Act", weight: 2 },
-
-  // ── Forme juridique & Capital ──
-  { id: 6, question: "Quel est le statut juridique de votre société ?", options: ["SUARL", "SARL", "SA / SAS", "Pas encore de statut"], compliantAnswer: 0, explanation: "Le choix de la forme juridique détermine les obligations légales. La SUARL et la SARL sont les plus courantes pour les startups.", article: "Code des Sociétés, Art. 92-160", category: "Forme juridique", weight: 1 },
-  { id: 7, question: "Votre capital social respecte-t-il le minimum légal pour votre type de société ?", options: ["Oui, il est au-dessus du minimum", "Non, en-dessous du seuil", "Je ne connais pas le minimum", "Pas encore de capital"], compliantAnswer: 0, explanation: "SARL/SUARL : 1 000 TND minimum. SA sans APE : 5 000 TND. SA avec APE : 50 000 TND.", article: "Code des Sociétés, Art. 92 & 160", category: "Forme juridique", weight: 2 },
-  { id: 8, question: "Vos statuts ont-ils été rédigés par acte authentique ou sous seing privé ?", options: ["Oui, par un notaire/avocat", "Oui, sous seing privé", "Non, pas de statuts formels", "Je ne sais pas"], compliantAnswer: 0, explanation: "Les statuts doivent être rédigés par acte authentique ou sous seing privé pour être valables.", article: "Code des Sociétés, Art. 96", category: "Forme juridique", weight: 2 },
-
-  // ── Protection des données ──
-  { id: 9, question: "Avez-vous effectué une déclaration auprès de l'INPDP pour le traitement de données personnelles ?", options: ["Oui", "Non", "Pas de traitement de données", "Je ne connais pas l'INPDP"], compliantAnswer: 0, explanation: "Toute personne traitant des données personnelles doit effectuer une déclaration préalable auprès de l'INPDP.", article: "Loi n° 2004-63, Art. 7", category: "Protection données", weight: 3 },
-  { id: 10, question: "Recueillez-vous le consentement explicite de vos utilisateurs avant de collecter leurs données ?", options: ["Oui, avec case à cocher + politique", "Partiellement", "Non", "Pas applicable"], compliantAnswer: 0, explanation: "Le consentement explicite est obligatoire pour toute collecte de données personnelles.", article: "Loi n° 2004-63, Art. 27", category: "Protection données", weight: 2 },
-  { id: 11, question: "Avez-vous une politique de confidentialité accessible sur votre site/application ?", options: ["Oui, complète et visible", "Oui, mais pas à jour", "Non", "Pas de site/app"], compliantAnswer: 0, explanation: "La politique de confidentialité doit informer les utilisateurs sur la finalité, la durée et les droits.", article: "Loi n° 2004-63, Art. 9", category: "Protection données", weight: 2 },
-
-  // ── Obligations fiscales ──
-  { id: 12, question: "Votre entreprise est-elle à jour dans ses déclarations fiscales (IS, TVA) ?", options: ["Oui, tout est à jour", "En retard sur certaines", "Non", "Pas encore assujettie"], compliantAnswer: 0, explanation: "Les déclarations fiscales doivent être effectuées dans les délais sous peine de pénalités.", article: "Code Fiscal, Art. 60", category: "Fiscalité", weight: 3 },
-  { id: 13, question: "Avez-vous un expert comptable ou un commissaire aux comptes ?", options: ["Oui, expert comptable", "Oui, commissaire aux comptes", "Les deux", "Non, aucun"], compliantAnswer: 0, explanation: "La tenue d'une comptabilité régulière est obligatoire. Les SA doivent avoir un commissaire aux comptes.", article: "Code des Sociétés & Code Fiscal", category: "Fiscalité", weight: 2 },
-
-  // ── Droit du travail / CNSS ──
-  { id: 14, question: "Vos salariés sont-ils tous déclarés à la CNSS ?", options: ["Oui, tous déclarés", "Certains seulement", "Non", "Pas de salariés"], compliantAnswer: 0, explanation: "L'affiliation au CNSS est obligatoire pour tous les salariés dès le premier jour.", article: "Code du Travail", category: "Droit social", weight: 3 },
-  { id: 15, question: "Vos contrats de travail sont-ils écrits et conformes au Code du Travail ?", options: ["Oui, tous écrits et signés", "Certains sont verbaux", "Pas de contrats écrits", "Pas de salariés"], compliantAnswer: 0, explanation: "Tout contrat de travail doit être formalisé par écrit et respecter les dispositions du Code du Travail.", article: "Code du Travail, Art. 6-13", category: "Droit social", weight: 2 },
-
-  // ── E-commerce ──
-  { id: 16, question: "Votre site web affiche-t-il les mentions légales obligatoires ?", options: ["Oui (raison sociale, siège, RCS, contact)", "Partiellement", "Non", "Pas de site web"], compliantAnswer: 0, explanation: "Les mentions obligatoires incluent : raison sociale, siège social, RCS, contact, numéro TVA.", article: "Loi n° 2000-83, Art. 9", category: "E-commerce", weight: 2 },
-  { id: 17, question: "Avez-vous des Conditions Générales de Vente/Utilisation accessibles ?", options: ["Oui, acceptées avant achat", "Rédigées mais pas visibles", "Non", "Pas de vente en ligne"], compliantAnswer: 0, explanation: "Les CGV/CGU doivent être accessibles et acceptées par le client avant toute transaction.", article: "Loi n° 2000-83, Art. 25", category: "E-commerce", weight: 2 },
-
-  // ── Fintech / BCT ──
-  { id: 18, question: "Si vous exercez une activité de paiement, avez-vous l'agrément BCT ?", options: ["Oui", "En cours de demande", "Non", "Pas d'activité de paiement"], compliantAnswer: 0, explanation: "Toute activité de services de paiement nécessite un agrément de la Banque Centrale de Tunisie.", article: "Loi 2016-48, Art. 34", category: "BCT / Fintech", weight: 3 },
-  { id: 19, question: "Avez-vous mis en place un dispositif KYC/AML (vérification d'identité, lutte anti-blanchiment) ?", options: ["Oui, conforme", "En cours d'implémentation", "Non", "Pas applicable"], compliantAnswer: 0, explanation: "Les établissements financiers doivent implémenter un dispositif KYC et de lutte anti-blanchiment.", article: "Loi 2003-75, Art. 74", category: "BCT / Fintech", weight: 3 },
-
-  // ── Propriété intellectuelle ──
-  { id: 20, question: "Avez-vous protégé votre marque (dépôt INNORPI) ?", options: ["Oui, marque déposée", "En cours", "Non", "Je ne connais pas la procédure"], compliantAnswer: 0, explanation: "Le dépôt de marque auprès de l'INNORPI protège votre identité commerciale.", article: "Loi n° 2001-36", category: "Propriété intellectuelle", weight: 1 },
-
-  // ── Investissement ──
-  { id: 21, question: "Avez-vous déclaré votre investissement auprès de l'APII ?", options: ["Oui", "Non", "En cours", "Pas nécessaire pour mon activité"], compliantAnswer: 0, explanation: "La déclaration d'investissement auprès de l'APII est requise pour bénéficier des incitations.", article: "Loi n° 2016-71", category: "Investissement", weight: 1 },
-
-  // ── Compte en devises ──
-  { id: 22, question: "Si vous faites des opérations à l'international, disposez-vous d'un compte en devises autorisé ?", options: ["Oui, compte startup en devises", "En cours de demande", "Non", "Pas d'opérations internationales"], compliantAnswer: 0, explanation: "Les startups labellisées peuvent ouvrir un compte en devises selon les conditions de la circulaire BCT.", article: "Circulaire BCT n° 2019-01", category: "BCT / Fintech", weight: 1 },
+  { id: 3, question: "Votre capital social respecte-t-il le minimum légal ?", options: ["Oui, au-dessus du minimum", "Non, en-dessous", "Je ne connais pas le minimum", "Pas encore de capital"], compliantAnswer: 0, explanation: "SARL/SUARL : 1 000 TND minimum. SA sans APE : 5 000 TND.", article: "Code des Sociétés, Art. 92 & 160", category: "Forme juridique", weight: 2 },
+  { id: 4, question: "Avez-vous effectué une déclaration auprès de l'INPDP ?", options: ["Oui", "Non", "Pas de traitement de données", "Je ne connais pas l'INPDP"], compliantAnswer: 0, explanation: "Toute personne traitant des données personnelles doit effectuer une déclaration préalable.", article: "Loi n° 2004-63, Art. 7", category: "Protection données", weight: 3 },
+  { id: 5, question: "Votre entreprise est-elle à jour dans ses déclarations fiscales ?", options: ["Oui, tout est à jour", "En retard sur certaines", "Non", "Pas encore assujettie"], compliantAnswer: 0, explanation: "Les déclarations fiscales doivent être effectuées dans les délais sous peine de pénalités.", article: "Code Fiscal, Art. 60", category: "Fiscalité", weight: 3 },
+  { id: 6, question: "Vos salariés sont-ils tous déclarés à la CNSS ?", options: ["Oui, tous déclarés", "Certains seulement", "Non", "Pas de salariés"], compliantAnswer: 0, explanation: "L'affiliation au CNSS est obligatoire pour tous les salariés dès le premier jour.", article: "Code du Travail", category: "Droit social", weight: 3 },
+  { id: 7, question: "Avez-vous protégé votre marque (dépôt INNORPI) ?", options: ["Oui, marque déposée", "En cours", "Non", "Je ne connais pas la procédure"], compliantAnswer: 0, explanation: "Le dépôt de marque auprès de l'INNORPI protège votre identité commerciale.", article: "Loi n° 2001-36", category: "Propriété intellectuelle", weight: 1 },
+  { id: 8, question: "Vos contrats de travail sont-ils écrits et conformes ?", options: ["Oui, tous écrits et signés", "Certains sont verbaux", "Pas de contrats écrits", "Pas de salariés"], compliantAnswer: 0, explanation: "Tout contrat de travail doit être formalisé par écrit.", article: "Code du Travail, Art. 6-13", category: "Droit social", weight: 2 },
+  { id: 9, question: "Votre site web affiche-t-il les mentions légales obligatoires ?", options: ["Oui (raison sociale, siège, RCS, contact)", "Partiellement", "Non", "Pas de site web"], compliantAnswer: 0, explanation: "Les mentions obligatoires incluent : raison sociale, siège social, RCS, contact.", article: "Loi n° 2000-83, Art. 9", category: "E-commerce", weight: 2 },
+  { id: 10, question: "Avez-vous un expert comptable ou commissaire aux comptes ?", options: ["Oui, expert comptable", "Oui, commissaire aux comptes", "Les deux", "Non, aucun"], compliantAnswer: 0, explanation: "La tenue d'une comptabilité régulière est obligatoire.", article: "Code des Sociétés & Code Fiscal", category: "Fiscalité", weight: 2 },
 ]
 
-const QUIZ_SIZE = 10
-const CATEGORIES = ['Startup Act', 'Forme juridique', 'Protection données', 'Fiscalité', 'Droit social', 'E-commerce', 'BCT / Fintech', 'Propriété intellectuelle', 'Investissement']
-
-function shuffleArray<T>(arr: T[]): T[] {
-  const a = [...arr]
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]]
+interface QuizSectionProps {
+  projectData?: {
+    nom?: string
+    description?: string
+    sector?: string
+    capital?: string
+    budget?: string
+    typeSociete?: string
+    location?: string
+    activite?: string
+    differentiator?: string
   }
-  return a
 }
-
-type QuizState = 'intro' | 'playing' | 'result'
 
 function ScoreRing({ score, max }: { score: number; max: number }) {
   const pct = Math.round((score / max) * 100)
@@ -97,40 +55,58 @@ function ScoreRing({ score, max }: { score: number; max: number }) {
   )
 }
 
-export default function QuizSection() {
+type QuizState = 'intro' | 'loading' | 'playing' | 'result'
+
+export default function QuizSection({ projectData }: QuizSectionProps) {
   const [state, setState] = useState<QuizState>('intro')
   const [questions, setQuestions] = useState<QuizQuestion[]>([])
   const [current, setCurrent] = useState(0)
   const [selected, setSelected] = useState<number | null>(null)
   const [answered, setAnswered] = useState(false)
   const [answers, setAnswers] = useState<number[]>([])
+  const [loadError, setLoadError] = useState('')
+  const [isContextual, setIsContextual] = useState(false)
 
-  const startQuiz = useCallback(() => {
-    // Pick 10 questions spread across categories
-    const shuffled = shuffleArray(QUESTION_POOL)
-    const picked: QuizQuestion[] = []
-    const catCounts: Record<string, number> = {}
-    for (const q of shuffled) {
-      if (picked.length >= QUIZ_SIZE) break
-      const cc = catCounts[q.category] || 0
-      if (cc >= 2) continue // max 2 per category for variety
-      picked.push(q)
-      catCounts[q.category] = cc + 1
-    }
-    // Fill remaining if needed
-    if (picked.length < QUIZ_SIZE) {
-      for (const q of shuffled) {
-        if (picked.length >= QUIZ_SIZE) break
-        if (!picked.includes(q)) picked.push(q)
-      }
-    }
-    setQuestions(picked)
+  const hasProjectData = !!(projectData?.description && projectData.description.trim().length > 10)
+
+  const startQuiz = useCallback(async () => {
+    setLoadError('')
     setCurrent(0)
     setSelected(null)
     setAnswered(false)
     setAnswers([])
-    setState('playing')
-  }, [])
+
+    if (hasProjectData) {
+      // Generate contextual questions via AI
+      setState('loading')
+      try {
+        const contextualQuestions = await generateContextualQuiz({
+          description: projectData!.description,
+          sector: projectData!.sector,
+          capital: projectData!.capital,
+          budget: projectData!.budget,
+          typeSociete: projectData!.typeSociete,
+          location: projectData!.location,
+          activite: projectData!.activite,
+        })
+        setQuestions(contextualQuestions)
+        setIsContextual(true)
+        setState('playing')
+      } catch (e) {
+        console.error('Quiz generation error:', e)
+        setLoadError(e instanceof Error ? e.message : 'Erreur génération')
+        // Fallback to generic
+        setQuestions(GENERIC_POOL)
+        setIsContextual(false)
+        setState('playing')
+      }
+    } else {
+      // Use generic questions
+      setQuestions(GENERIC_POOL)
+      setIsContextual(false)
+      setState('playing')
+    }
+  }, [hasProjectData, projectData])
 
   const handleAnswer = (idx: number) => {
     if (answered) return
@@ -161,10 +137,10 @@ export default function QuizSection() {
   const scorePct = totalWeight > 0 ? Math.round((earnedWeight / totalWeight) * 100) : 0
 
   const getVerdict = (pct: number) => {
-    if (pct >= 80) return { label: '✅ Très bonne conformité', color: 'text-emerald-600', bg: 'bg-emerald-50 border-emerald-200', desc: 'Votre société respecte bien le cadre juridique tunisien. Continuez à surveiller les évolutions réglementaires.' }
+    if (pct >= 80) return { label: '✅ Très bonne conformité', color: 'text-emerald-600', bg: 'bg-emerald-50 border-emerald-200', desc: 'Votre projet respecte bien le cadre juridique tunisien. Continuez à surveiller les évolutions réglementaires.' }
     if (pct >= 60) return { label: '⚠️ Conformité partielle', color: 'text-amber-600', bg: 'bg-amber-50 border-amber-200', desc: 'Certains aspects nécessitent votre attention. Consultez les recommandations ci-dessous.' }
     if (pct >= 40) return { label: '🔶 Insuffisant', color: 'text-orange-600', bg: 'bg-orange-50 border-orange-200', desc: 'Plusieurs obligations ne sont pas respectées. Il est recommandé de consulter un conseil juridique.' }
-    return { label: '🚨 Non conforme', color: 'text-red-600', bg: 'bg-red-50 border-red-200', desc: 'Votre société présente des risques juridiques significatifs. Consultez un avocat spécialisé.' }
+    return { label: '🚨 Non conforme', color: 'text-red-600', bg: 'bg-red-50 border-red-200', desc: 'Votre projet présente des risques juridiques significatifs. Consultez un avocat spécialisé.' }
   }
 
   // Category scores for result
@@ -188,8 +164,10 @@ export default function QuizSection() {
             <Brain className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-foreground">Quiz de Conformité</h2>
-            <p className="text-xs text-muted-foreground">Évaluez si votre société respecte le cadre juridique tunisien</p>
+            <h2 className="text-lg font-bold text-foreground">Analyse de Conformité Approfondie</h2>
+            <p className="text-xs text-muted-foreground">
+              {hasProjectData ? 'Questions générées par IA selon votre projet' : 'Évaluation générique du cadre juridique tunisien'}
+            </p>
           </div>
         </div>
       </div>
@@ -197,42 +175,95 @@ export default function QuizSection() {
       <div className="flex-1 overflow-y-auto flex items-center justify-center p-6">
         {/* ── INTRO ── */}
         {state === 'intro' && (
-          <div className="text-center space-y-8 max-w-lg w-full">
+          <div className="text-center space-y-6 max-w-lg w-full">
             <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 flex items-center justify-center mx-auto animate-float">
               <Brain className="w-12 h-12 text-amber-500" />
             </div>
             <div className="space-y-3">
-              <h3 className="text-2xl font-black gradient-text">Auto-évaluation Juridique</h3>
+              <h3 className="text-2xl font-black gradient-text">Questionnaire de Conformité</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Répondez à <strong>10 questions</strong> sur votre société pour évaluer sa conformité avec la législation tunisienne : Startup Act, protection des données, fiscalité, droit du travail...
+                {hasProjectData
+                  ? <>L&apos;IA va analyser votre projet et générer <strong>10 questions spécifiques</strong> pour évaluer sa conformité juridique en profondeur.</>
+                  : <>Répondez à <strong>10 questions</strong> pour évaluer votre conformité avec la législation tunisienne.</>
+                }
               </p>
             </div>
-            <div className="grid grid-cols-3 gap-3">
-              {[{ n: '22+', l: 'Questions' }, { n: '10', l: 'Par évaluation' }, { n: '9', l: 'Domaines' }].map((s, i) => (
-                <div key={i} className="p-3 rounded-xl bg-secondary/50 border border-border">
-                  <p className="text-lg font-black text-foreground">{s.n}</p>
-                  <p className="text-[10px] text-muted-foreground">{s.l}</p>
+
+            {/* Project context display */}
+            {hasProjectData && (
+              <div className="p-4 rounded-2xl bg-blue-50 border border-blue-200 text-left space-y-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <FileText className="w-4 h-4 text-blue-600" />
+                  <p className="text-xs font-semibold text-blue-800">Contexte du projet détecté</p>
                 </div>
+                <p className="text-xs text-blue-700 leading-relaxed line-clamp-3">{projectData!.description}</p>
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  {projectData!.sector && (
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-medium">{projectData!.sector}</span>
+                  )}
+                  {(projectData!.capital || projectData!.budget) && (
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-medium">{projectData!.capital || projectData!.budget} TND</span>
+                  )}
+                  {projectData!.typeSociete && (
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-medium">{projectData!.typeSociete}</span>
+                  )}
+                  {projectData!.location && (
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-medium">{projectData!.location}</span>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {!hasProjectData && (
+              <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-left space-y-2">
+                <p className="text-xs font-semibold text-amber-800">💡 Astuce</p>
+                <p className="text-xs text-amber-700">
+                  Remplissez d&apos;abord la description de votre projet dans le <strong>Pipeline</strong> pour obtenir des questions personnalisées !
+                </p>
+              </div>
+            )}
+
+            <Button onClick={startQuiz} className="w-full py-6 rounded-xl text-sm font-semibold bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 shadow-lg shadow-amber-500/20 gap-2">
+              <Sparkles className="w-4 h-4" />
+              {hasProjectData ? 'Générer les questions contextuelles' : 'Commencer l\'évaluation'}
+            </Button>
+          </div>
+        )}
+
+        {/* ── LOADING (AI generating questions) ── */}
+        {state === 'loading' && (
+          <div className="text-center space-y-6 max-w-md">
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 flex items-center justify-center mx-auto">
+              <Loader2 className="w-10 h-10 text-amber-500 animate-spin" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-lg font-bold text-foreground">Analyse de votre projet en cours...</h3>
+              <p className="text-xs text-muted-foreground">L&apos;IA génère des questions de conformité spécifiques à votre secteur et activité</p>
+            </div>
+            <div className="grid grid-cols-3 gap-2 text-[10px]">
+              {['📋 Lecture du projet', '⚖️ Analyse sectorielle', '📝 Génération questions'].map((s, i) => (
+                <div key={i} className="p-2 rounded-lg bg-amber-50/50 border border-amber-200/50 text-amber-700 font-medium">{s}</div>
               ))}
             </div>
-            <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-left space-y-2">
-              <p className="text-xs font-semibold text-amber-800">💡 Comment ça marche ?</p>
-              <ul className="text-xs text-amber-700 space-y-1">
-                <li>• Chaque question porte sur une obligation légale réelle</li>
-                <li>• La première option est toujours la réponse conforme</li>
-                <li>• Vous obtenez un score pondéré + recommandations concrètes</li>
-                <li>• Les articles de loi sont cités pour chaque point</li>
-              </ul>
-            </div>
-            <Button onClick={startQuiz} className="w-full py-6 rounded-xl text-sm font-semibold bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 shadow-lg shadow-amber-500/20 gap-2">
-              <Sparkles className="w-4 h-4" /> Commencer l&apos;évaluation
-            </Button>
           </div>
         )}
 
         {/* ── PLAYING ── */}
         {state === 'playing' && questions[current] && (
           <div className="w-full max-w-2xl space-y-6">
+            {/* Contextual badge */}
+            {isContextual && (
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-700 font-medium w-fit">
+                <Sparkles className="w-3 h-3" /> Questions contextualisées pour votre projet
+              </div>
+            )}
+
+            {loadError && (
+              <div className="px-3 py-2 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-700">
+                ⚠ {loadError} — Questions génériques utilisées.
+              </div>
+            )}
+
             {/* Progress */}
             <div className="space-y-2">
               <div className="flex justify-between text-xs text-muted-foreground">
@@ -319,6 +350,9 @@ export default function QuizSection() {
                 {getVerdict(scorePct).label}
               </div>
               <p className="text-xs text-muted-foreground max-w-md mx-auto">{getVerdict(scorePct).desc}</p>
+              {isContextual && (
+                <p className="text-[10px] text-blue-600 font-medium">🎯 Résultat basé sur des questions spécifiques à votre projet</p>
+              )}
             </div>
 
             {/* Category breakdown */}

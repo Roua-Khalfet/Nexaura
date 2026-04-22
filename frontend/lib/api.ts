@@ -167,3 +167,36 @@ export async function fetchGraph(): Promise<GraphData> {
   if (!response.ok) throw new Error("Echec récupération graphe")
   return (await response.json()) as GraphData
 }
+
+export interface QuizQuestion {
+  id: number
+  question: string
+  options: string[]
+  compliantAnswer: number
+  explanation: string
+  article: string
+  category: string
+  weight: number
+}
+
+export async function generateContextualQuestionnaire(projectData: {
+  description?: string
+  sector?: string
+  capital?: string
+  budget?: string
+  typeSociete?: string
+  location?: string
+  activite?: string
+}): Promise<QuizQuestion[]> {
+  const response = await fetch(`${API_BASE}/conformite/questionnaire/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(projectData),
+  })
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}))
+    throw new Error(err.error || "Echec génération questionnaire")
+  }
+  const data = await response.json()
+  return data.questions as QuizQuestion[]
+}

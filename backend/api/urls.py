@@ -15,4 +15,13 @@ urlpatterns = [
     path("graph/", views.get_graph, name="graph"),
     path("veille/", views.get_veille, name="veille"),
     path("suggestions/", views.get_suggestions, name="suggestions"),
+    # Contextual Questionnaire
+    path("conformite/questionnaire/", views.generate_questionnaire, name="generate-questionnaire"),
+    # MarketScout
+    path("save-context/", views.save_context, name="save-context"),
+    path("download-context/", views.download_context, name="download-context"),
+    path("download-context/<str:filename>/", views.download_context, name="download-context-file"),
+    path("list-contexts/", views.list_contexts, name="list-contexts"),
+    path("avatar/", views.generate_avatar, name="avatar"),
 ]
+

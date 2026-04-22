@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FileText, Download, Loader2, Sparkles, Plus, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -17,7 +17,20 @@ const DOC_TYPES = [
 
 const SOCIETE_TYPES = ['SUARL', 'SARL', 'SA', 'SAS']
 
-export default function DocumentsSection() {
+interface DocumentsSectionProps {
+  projectData?: {
+    nom?: string
+    activite?: string
+    capital?: string
+    siege?: string
+    typeSociete?: string
+    fondateurs?: string[]
+    description?: string
+    location?: string
+  }
+}
+
+export default function DocumentsSection({ projectData }: DocumentsSectionProps) {
   const [nom, setNom] = useState('')
   const [activite, setActivite] = useState('')
   const [fondateurs, setFondateurs] = useState<string[]>([''])
@@ -29,6 +42,24 @@ export default function DocumentsSection() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [activePreview, setActivePreview] = useState<string | null>(null)
+  const [prefilled, setPrefilled] = useState(false)
+
+  // Auto-fill from pipeline data
+  useEffect(() => {
+    if (projectData && !prefilled) {
+      if (projectData.nom) setNom(projectData.nom)
+      if (projectData.activite) setActivite(projectData.activite)
+      else if (projectData.description) setActivite(projectData.description.slice(0, 200))
+      if (projectData.capital) setCapital(projectData.capital)
+      if (projectData.siege) setSiege(projectData.siege)
+      else if (projectData.location) setSiege(projectData.location)
+      if (projectData.typeSociete) setTypeSociete(projectData.typeSociete)
+      if (projectData.fondateurs && projectData.fondateurs.some(f => f.trim())) {
+        setFondateurs(projectData.fondateurs.filter(f => f.trim()))
+      }
+      setPrefilled(true)
+    }
+  }, [projectData, prefilled])
 
   const handleGenerate = async () => {
     if (!nom.trim() || !activite.trim() || !selectedDoc) return
