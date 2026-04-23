@@ -1,6 +1,6 @@
 'use client'
 
-import { Download, ClipboardCheck, Scale, TrendingUp, Users, Zap, Shield, AlertTriangle, CheckCircle2, XCircle, FileText, ArrowRight, Sparkles } from 'lucide-react'
+import { Download, ClipboardCheck, Scale, TrendingUp, Users, Zap, Shield, AlertTriangle, CheckCircle2, XCircle, FileText, ArrowRight, Sparkles, Leaf, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import type { ProjectData, PipelineState } from './pipeline-section'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -18,12 +18,12 @@ const staggerContainer = {
       staggerChildren: 0.1
     }
   }
-}
+} as const
 
 const fadeInScale = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
   show: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 25 } }
-}
+} as const
 
 function ScoreBadge({ score, label, colorClass }: { score: number, label: string, colorClass: string }) {
   return (
@@ -50,6 +50,7 @@ function ScoreBadge({ score, label, colorClass }: { score: number, label: string
 export default function ReportSection({ projectData, pipelineState }: ReportSectionProps) {
   const juridique = pipelineState.juridique
   const marketing = pipelineState.marketing
+  const green = pipelineState.green
 
   const downloadReport = () => {
     const lines: string[] = []
@@ -134,6 +135,45 @@ export default function ReportSection({ projectData, pipelineState }: ReportSect
       lines.push('')
     }
 
+    if (green.result) {
+      lines.push('---')
+      lines.push('')
+      lines.push('## 4. Analyse Verte & ESG')
+      if (green.result.esg_score) {
+        lines.push(`**Score ESG global : ${green.result.esg_score.composite_score}/100 (${green.result.esg_score.letter_grade})**`)
+        lines.push(`- Environnement : ${green.result.esg_score.environmental_score}/100`)
+        lines.push(`- Social : ${green.result.esg_score.social_score}/100`)
+        lines.push(`- Gouvernance : ${green.result.esg_score.governance_score}/100`)
+        if (green.result.esg_score.summary) {
+          lines.push(`- Synthèse : ${green.result.esg_score.summary}`)
+        }
+        lines.push('')
+      }
+
+      if ((green.result.certifications || []).length > 0) {
+        lines.push('### Certifications recommandées')
+        green.result.certifications?.forEach((cert, i) => {
+          lines.push(`${i + 1}. **${cert.name}** (${cert.priority || 'priority n/a'})`)
+          if (cert.relevance) lines.push(`   - Pertinence : ${cert.relevance}`)
+          if (cert.estimated_timeline) lines.push(`   - Délai : ${cert.estimated_timeline}`)
+          if (cert.estimated_cost) lines.push(`   - Coût : ${cert.estimated_cost}`)
+        })
+        lines.push('')
+      }
+
+      if ((green.result.recommendations || []).length > 0) {
+        lines.push('### Recommandations d\'impact')
+        green.result.recommendations?.slice(0, 6).forEach((rec, i) => {
+          lines.push(`${i + 1}. **${rec.title}**`)
+          lines.push(`   - Catégorie : ${rec.category}`)
+          lines.push(`   - Impact estimé : ${rec.estimated_impact}`)
+          lines.push(`   - Difficulté : ${rec.implementation_difficulty}`)
+          if (rec.estimated_cost) lines.push(`   - Coût : ${rec.estimated_cost}`)
+        })
+        lines.push('')
+      }
+    }
+
     lines.push('---')
     lines.push(`*Rapport généré par Startify — Plateforme IA pour Startups*`)
 
@@ -147,7 +187,7 @@ export default function ReportSection({ projectData, pipelineState }: ReportSect
     URL.revokeObjectURL(url)
   }
 
-  const hasAny = juridique || marketing
+  const hasAny = juridique || marketing || green.result || green.status === 'running' || green.status === 'starting'
 
   return (
     <div className="flex flex-col h-full overflow-hidden bg-slate-50/30">
@@ -186,7 +226,7 @@ export default function ReportSection({ projectData, pipelineState }: ReportSect
             <div className="space-y-2">
               <h3 className="text-xl font-bold text-slate-400">En attente des analyses</h3>
               <p className="text-sm text-slate-500 max-w-sm mx-auto leading-relaxed">
-                Complétez les étapes de l'audit juridique et de l'analyse de marché pour générer votre rapport stratégique complet.
+                Complétez les étapes de l'audit juridique et de l'analyse de marché. L'analyse verte se lance automatiquement en arrière-plan.
               </p>
             </div>
           </div>
@@ -440,6 +480,89 @@ export default function ReportSection({ projectData, pipelineState }: ReportSect
                     </div>
                   </div>
                 </div>
+              </motion.div>
+            )}
+
+            {(green.status === 'starting' || green.status === 'running') && (
+              <motion.div variants={fadeInScale} className="bg-white rounded-[40px] border border-emerald-100 shadow-sm overflow-hidden">
+                <div className="p-8 border-b border-emerald-100 flex items-center justify-between bg-emerald-50/50">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-600/20">
+                      <Leaf className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-black text-slate-900 uppercase tracking-wider">Analyse Verte</h3>
+                      <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">Traitement en arrière-plan</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-emerald-700">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span className="text-[11px] font-black uppercase tracking-widest">En cours</span>
+                  </div>
+                </div>
+                <div className="p-8">
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    L'ESG et la roadmap durable se préparent automatiquement pendant que vous avancez dans le pipeline.
+                  </p>
+                </div>
+              </motion.div>
+            )}
+
+            {green.result && (
+              <motion.div variants={fadeInScale} className="bg-white rounded-[40px] border border-emerald-200 shadow-sm overflow-hidden">
+                <div className="p-8 border-b border-emerald-100 flex items-center justify-between bg-emerald-50/50">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-600/20">
+                      <Leaf className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-black text-slate-900 uppercase tracking-wider">Analyse Verte & ESG</h3>
+                      <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">Impact, certifications, roadmap</p>
+                    </div>
+                  </div>
+                  {green.result.esg_score && (
+                    <ScoreBadge score={green.result.esg_score.composite_score} label={`ESG ${green.result.esg_score.letter_grade}`} colorClass="from-emerald-500 to-teal-600" />
+                  )}
+                </div>
+
+                <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                      <div className="w-1 h-3 bg-emerald-500 rounded-full" />
+                      Certifications Recommandées
+                    </h4>
+                    <div className="space-y-3">
+                      {(green.result.certifications || []).slice(0, 4).map((cert, i) => (
+                        <div key={i} className="p-4 rounded-2xl border border-emerald-100 bg-emerald-50/40">
+                          <p className="text-sm font-black text-slate-900">{cert.name}</p>
+                          <p className="text-[11px] text-slate-500 mt-1">{cert.relevance || 'Pertinence en cours de calcul'}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                      <div className="w-1 h-3 bg-teal-500 rounded-full" />
+                      Actions Prioritaires
+                    </h4>
+                    <div className="space-y-3">
+                      {(green.result.recommendations || []).slice(0, 5).map((rec, i) => (
+                        <div key={i} className="p-4 rounded-2xl border border-slate-100 bg-white shadow-sm">
+                          <p className="text-sm font-black text-slate-900">{rec.title}</p>
+                          <p className="text-[11px] text-slate-500 mt-1">{rec.description}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {green.status === 'failed' && (
+              <motion.div variants={fadeInScale} className="bg-red-50 border border-red-200 rounded-[28px] p-6">
+                <p className="text-sm font-bold text-red-700">Analyse verte non disponible pour ce run.</p>
+                {green.error && <p className="text-xs text-red-600 mt-1">{green.error}</p>}
               </motion.div>
             )}
 

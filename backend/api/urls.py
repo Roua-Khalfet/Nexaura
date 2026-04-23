@@ -2,7 +2,7 @@
 API URLs for ComplianceGuard.
 """
 
-from django.urls import path
+from django.urls import include, path
 from . import views
 
 urlpatterns = [
@@ -23,5 +23,7 @@ urlpatterns = [
     path("download-context/<str:filename>/", views.download_context, name="download-context-file"),
     path("list-contexts/", views.list_contexts, name="list-contexts"),
     path("avatar/", views.generate_avatar, name="avatar"),
+    # Green Analysis Module
+    path("green-analysis/", include("green_analysis.api.urls")),
 ]
 

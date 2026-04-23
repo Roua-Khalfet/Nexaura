@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "rest_framework",
     # Local apps
     "api",
+    "green_analysis",
 ]
 
 MIDDLEWARE = [

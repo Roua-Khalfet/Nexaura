@@ -201,3 +201,118 @@ export async function generateContextualQuestionnaire(projectData: {
   const data = await response.json()
   return data.questions as QuizQuestion[]
 }
+
+// ─── Green Analysis Module ───────────────────────────────────────────────────
+
+export interface GreenAnalysisSession {
+  id: string
+  status: string
+  raw_input?: string
+  parsed_input?: Record<string, unknown>
+  impact_assessment?: Record<string, unknown>
+  certifications?: GreenCertification[]
+  recommendations?: GreenRecommendation[]
+  esg_score?: GreenESGScore
+  final_report?: string
+  follow_up_questions?: string[]
+  agent_status?: Record<string, string>
+  agent_trace?: Record<string, GreenTraceStep[]>
+}
+
+export interface GreenCertification {
+  name: string
+  relevance?: string
+  priority?: string
+  estimated_timeline?: string
+  estimated_cost?: string
+}
+
+export interface GreenRecommendation {
+  title: string
+  description: string
+  category: string
+  estimated_impact: string
+  implementation_difficulty: string
+  estimated_cost?: string
+  relevant_programs?: string[]
+}
+
+export interface GreenESGScore {
+  composite_score: number
+  environmental_score: number
+  social_score: number
+  governance_score: number
+  letter_grade: string
+  summary?: string
+}
+
+export interface GreenTraceStep {
+  step: string
+  detail: string
+}
+
+export async function startGreenAnalysis(
+  businessDescription: string,
+  projectData?: Record<string, unknown>,
+): Promise<{ id: string; status: string }> {
+  const response = await fetch(`${API_BASE}/green-analysis/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      business_description: businessDescription,
+      ...(projectData ? { project_data: projectData } : {}),
+    }),
+  })
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}))
+    throw new Error(err.detail || err.business_description?.[0] || "Echec lancement analyse verte")
+  }
+  return response.json()
+}
+
+export async function getGreenAnalysisResults(sessionId: string): Promise<GreenAnalysisSession> {
+  const response = await fetch(`${API_BASE}/green-analysis/${sessionId}/`)
+  if (!response.ok) throw new Error("Echec récupération résultats analyse verte")
+  return response.json()
+}
+
+export async function pollGreenAnalysis(
+  sessionId: string,
+  onStatusChange: (agent: string, status: string) => void,
+  onTraceChange?: (agent: string, steps: GreenTraceStep[]) => void,
+): Promise<{ type: string; status?: string; questions?: string[] }> {
+  const seen: Record<string, string> = {}
+  const seenTrace: Record<string, string> = {}
+  const MAX_POLLS = 600
+
+  for (let i = 0; i < MAX_POLLS; i++) {
+    await new Promise((r) => setTimeout(r, 500))
+
+    const data = await getGreenAnalysisResults(sessionId)
+
+    const agentStatus = data.agent_status || {}
+    for (const [agent, status] of Object.entries(agentStatus)) {
+      if (seen[agent] !== status) {
+        seen[agent] = status
+        onStatusChange(agent, status)
+      }
+    }
+
+    const agentTrace = data.agent_trace || {}
+    for (const [agent, steps] of Object.entries(agentTrace)) {
+      const key = JSON.stringify(steps)
+      if (seenTrace[agent] !== key) {
+        seenTrace[agent] = key
+        onTraceChange?.(agent, steps)
+      }
+    }
+
+    if (data.status === "completed") return { type: "done", status: "completed" }
+    if (data.status === "failed") return { type: "done", status: "failed" }
+    if (data.status === "clarification_needed") {
+      return { type: "clarification", questions: data.follow_up_questions }
+    }
+  }
+
+  return { type: "timeout" }
+}

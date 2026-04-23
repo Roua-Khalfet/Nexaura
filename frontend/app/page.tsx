@@ -11,6 +11,7 @@ import GraphSection from '@/components/graph-section'
 import PipelineSection, { type ProjectData, type PipelineState, type MarketingResult } from '@/components/pipeline-section'
 import MarketingSection from '@/components/marketing-section'
 import ReportSection from '@/components/report-section'
+import GreenAnalysisSection from '@/components/green-analysis-section'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const DEFAULT_PROJECT: ProjectData = {
@@ -39,13 +40,19 @@ const DEFAULT_PIPELINE: PipelineState = {
   activeStep: null,
   juridique: null,
   marketing: null,
+  green: {
+    status: 'idle',
+    sessionId: null,
+    result: null,
+    error: null,
+  },
 }
 
 const sectionVariants = {
   initial: { opacity: 0, scale: 0.98, filter: 'blur(4px)' },
   animate: { opacity: 1, scale: 1, filter: 'blur(0px)', transition: { duration: 0.35, ease: [0.4, 0, 0.2, 1] } },
   exit: { opacity: 0, scale: 0.98, filter: 'blur(4px)', transition: { duration: 0.2 } },
-}
+} as const
 
 export default function Page() {
   const [activeSection, setActiveSection] = useState<SectionId>('studio')
@@ -94,6 +101,11 @@ export default function Page() {
           {activeSection === 'graph' && (
             <motion.div key="graph" variants={sectionVariants} initial="initial" animate="animate" exit="exit" className="absolute inset-0">
               <GraphSection />
+            </motion.div>
+          )}
+          {activeSection === 'green' && (
+            <motion.div key="green" variants={sectionVariants} initial="initial" animate="animate" exit="exit" className="absolute inset-0">
+              <GreenAnalysisSection />
             </motion.div>
           )}
         </AnimatePresence>

@@ -1,19 +1,20 @@
 'use client'
 
-import { MessageSquare, FileText, ShieldCheck, Brain, Radio, Network, ChevronLeft, ChevronRight, Rocket, LayoutDashboard, TrendingUp } from 'lucide-react'
+import { MessageSquare, FileText, ShieldCheck, Brain, Radio, Network, ChevronLeft, ChevronRight, Rocket, LayoutDashboard, TrendingUp, Leaf } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 
 
 import { motion, AnimatePresence } from 'framer-motion'
 
-export type SectionId = 'studio' | 'chat' | 'veille' | 'graph'
+export type SectionId = 'studio' | 'chat' | 'veille' | 'graph' | 'green'
 
 const NAV_ITEMS: { id: SectionId; label: string; icon: React.ElementType; color: string; gradient: string; separator?: boolean }[] = [
   { id: 'studio', label: 'Studio Startup', icon: LayoutDashboard, color: 'text-teal-600', gradient: 'from-teal-500/15 to-emerald-500/15' },
   { id: 'chat', label: 'Chat Juridique', icon: MessageSquare, color: 'text-blue-600', gradient: 'from-blue-500/15 to-indigo-500/15', separator: true },
   { id: 'veille', label: 'Veille Légale', icon: Radio, color: 'text-rose-600', gradient: 'from-rose-500/15 to-pink-500/15', separator: true },
   { id: 'graph', label: 'Graphe de Lois', icon: Network, color: 'text-sky-600', gradient: 'from-sky-500/15 to-cyan-500/15' },
+  { id: 'green', label: 'Analyse Verte', icon: Leaf, color: 'text-emerald-600', gradient: 'from-emerald-500/15 to-teal-500/15', separator: true },
 ]
 
 interface AppSidebarProps {
