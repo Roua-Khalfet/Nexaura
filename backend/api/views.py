@@ -817,13 +817,29 @@ def chat(request):
         enriched_question = f"Contexte projet: {project_context}\n\nQuestion: {message}"
     
     try:
-        if mode == "notebook":
-            answer, sources, metadata = crag_func(enriched_question, enable_web_fallback=False, mode="notebook")
-            source_type = metadata.get("action", "CRAG")
-        else:
-            answer, sources = answer_question_func(enriched_question, enable_web_fallback=True, mode="kb")
-            metadata = {}
-            source_type = "GraphRAG"
+        from complianceguard.graph_agent import compliance_agent
+        
+        # L'agent LangGraph unifie les sources
+        # On définit has_pdf en fonction du mode demandé par le front
+        has_pdf = (mode == "notebook")
+        
+        initial_state = {
+            "question": enriched_question,
+            "has_pdf": has_pdf
+        }
+        
+        # Exécution de l'agent LangGraph (CRAG + GraphRAG + Scraping en parallèle)
+        result_state = compliance_agent.invoke(initial_state)
+        
+        answer = result_state.get("final_answer", "")
+        sources = result_state.get("final_sources", [])
+        
+        metadata = {
+            "crag_metadata": result_state.get("crag_metadata", {}),
+            "sources_combinees": True,
+            "has_pdf": has_pdf
+        }
+        source_type = "Agent Unifié"
         
         return Response({
             "response": answer,
@@ -955,12 +971,18 @@ def upload_document(request):
 
 @api_view(["POST"])
 def conformite(request):
-    """Analyse de conformité avec scoring."""
+    """Analyse de conformité avec scoring dynamique (GraphRAG + Web + LLM)."""
     serializer = ConformiteRequestSerializer(data=request.data)
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    result = analyze_conformite(serializer.validated_data)
+    try:
+        from complianceguard.compliance_scoring import calculate_conformite_score
+        result = calculate_conformite_score(serializer.validated_data)
+    except Exception as e:
+        print(f"[Conformite] Erreur scoring dynamique: {e}, fallback sur l'ancien système")
+        result = analyze_conformite(serializer.validated_data)
+    
     return Response(result)
 
 @api_view(["POST"])
@@ -1171,38 +1193,72 @@ def generate_questionnaire(request):
 
         capital_display = capital or budget or "non précisé"
 
-        system_prompt = "Tu es un expert juridique tunisien spécialisé dans l'audit de conformité. Réponds uniquement en JSON valide."
+        from complianceguard.compliance_scoring import query_graph_requirements, check_law_freshness
+        
+        # 1. Récupérer le contexte légal réel (GraphRAG + Web)
+        print(f"[Audit] Recherche de contexte pour le secteur: {sector}")
+        legal_context_data = query_graph_requirements(sector, type_societe)
+        
+        # Extraire les références de loi pour vérifier la fraîcheur
+        law_refs = []
+        if legal_context_data.get("startup_conditions"):
+            law_refs.extend([c["reference"] for c in legal_context_data["startup_conditions"] if c.get("reference")])
+        if legal_context_data.get("sector_obligations"):
+            law_refs.extend([o["reference"] for o in legal_context_data["sector_obligations"] if o.get("reference")])
+        
+        freshness = {}
+        if law_refs:
+            freshness = check_law_freshness(list(set(law_refs)))
+
+        # Formater le contexte pour le LLM
+        context_str = f"- Capital minimum détecté (Référence): {legal_context_data.get('capital_seuil', 'Inconnu')} TND\n"
+        if legal_context_data.get("startup_conditions"):
+            context_str += "- Conditions Startup Act trouvées:\n"
+            for c in legal_context_data["startup_conditions"][:3]:
+                context_str += f"  * {c['description']} (Réf: {c['reference']})\n"
+        
+        if legal_context_data.get("sector_obligations"):
+            context_str += f"- Obligations spécifiques au secteur {sector}:\n"
+            for o in legal_context_data["sector_obligations"][:3]:
+                context_str += f"  * {o['description']} (Réf: {o['reference']})\n"
+
+        if freshness:
+            context_str += "- État de fraîcheur des lois:\n"
+            for ref, score in freshness.items():
+                l_status = "En vigueur" if score > 0.5 else "Potentiellement obsolète/abrogée"
+                context_str += f"  * {ref}: {l_status}\n"
+
+        system_prompt = "Tu es un expert juridique tunisien spécialisé dans l'audit de conformité. Tu dois générer des questions BASÉES SUR LE CONTEXTE RÉEL fourni. Réponds uniquement en JSON valide."
         user_prompt = f"""CONTEXTE DU PROJET:
 - Description: {description}
 - Secteur: {sector}
 - Activité: {activite}
-- Localisation: {location}
 - Capital/Budget: {capital_display} TND
 - Forme juridique: {type_societe}
 
-MISSION: Génère un QUESTIONNAIRE D'AUDIT DE CONFORMITÉ composé de exactement 10 questions précises.
-Ce questionnaire doit servir à affiner le score de conformité du projet après lecture de sa description.
+SOURCES LÉGALES ET RÉGLEMENTAIRES RÉCUPÉRÉES:
+{context_str}
 
-RÈGLES:
-1. Les questions doivent être techniques et professionnelles (pas de ton ludique).
-2. Les questions doivent porter sur des obligations réelles : registres obligatoires, protection des données (INPDP), fiscalité, droit du travail, assurances spécifiques, licences sectorielles.
-3. Chaque question doit proposer des options structurées. La première option (index 0) doit être celle qui représente la conformité totale.
-4. Poids (weight): 3=Critique/Bloquant, 2=Important, 1=Recommandé.
-
-Réponds UNIQUEMENT en JSON valide, un tableau de 10 objets avec cette structure exacte:
+MISSION: Génère un QUESTIONNAIRE D'AUDIT composé de 10 questions au format JSON.
+IMPORTANT: Cite systématiquement la source exacte (ex: Code des Sociétés, Startup Act) dans le champ "article".
+Format JSON attendu:
 [
   {{
-    "id": 1,
-    "question": "Libellé de la question technique",
-    "options": ["Option conforme", "Option partielle", "Option non conforme", "Je ne sais pas"],
+    "question": "Texte de la question technique",
+    "options": ["Option conforme (index 0)", "Option non-conforme", ...],
     "compliantAnswer": 0,
-    "explanation": "Détail juridique expliquant l'obligation",
-    "article": "Référence à la loi ou au décret tunisien",
-    "category": "Domaine (ex: Fiscalité, Protection des données...)",
+    "explanation": "Analyse de l'expert",
+    "article": "Référence légale (ex: Art. 3 Startup Act)",
+    "category": "Domaine (ex: Fiscalité, Social, RGPD)",
     "weight": 3
   }}
-]"""
+]
 
+RÈGLES:
+1. Les questions doivent être techniques.
+2. La première option (index 0) doit TOUJOURS être celle qui représente la conformité.
+3. Utilise les informations des 'SOURCES LÉGALES' pour créer des questions précises.
+"""
         content = call_llm_with_fallback(system_prompt, user_prompt)
         
         # Extract JSON from response

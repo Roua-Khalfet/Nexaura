@@ -233,23 +233,22 @@ Rules:
     return question
 
 
+from complianceguard.tools.fact_checker import calculate_document_score
+from complianceguard.tools.retriever import get_graph
+
 def grade_documents(question: str, docs: List[Document], llm, upper_threshold: float = 0.6, lower_threshold: float = -0.2) -> List[Tuple[Document, str, float]]:
     """
-    Grades documents using score-based relevance evaluation.
+    Grades documents using hybrid scoring evaluation (GraphRAG + Web + Vector).
     Returns list of (Document, Grade, Score).
     """
     if not docs:
         return []
 
-    doc_texts = [_normalize_text(doc.page_content) for doc in docs]
-    scores = _score_text_items(question, doc_texts, llm, item_label="Document", preview_chars=350)
+    # Utilisation du nouveau système de scoring algorithmique (Triangulation)
+    graph = get_graph()
+    graded_docs = calculate_document_score(question, docs, graph)
 
-    graded: List[Tuple[Document, str, float]] = []
-    for doc, score in zip(docs, scores):
-        grade = _score_to_grade(score, upper_threshold=upper_threshold, lower_threshold=lower_threshold)
-        graded.append((doc, grade, score))
-
-    return graded
+    return graded_docs
 
 
 def decide_action(graded_docs: List[Tuple[Document, str, float]], upper_threshold: float = 0.6, lower_threshold: float = -0.2) -> str:

@@ -23,6 +23,7 @@ class ConformiteRequestSerializer(serializers.Serializer):
     sector = serializers.CharField(required=False, default="SaaS", allow_blank=True)
     capital = serializers.IntegerField(required=False, default=None, allow_null=True)
     type_societe = serializers.CharField(required=False, default="SUARL", allow_blank=True)
+    audit_results = serializers.DictField(required=False, allow_null=True, default=None)
 
 
 class ConformiteCritereSerializer(serializers.Serializer):

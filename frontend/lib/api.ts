@@ -128,6 +128,7 @@ export async function analyzeConformite(params: {
   sector: string
   capital?: number | null
   type_societe?: string
+  audit_results?: { questions: QuizQuestion[]; answers: number[] } | null
 }): Promise<ConformiteResult> {
   const response = await fetch(`${API_BASE}/conformite/`, {
     method: "POST",

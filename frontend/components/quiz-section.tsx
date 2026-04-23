@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { Brain, ChevronRight, Trophy, RotateCcw, CheckCircle2, XCircle, Sparkles, AlertTriangle, ArrowRight, Loader2, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
-import { generateContextualQuiz, type QuizQuestion } from '@/lib/api'
+import { generateContextualQuestionnaire, type QuizQuestion } from '@/lib/api'
 
 /* ── Fallback generic pool (used when no project data) ── */
 const GENERIC_POOL: QuizQuestion[] = [
@@ -80,7 +80,7 @@ export default function QuizSection({ projectData }: QuizSectionProps) {
       // Generate contextual questions via AI
       setState('loading')
       try {
-        const contextualQuestions = await generateContextualQuiz({
+        const contextualQuestions = await generateContextualQuestionnaire({
           description: projectData!.description,
           sector: projectData!.sector,
           capital: projectData!.capital,

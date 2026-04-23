@@ -50,28 +50,6 @@ except ModuleNotFoundError:
 def _build_llm() -> ChatOpenAI | AzureChatOpenAI:
     llm_provider = os.getenv("LLM_PROVIDER", "").strip().lower()
 
-    groq_api_key = os.getenv("GROQ_API_KEY", "").strip()
-    groq_model = (
-        os.getenv("GROQ_MODEL", "").strip()
-        or "openai/gpt-oss-120b"
-    )
-    groq_base_url = os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1").strip()
-
-    # Prefer Groq for CRAG when explicitly requested or when a Groq key is present.
-    use_groq = llm_provider == "groq" or (groq_api_key and llm_provider != "azure")
-    if use_groq:
-        if not groq_api_key:
-            raise RuntimeError("Configuration Groq incomplete: GROQ_API_KEY")
-
-        print(f"[LLM] Provider=groq model={groq_model}")
-
-        return ChatOpenAI(
-            model=groq_model,
-            api_key=groq_api_key,
-            base_url=groq_base_url,
-            temperature=0,
-        )
-
     azure_endpoint = (
         os.getenv("AZURE_OPENAI_ENDPOINT", "").strip()
         or os.getenv("AZURE_API_BASE", "").strip()
@@ -86,31 +64,52 @@ def _build_llm() -> ChatOpenAI | AzureChatOpenAI:
         os.getenv("AZURE_OPENAI_API_VERSION", "").strip()
         or os.getenv("AZURE_API_VERSION", "2024-02-01").strip()
     )
-    api_key = (
+    azure_api_key = (
         os.getenv("AZURE_OPENAI_API_KEY", "").strip()
         or os.getenv("AZURE_API_KEY", "").strip()
     )
 
-    missing: list[str] = []
-    if not azure_endpoint:
-        missing.append("AZURE_OPENAI_ENDPOINT (ou AZURE_API_BASE)")
-    if not model_or_deployment:
-        missing.append("AZURE_OPENAI_DEPLOYMENT (ou AZURE_MODEL/model)")
-    if not api_key:
-        missing.append("AZURE_OPENAI_API_KEY (ou AZURE_API_KEY)")
+    # Priorité absolue à Azure (sauf si forcé en 'groq' ou clé Azure manquante)
+    use_azure = llm_provider == "azure" or (azure_api_key and llm_provider != "groq")
 
-    if missing:
-        raise RuntimeError("Configuration Azure incomplete: " + ", ".join(missing))
+    if use_azure:
+        missing: list[str] = []
+        if not azure_endpoint:
+            missing.append("AZURE_OPENAI_ENDPOINT (ou AZURE_API_BASE)")
+        if not model_or_deployment:
+            missing.append("AZURE_OPENAI_DEPLOYMENT (ou AZURE_MODEL/model)")
+        if not azure_api_key:
+            missing.append("AZURE_OPENAI_API_KEY (ou AZURE_API_KEY)")
 
-    deployment_name = model_or_deployment
-    if "/" in deployment_name:
-        deployment_name = deployment_name.split("/", 1)[1].strip()
+        if missing:
+            raise RuntimeError("Configuration Azure incomplete: " + ", ".join(missing))
 
-    return AzureChatOpenAI(
-        azure_endpoint=azure_endpoint,
-        azure_deployment=deployment_name,
-        api_version=api_version,
-        api_key=api_key,
+        deployment_name = model_or_deployment
+        if "/" in deployment_name:
+            deployment_name = deployment_name.split("/", 1)[1].strip()
+
+        print(f"[LLM] Provider=azure deployment={deployment_name}")
+        return AzureChatOpenAI(
+            azure_endpoint=azure_endpoint,
+            azure_deployment=deployment_name,
+            api_version=api_version,
+            api_key=azure_api_key,
+            temperature=0,
+        )
+
+    # Fallback sur Groq
+    groq_api_key = os.getenv("GROQ_API_KEY", "").strip()
+    groq_model = os.getenv("GROQ_MODEL", "llama3-70b-8192").strip()
+    groq_base_url = os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1").strip()
+
+    if not groq_api_key:
+        raise RuntimeError("Configuration LLM incomplete : Aucune clé Azure ni Groq détectée.")
+
+    print(f"[LLM] Provider=groq model={groq_model}")
+    return ChatOpenAI(
+        model=groq_model,
+        api_key=groq_api_key,
+        base_url=groq_base_url,
         temperature=0,
     )
 
@@ -254,7 +253,7 @@ def _is_greeting_or_non_question(text: str) -> bool:
 
 
 def _web_search(query: str) -> tuple[str, list[str]]:
-    """Recherche web via Serper API."""
+    """Recherche web via Serper API et Crawl4AI."""
     serper_key = os.getenv("SERPER_API_KEY", "").strip()
     if not serper_key:
         return "", []
@@ -276,18 +275,28 @@ def _web_search(query: str) -> tuple[str, list[str]]:
         if link:
             web_sources.append(link)
     
-    # Scraper les 2 premières URLs pour plus de contexte
-    for url in web_sources[:2]:
-        try:
-            print(f"[Web] Scraping {url[:50]}...")
-            from langchain_community.document_loaders import WebBaseLoader
-            loader = WebBaseLoader(url)
-            docs = loader.load()
-            content = "\n".join(doc.page_content for doc in docs)
-            content = " ".join(content.split())[:2000]
-            web_context += f"\n[Contenu de {url}]\n{content}\n"
-        except Exception as e:
-            print(f"[Web] Erreur scraping: {e}")
+    # Scraper les 2 premières URLs pour plus de contexte avec Crawl4AI
+    try:
+        from crawl4ai import WebCrawler
+        crawler = WebCrawler()
+        crawler.warmup()
+        
+        for url in web_sources[:2]:
+            try:
+                print(f"[Web] Scraping {url[:50]} avec Crawl4AI...")
+                result = crawler.run(url=url)
+                if result.markdown:
+                    # Limiter pour ne pas exploser le contexte LLM
+                    content = result.markdown[:3000]
+                    web_context += f"\n[Contenu complet de {url}]\n{content}\n"
+                else:
+                    print(f"[Web] Crawl4AI n'a pas pu extraire de texte pour {url}")
+            except Exception as e:
+                print(f"[Web] Erreur d'extraction pour {url}: {e}")
+    except ImportError:
+        print("[Web] Erreur: crawl4ai n'est pas installé. Les snippets Serper seuls seront utilisés.")
+    except Exception as e:
+        print(f"[Web] Erreur globale Crawl4AI: {e}")
     
     return web_context, web_sources
 

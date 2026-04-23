@@ -1,14 +1,16 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import {
-  FileText, Scale, TrendingUp, ClipboardCheck, CheckCircle2,
-  Loader2, ChevronRight, Rocket, Sparkles, ArrowRight, AlertCircle
-} from 'lucide-react'
+import { ShieldCheck, Loader2, ChevronLeft, ChevronRight, Rocket, Sparkles, ArrowRight, AlertCircle, FileText, Scale, TrendingUp, ClipboardCheck, CheckCircle2, BarChart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { analyzeConformite, type ConformiteResult } from '@/lib/api'
+import ConformiteSection from '@/components/conformite-section'
+import MarketingSection from '@/components/marketing-section'
+import DocumentsSection from '@/components/documents-section'
+import ReportSection from '@/components/report-section'
+import { motion, AnimatePresence } from 'framer-motion'
 
 /* ── Types ── */
 export interface ProjectData {
@@ -27,9 +29,11 @@ export interface ProjectData {
   differentiator: string
   stage: string
   budget: string
+  cible: string
+  donneesTraitees: string
 }
 
-export type PipelineStep = 'description' | 'juridique' | 'marketing' | 'rapport'
+export type PipelineStep = 'description' | 'audit' | 'marketing' | 'documents' | 'rapport'
 
 export interface PipelineState {
   currentStep: PipelineStep
@@ -70,10 +74,11 @@ interface PersonaItem { name: string; age: string; role: string; motivations: st
 interface CompetitorItem { name: string; url: string; strengths: string[]; weaknesses: string[] }
 
 const STEPS: { id: PipelineStep; label: string; icon: React.ElementType; color: string }[] = [
-  { id: 'description', label: 'Description', icon: FileText, color: 'teal' },
-  { id: 'juridique', label: 'Analyse Juridique', icon: Scale, color: 'blue' },
-  { id: 'marketing', label: 'Analyse Marketing', icon: TrendingUp, color: 'pink' },
-  { id: 'rapport', label: 'Rapport Final', icon: ClipboardCheck, color: 'amber' },
+  { id: 'description', label: 'Projet', icon: FileText, color: 'teal' },
+  { id: 'audit', label: 'Audit Juridique', icon: ShieldCheck, color: 'blue' },
+  { id: 'marketing', label: 'Analyse Marché', icon: TrendingUp, color: 'pink' },
+  { id: 'documents', label: 'Documents', icon: FileText, color: 'violet' },
+  { id: 'rapport', label: 'Finalisation', icon: ClipboardCheck, color: 'amber' },
 ]
 
 const SECTORS = [
@@ -97,6 +102,8 @@ const QUESTIONS = [
   { key: 'activite', label: 'Quelle est l\'activité principale exacte ?', placeholder: 'Ex : Développement de logiciels B2B' },
   { key: 'location', label: 'Où est situé le siège social ?', placeholder: 'Ex : Grand Tunis' },
   { key: 'clientType', label: 'Quel est votre type de clientèle ?', placeholder: 'Ex : B2B (PME de 10-50 employés)' },
+  { key: 'cible', label: 'Quelle est votre cible principale ?', type: 'choice' as const },
+  { key: 'donneesTraitees', label: 'Quelles données traitez-vous ?', placeholder: 'Ex : Données de santé, coordonnées bancaires...' },
 ]
 
 interface PipelineSectionProps {
@@ -117,10 +124,11 @@ export default function PipelineSection({
   const [selectedPipelineView, setSelectedPipelineView] = useState<PipelineStep>('description')
 
   /* Check if description phase is complete */
-  const isDescriptionComplete = !!(projectData.nom && projectData.description && projectData.sector)
+  const isDescriptionComplete = questionIndex >= QUESTIONS.length && !!(projectData.nom && projectData.description && projectData.sector)
 
   /* Handle conversational answer */
   const handleAnswer = useCallback(() => {
+    if (questionIndex >= QUESTIONS.length) return
     if (!currentAnswer.trim() && QUESTIONS[questionIndex].type !== 'select' && QUESTIONS[questionIndex].type !== 'choice') return
     const key = QUESTIONS[questionIndex].key as keyof ProjectData
     const value = currentAnswer.trim()
@@ -132,7 +140,7 @@ export default function PipelineSection({
     }
 
     setCurrentAnswer('')
-    if (questionIndex < QUESTIONS.length - 1) {
+    if (questionIndex < QUESTIONS.length) {
       setQuestionIndex(questionIndex + 1)
     }
   }, [currentAnswer, questionIndex, projectData, setProjectData])
@@ -143,7 +151,7 @@ export default function PipelineSection({
       setPipelineState({
         ...pipelineState,
         completedSteps: [...pipelineState.completedSteps, 'description'],
-        currentStep: 'juridique',
+        currentStep: 'audit',
       })
     }
   }, [isDescriptionComplete, pipelineState, setPipelineState])
@@ -164,7 +172,7 @@ export default function PipelineSection({
       setPipelineState({
         ...pipelineState,
         juridique: result,
-        completedSteps: [...pipelineState.completedSteps.filter(s => s !== 'juridique'), 'juridique'],
+        completedSteps: [...pipelineState.completedSteps.filter(s => s !== 'audit'), 'audit'],
         currentStep: 'marketing',
       })
       // Navigate to conformite section to show detailed results
@@ -179,6 +187,28 @@ export default function PipelineSection({
   /* Launch marketing analysis (triggers navigation to marketing section) */
   const handleMarketingAnalysis = () => {
     onNavigate('marketing')
+  }
+
+  const handleNextQuestion = () => {
+    if (questionIndex < QUESTIONS.length) {
+      setQuestionIndex(questionIndex + 1)
+    }
+  }
+
+  const handlePrevQuestion = () => {
+    if (questionIndex > 0) {
+      setQuestionIndex(questionIndex - 1)
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleNextQuestion()
+    }
+  }
+
+  const handleProjectSubmit = () => {
+    handleJuridiqueAnalysis()
   }
 
   /* Get step state */
@@ -206,341 +236,576 @@ export default function PipelineSection({
       <div className="flex-1 overflow-y-auto">
         {/* ── Pipeline Visual ── */}
         <div className="px-6 py-8">
-          <div className="flex items-center justify-between max-w-3xl mx-auto">
+          <motion.div 
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
+            }}
+            className="flex items-center justify-between max-w-3xl mx-auto relative z-10"
+          >
             {STEPS.map((step, i) => {
               const state = getStepState(step.id)
               const Icon = step.icon
               return (
-                <div key={step.id} className="flex items-center flex-1 last:flex-none">
+                <motion.div 
+                  variants={{
+                    hidden: { opacity: 0, y: 20, scale: 0.8 },
+                    visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 300, damping: 20 } }
+                  }}
+                  key={step.id} 
+                  className="flex items-center flex-1 last:flex-none"
+                >
                   {/* Node */}
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.08, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => setSelectedPipelineView(step.id)}
-                    className={`flex flex-col items-center gap-2 group cursor-pointer transition-all duration-500 ${
-                      selectedPipelineView === step.id ? 'scale-105' : ''
+                    className={`relative flex flex-col items-center gap-2 group cursor-pointer transition-all duration-300 ${
+                      selectedPipelineView === step.id ? 'z-20' : 'z-10'
                     }`}
                   >
-                    <div className={`relative w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 ${
-                      state === 'done' ? 'pipeline-node-done' :
-                      state === 'active' ? 'pipeline-node-active' :
-                      'pipeline-node-idle'
-                    }`}>
-                      {state === 'done' ? (
-                        <CheckCircle2 className="w-7 h-7 text-emerald-500 animate-check-pop" />
-                      ) : state === 'active' ? (
-                        <Icon className="w-7 h-7" />
-                      ) : (
-                        <Icon className="w-7 h-7 opacity-40" />
-                      )}
+                        <div className="relative">
+                      {/* Subdued shadow on hover for inactive, glowing ambient light for active */}
                       {state === 'active' && (
-                        <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-teal-500 animate-pulse" />
+                        <div className="absolute inset-0 rounded-2xl bg-blue-400/40 blur-xl opacity-60 z-0 animate-pulse" />
                       )}
+                      
+                      <motion.div 
+                        layoutId={`step-bg-${step.id}`}
+                        className={`relative w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 shadow-sm z-10 ${
+                          state === 'done' ? 'bg-emerald-50 text-emerald-500 border border-emerald-200 shadow-[0_8px_20px_rgba(16,185,129,0.15)]' :
+                          state === 'active' ? 'bg-white text-blue-600 border-2 border-blue-500 shadow-[0_8px_30px_rgba(59,130,246,0.2)]' :
+                          'bg-white/80 backdrop-blur-md text-gray-400 border border-gray-200/50 hover:border-gray-300 hover:shadow-md'
+                        }`}
+                      >
+                        {state === 'done' ? (
+                          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", bounce: 0.5 }}>
+                            <CheckCircle2 className="w-7 h-7" />
+                          </motion.div>
+                        ) : (
+                          <Icon className={`w-7 h-7 relative z-20 transition-transform duration-300 ${state === 'active' ? 'scale-110 drop-shadow-sm' : 'opacity-60 group-hover:opacity-100 group-hover:scale-105'}`} />
+                        )}
+                        
+                        {state === 'active' && (
+                          <motion.div 
+                            layoutId="activeStepIndicator"
+                            className="absolute inset-[-4px] rounded-[20px] border border-blue-500/50 z-0 pointer-events-none"
+                            transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                          />
+                        )}
+                      </motion.div>
                     </div>
-                    <span className={`text-xs font-semibold text-center transition-colors ${
-                      state === 'done' ? 'text-emerald-600' :
-                      state === 'active' ? 'text-foreground' :
-                      'text-muted-foreground/50'
+                    <span className={`text-[10px] font-black uppercase tracking-widest text-center transition-colors ${
+                      state === 'done' ? 'text-emerald-600 drop-shadow-sm' :
+                      state === 'active' ? 'text-blue-700 drop-shadow-sm' :
+                      'text-slate-400/80 group-hover:text-slate-500'
                     }`}>
                       {step.label}
                     </span>
-                  </button>
+                  </motion.button>
 
                   {/* Connector line */}
                   {i < STEPS.length - 1 && (
-                    <div className="flex-1 mx-3 relative">
-                      <div className={`rounded-full transition-all duration-700 ${
-                        getStepState(STEPS[i + 1].id) === 'done' || getStepState(step.id) === 'done'
-                          ? 'pipeline-line-done'
-                          : getStepState(STEPS[i + 1].id) === 'active'
-                          ? 'pipeline-line-active'
-                          : 'pipeline-line-idle'
-                      }`} />
+                    <div className="flex-1 h-[3px] mx-4 relative overflow-hidden bg-slate-100 rounded-full shadow-inner">
+                      {pipelineState.completedSteps.includes(step.id) && (
+                        <motion.div 
+                          initial={{ scaleX: 0 }}
+                          animate={{ scaleX: 1 }}
+                          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                          className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-400 origin-left"
+                        />
+                      )}
                     </div>
                   )}
-                </div>
+                </motion.div>
               )
             })}
-          </div>
+          </motion.div>
         </div>
 
         {/* ── Content Area ── */}
         <div className="px-6 pb-8">
-          <div className="max-w-3xl mx-auto">
+          <div className={`${selectedPipelineView === 'audit' || selectedPipelineView === 'marketing' ? 'max-w-6xl' : 'max-w-4xl'} mx-auto transition-all duration-500`}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={selectedPipelineView}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="w-full"
+              >
+                {/* ─── DESCRIPTION STEP ─── */}
+                {selectedPipelineView === 'description' && (
+                  <div className="space-y-8 relative">
+                    {/* Ambient Glow */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-sky-200/40 rounded-full blur-[120px] -z-10 mix-blend-multiply opacity-50" />
 
-            {/* ─── DESCRIPTION STEP ─── */}
-            {selectedPipelineView === 'description' && (
-              <div className="animate-slide-up space-y-6">
-                <div className="startify-card p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <FileText className="w-5 h-5 text-teal-600" />
-                    <h3 className="text-base font-bold text-foreground">Description du projet</h3>
+                    <div className="bg-white/60 backdrop-blur-2xl p-8 rounded-[40px] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden group">
+                  
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-teal-100/50 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 transition-opacity duration-1000 opacity-0 group-hover:opacity-100" />
+                  
+                  <div className="flex items-center justify-between mb-8 relative z-10 border-b border-slate-100/50 pb-6">
+                    <div className="flex items-center gap-4">
+                      <motion.div 
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        className="w-12 h-12 rounded-[18px] bg-gradient-to-br from-teal-50 to-blue-50 border border-teal-100/50 flex items-center justify-center shadow-inner"
+                      >
+                        <FileText className="w-6 h-6 text-teal-600 drop-shadow-sm" />
+                      </motion.div>
+                      <div>
+                        <h3 className="text-sm font-black uppercase tracking-widest text-slate-800">Configuration Projet</h3>
+                        <p className="text-[11px] font-medium text-slate-500 mt-1">L'agent recueille vos informations essentielles</p>
+                      </div>
+                    </div>
                     {isDescriptionComplete && (
-                      <span className="ml-auto text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
-                        ✓ Complété
-                      </span>
+                      <motion.span 
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="text-[10px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 px-4 py-2 rounded-full shadow-sm border border-emerald-100/50 flex items-center gap-2"
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        Prêt
+                      </motion.span>
                     )}
                   </div>
 
                   {/* Conversational Form */}
                   <div className="space-y-4">
-                    {QUESTIONS.map((q, i) => {
-                      const key = q.key as keyof ProjectData
-                      const value = projectData[key]
-                      const isCurrentQ = i === questionIndex
-                      const isAnswered = typeof value === 'string' ? !!value : (Array.isArray(value) && value.length > 0 && value[0] !== '')
+                    <AnimatePresence initial={false}>
+                      {QUESTIONS.map((q, i) => {
+                        const key = q.key as keyof ProjectData
+                        const value = projectData[key]
+                        const isCurrentQ = i === questionIndex
+                        const isAnswered = typeof value === 'string' ? !!value.trim() : (Array.isArray(value) && value.length > 0 && value[0] !== '')
 
-                      // Show answered questions as chips, current as input
-                      if (i > questionIndex && !isAnswered) return null
+                        if (i < questionIndex - 2 || i > questionIndex) {
+                          if (!isAnswered || i > questionIndex) return null
+                        }
 
-                      return (
-                        <div key={q.key} className={`transition-all duration-300 ${isCurrentQ ? 'opacity-100' : 'opacity-80'}`}>
-                          <label className="text-xs font-semibold text-foreground/70 mb-1 block">{q.label}</label>
-                          {isAnswered && !isCurrentQ ? (
-                            <button
-                              onClick={() => setQuestionIndex(i)}
-                              className="w-full text-left px-3 py-2 rounded-lg bg-teal-50/50 border border-teal-200/50 text-sm text-foreground hover:border-teal-300 transition-colors"
-                            >
-                              {typeof value === 'string' ? value : (value as string[]).join(', ')}
-                            </button>
-                          ) : isCurrentQ ? (
-                            <div className="space-y-2">
-                              {q.type === 'select' ? (
-                                <div className="grid grid-cols-4 gap-2">
-                                  {SECTORS.map(s => (
-                                    <button
-                                      key={s.id}
-                                      onClick={() => {
-                                        setProjectData({ ...projectData, sector: s.id })
-                                        setCurrentAnswer(s.id)
-                                        if (questionIndex < QUESTIONS.length - 1) setQuestionIndex(questionIndex + 1)
-                                      }}
-                                      className={`p-2.5 rounded-xl border-2 text-center transition-all ${
-                                        projectData.sector === s.id
-                                          ? 'border-teal-400 bg-teal-50/50 shadow-sm'
-                                          : 'border-border hover:border-teal-300'
-                                      }`}
-                                    >
-                                      <span className="text-xl block">{s.emoji}</span>
-                                      <span className="text-[10px] font-semibold block mt-0.5 text-foreground">{s.label}</span>
-                                    </button>
-                                  ))}
+                        return (
+                          <motion.div 
+                            layout
+                            key={i}
+                            initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.98, height: 0, margin: 0, overflow: 'hidden' }}
+                            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                            className={`flex flex-col gap-3 py-1 ${!isCurrentQ ? 'opacity-50 blur-[0.5px] hover:opacity-100 hover:blur-none transition-all' : ''}`}
+                          >
+                            {/* Question bubble */}
+                            <div className="flex justify-start">
+                              <div className="flex items-end gap-2 max-w-[85%]">
+                                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0 mb-1">
+                                  <Sparkles className="w-4 h-4 text-slate-500" />
                                 </div>
-                              ) : q.type === 'choice' ? (
-                                <div className="flex gap-2">
-                                  {q.options?.map(opt => (
-                                    <button
-                                      key={opt}
-                                      onClick={() => {
-                                        setProjectData({ ...projectData, [key]: opt })
-                                        if (questionIndex < QUESTIONS.length - 1) setQuestionIndex(questionIndex + 1)
-                                      }}
-                                      className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
-                                        projectData[key] === opt ? 'bg-teal-500 text-white' : 'bg-secondary hover:bg-teal-100'
-                                      }`}
-                                    >{opt}</button>
-                                  ))}
+                                <div className="bg-slate-100/80 backdrop-blur-sm text-slate-800 px-5 py-3 rounded-2xl rounded-bl-sm font-medium text-[13px] leading-relaxed relative">
+                                  {q.label}
+                                  {q.description && (
+                                    <span className="block text-[11px] text-slate-500 mt-1 font-normal">
+                                      {q.description}
+                                    </span>
+                                  )}
+                                  {isCurrentQ && (
+                                    <motion.div 
+                                      className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-sky-400"
+                                      animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
+                                      transition={{ repeat: Infinity, duration: 2 }}
+                                    />
+                                  )}
                                 </div>
-                              ) : q.key === 'description' ? (
-                                <div className="flex gap-2">
-                                  <Textarea
-                                    value={currentAnswer}
-                                    onChange={e => setCurrentAnswer(e.target.value)}
-                                    placeholder={q.placeholder}
-                                    className="rounded-xl min-h-[80px]"
-                                    onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleAnswer() } }}
-                                  />
-                                </div>
-                              ) : (
-                                <div className="flex gap-2">
-                                  <Input
-                                    value={currentAnswer}
-                                    onChange={e => setCurrentAnswer(e.target.value)}
-                                    placeholder={q.placeholder}
-                                    className="rounded-lg"
-                                    onKeyDown={e => { if (e.key === 'Enter') handleAnswer() }}
-                                    type={q.key === 'capital' ? 'number' : 'text'}
-                                  />
-                                  <Button onClick={handleAnswer} size="icon" className="shrink-0 rounded-lg bg-teal-500 hover:bg-teal-600">
-                                    <ArrowRight className="w-4 h-4" />
-                                  </Button>
-                                </div>
-                              )}
+                              </div>
                             </div>
-                          ) : null}
+
+                            {/* Answer Area */}
+                            {isCurrentQ ? (
+                              <motion.div 
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="flex justify-end pt-2"
+                              >
+                                <div className="w-full max-w-[90%] bg-sky-50/50 backdrop-blur-md rounded-[24px] p-2 border border-sky-100 shadow-[inset_0_2px_10px_rgba(0,0,0,0.02)] relative group focus-within:bg-white focus-within:shadow-[0_8px_30px_rgba(59,130,246,0.1)] focus-within:border-sky-200 transition-all duration-500">
+                                   
+                                   {/* Input type handling */}
+                                   <div className="relative">
+                                    {q.key === 'cible' ? (
+                                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-2">
+                                        {['B2B - Entreprises', 'B2C - Particuliers', 'B2B2C', 'Gouvernement / Secteur Public'].map((opt) => (
+                                          <button
+                                            key={opt}
+                                            type="button"
+                                            onClick={() => setProjectData({ ...projectData, cible: opt })}
+                                            className={`px-4 py-3 rounded-xl text-xs font-bold transition-all text-left border ${
+                                              projectData.cible === opt 
+                                                ? 'bg-sky-500 text-white border-sky-500 shadow-md transform scale-[1.02]' 
+                                                : 'bg-white text-slate-600 border-slate-200 hover:border-sky-300 hover:bg-sky-50'
+                                            }`}
+                                          >
+                                            {opt}
+                                          </button>
+                                        ))}
+                                      </div>
+                                    ) : q.key === 'donneesTraitees' ? (
+                                       <textarea
+                                          autoFocus
+                                          placeholder={q.placeholder}
+                                          value={typeof value === 'string' ? value : ''}
+                                          onChange={(e) => setProjectData({ ...projectData, [key]: e.target.value })}
+                                          onKeyDown={handleKeyDown}
+                                          className="w-full h-24 bg-transparent outline-none p-4 text-[13px] text-slate-800 placeholder:text-blue-300/60 leading-relaxed resize-none font-medium"
+                                        />
+                                    ) : (
+                                      <input
+                                        type="text"
+                                        autoFocus
+                                        placeholder={q.placeholder}
+                                        value={typeof value === 'string' ? value : ''}
+                                        onChange={(e) => setProjectData({ ...projectData, [key]: e.target.value })}
+                                        onKeyDown={handleKeyDown}
+                                        className="w-full bg-transparent outline-none px-5 py-3 text-[14px] text-slate-800 placeholder:text-blue-300/60 font-medium"
+                                      />
+                                    )}
+                                  </div>
+
+                                  <div className="absolute right-2 bottom-2 z-10 flex items-center justify-end p-2 gap-2">
+                                    {questionIndex > 0 && (
+                                       <Button 
+                                        type="button" 
+                                        variant="ghost"
+                                        onClick={handlePrevQuestion}
+                                        className="text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full w-8 h-8 p-0"
+                                      >
+                                        <ChevronLeft className="w-4 h-4" />
+                                      </Button>
+                                    )}
+                                    <Button 
+                                      type="button" 
+                                      onClick={handleNextQuestion}
+                                      disabled={!isAnswered}
+                                      className="bg-blue-600 hover:bg-blue-700 text-white rounded-full w-10 h-10 p-0 shadow-lg shadow-blue-500/30 transition-all active:scale-95 disabled:opacity-40 disabled:hover:bg-blue-600"
+                                    >
+                                      {questionIndex < QUESTIONS.length - 1 ? (
+                                        <ArrowRight className="w-5 h-5 ml-0.5" />
+                                      ) : (
+                                        <CheckCircle2 className="w-5 h-5" />
+                                      )}
+                                    </Button>
+                                  </div>
+                                </div>
+                              </motion.div>
+                            ) : (
+                              <div className="flex justify-end">
+                                <div className="bg-sky-500 text-white px-5 py-3 rounded-2xl rounded-br-sm font-medium text-[13px] max-w-[85%] shadow-sm hover:shadow-md cursor-pointer transition-shadow" onClick={() => setQuestionIndex(i)}>
+                                  {typeof value === 'string' ? value : JSON.stringify(value)}
+                                </div>
+                              </div>
+                            )}
+                          </motion.div>
+                        )
+                      })}
+                    </AnimatePresence>
+
+                    {/* Final Submit Button state */}
+                    {questionIndex >= QUESTIONS.length && (
+                       <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex flex-col items-center gap-4 py-8 border-t border-slate-100 mt-8"
+                      >
+                        <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-500">
+                          <CheckCircle2 className="w-8 h-8" />
                         </div>
-                      )
-                    })}
-                  </div>
-                </div>
-
-                {/* Next step CTA */}
-                {isDescriptionComplete && (
-                  <Button
-                    onClick={() => { setSelectedPipelineView('juridique') }}
-                    className="w-full py-5 rounded-xl text-sm font-semibold bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700 shadow-lg shadow-teal-500/20 gap-2"
-                  >
-                    <Sparkles className="w-4 h-4" />
-                    Passer à l&apos;Analyse Juridique
-                    <ChevronRight className="w-4 h-4" />
-                  </Button>
-                )}
-              </div>
-            )}
-
-            {/* ─── JURIDIQUE STEP ─── */}
-            {selectedPipelineView === 'juridique' && (
-              <div className="animate-slide-up space-y-6">
-                <div className="startify-card p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Scale className="w-5 h-5 text-blue-600" />
-                    <h3 className="text-base font-bold text-foreground">Analyse Juridique</h3>
-                    {pipelineState.juridique && (
-                      <span className="ml-auto text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
-                        Score : {pipelineState.juridique.score_global}/100
-                      </span>
+                        <div className="text-center">
+                          <h4 className="text-sm font-black uppercase tracking-widest text-slate-800">Profil Projet Complété</h4>
+                          <p className="text-[12px] text-slate-500 mt-2 max-w-sm">
+                            Le contexte est prêt. Vous pouvez maintenant lancer l'audit IA pour analyser la conformité.
+                          </p>
+                        </div>
+                        <Button 
+                          onClick={handleProjectSubmit}
+                          disabled={isAnalyzing || pipelineState.completedSteps.includes('description')}
+                          className="mt-4 bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-500 hover:to-teal-600 text-white rounded-full px-8 py-6 h-auto text-sm font-bold shadow-[0_8px_30px_rgba(16,185,129,0.3)] transition-all hover:-translate-y-1"
+                        >
+                          {isAnalyzing ? (
+                            <>
+                              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-3" />
+                              Analyse du contexte...
+                            </>
+                          ) : pipelineState.completedSteps.includes('description') ? (
+                            <>
+                               <CheckCircle2 className="w-5 h-5 mr-3" />
+                               Analyse Terminée
+                            </>
+                          ) : (
+                            <>
+                              Valider et passer à l'audit
+                              <ArrowRight className="w-5 h-5 ml-3" />
+                            </>
+                          )}
+                        </Button>
+                      </motion.div>
                     )}
                   </div>
-
-                  {!isDescriptionComplete ? (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <AlertCircle className="w-8 h-8 mx-auto mb-2 opacity-40" />
-                      <p className="text-sm">Veuillez d&apos;abord compléter la description du projet</p>
-                      <Button variant="outline" size="sm" className="mt-3" onClick={() => setSelectedPipelineView('description')}>
-                        Retour à la description
-                      </Button>
-                    </div>
-                  ) : !pipelineState.juridique ? (
-                    <div className="space-y-4">
-                      <div className="p-4 rounded-xl bg-blue-50/50 border border-blue-200/50 space-y-2">
-                        <p className="text-sm text-blue-800 font-medium">Prêt pour l&apos;analyse de conformité</p>
-                        <p className="text-xs text-blue-600/70">
-                          Projet : <strong>{projectData.nom}</strong> • Secteur : <strong>{projectData.sector}</strong>
-                          {projectData.capital && <> • Capital : <strong>{projectData.capital} TND</strong></>}
-                        </p>
-                      </div>
-                      <Button
-                        onClick={handleJuridiqueAnalysis}
-                        disabled={isAnalyzing}
-                        className="w-full py-5 rounded-xl text-sm font-semibold bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg shadow-blue-500/20 gap-2"
-                      >
-                        {isAnalyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Scale className="w-4 h-4" />}
-                        {isAnalyzing ? 'Analyse en cours...' : 'Lancer l\'analyse juridique'}
-                      </Button>
-                      {analyzeError && <div className="p-3 rounded-xl bg-red-50 text-red-600 text-xs border border-red-200">{analyzeError}</div>}
-                    </div>
-                  ) : (
-                    /* Juridique Results Summary */
-                    <div className="space-y-4">
-                      {/* Score gauge mini */}
-                      <div className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50">
-                        <div className="relative w-16 h-16">
-                          <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="6" className="text-blue-200" />
-                            <circle cx="50" cy="50" r="45" fill="none"
-                              stroke={pipelineState.juridique.score_global >= 75 ? '#10b981' : pipelineState.juridique.score_global >= 50 ? '#f59e0b' : '#ef4444'}
-                              strokeWidth="6" strokeLinecap="round"
-                              strokeDasharray={283} strokeDashoffset={283 - (pipelineState.juridique.score_global / 100) * 283}
-                              style={{ transition: 'stroke-dashoffset 1.5s ease-out' }} />
-                          </svg>
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-lg font-black text-blue-700">{pipelineState.juridique.score_global}</span>
-                          </div>
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-bold text-blue-800">Conformité : {pipelineState.juridique.status === 'conforme' ? '✓ Conforme' : pipelineState.juridique.status === 'conforme_reserves' ? '⚠ Avec réserves' : '✗ Non conforme'}</p>
-                          <p className="text-xs text-blue-600/70 mt-1">{pipelineState.juridique.criteres.length} critères analysés • {pipelineState.juridique.recommendations.length} recommandations</p>
-                        </div>
-                        <Button variant="outline" size="sm" className="text-xs" onClick={() => onNavigate('conformite')}>
-                          Détails <ChevronRight className="w-3 h-3 ml-1" />
-                        </Button>
-                      </div>
-
-                      {/* Key recommendations */}
-                      {pipelineState.juridique.recommendations.slice(0, 3).map((rec, i) => (
-                        <div key={i} className="flex items-start gap-2 text-xs text-foreground/70 pl-2">
-                          <span className="font-bold text-blue-500 mt-0.5">{i + 1}.</span>
-                          <span>{rec}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
-
-                {/* Next step */}
-                {pipelineState.juridique && (
-                  <Button
-                    onClick={() => { setSelectedPipelineView('marketing'); handleMarketingAnalysis() }}
-                    className="w-full py-5 rounded-xl text-sm font-semibold bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 shadow-lg shadow-pink-500/20 gap-2"
-                  >
-                    <TrendingUp className="w-4 h-4" />
-                    Passer à l&apos;Analyse Marketing
-                    <ChevronRight className="w-4 h-4" />
-                  </Button>
+                </div>
                 )}
-              </div>
+
+                {/* ─── NEXT CTA FOR DESCRIPTION STEP ─── */}
+                {selectedPipelineView === 'description' && (
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="relative group/cta mt-8">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-teal-500 to-blue-600 rounded-[24px] blur opacity-30 group-hover/cta:opacity-60 transition duration-500" />
+                    <Button
+                      onClick={() => { 
+                        setSelectedPipelineView('audit')
+                        setPipelineState({
+                          ...pipelineState,
+                          completedSteps: Array.from(new Set([...pipelineState.completedSteps, 'description'])),
+                          currentStep: 'audit'
+                        })
+                      }}
+                      className="relative w-full py-8 text-white rounded-[24px] text-sm font-black uppercase tracking-widest bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700 shadow-2xl gap-3"
+                    >
+                      <ShieldCheck className="w-5 h-5 group-hover/cta:scale-125 transition-transform duration-300" />
+                      Transférer à l&apos;Agent Juridique
+                      <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}>
+                        <ChevronRight className="w-5 h-5" />
+                      </motion.div>
+                    </Button>
+                  </motion.div>
+                )}
+                {!isDescriptionComplete && (!projectData.description || projectData.description.length < 20) && (
+                   <p className="text-center text-[10px] text-muted-foreground italic mt-4">
+                      Complétez le questionnaire pour débloquer l&apos;audit juridique
+                   </p>
+                )}
+
+
+            {/* ─── AUDIT STEP ─── */}
+            {selectedPipelineView === 'audit' && (
+               <div className="space-y-8 relative">
+                  {/* Ambient Glow */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-emerald-200/40 rounded-full blur-[150px] -z-10 mix-blend-multiply opacity-50 pointer-events-none" />
+
+                  <div className="bg-white/60 backdrop-blur-2xl px-6 rounded-[50px] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden group min-h-[600px] flex flex-col pt-10">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-100/50 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 transition-opacity duration-1000 opacity-0 group-hover:opacity-100" />
+                    
+                    <div className="flex items-center justify-between mb-6 relative z-10 border-b border-slate-100/50 pb-6 px-4">
+                      <div className="flex items-center gap-4">
+                        <motion.div 
+                          whileHover={{ scale: 1.1, rotate: 5 }}
+                          className="w-12 h-12 rounded-[18px] bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100/50 flex items-center justify-center shadow-inner"
+                        >
+                          <ShieldCheck className="w-6 h-6 text-emerald-600 drop-shadow-sm" />
+                        </motion.div>
+                        <div>
+                          <h3 className="text-sm font-black uppercase tracking-widest text-slate-800">Audit Juridique</h3>
+                          <p className="text-[11px] font-medium text-slate-500 mt-1">Analyse de la conformité réglementaire</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex-1 min-h-[500px]">
+                      <ConformiteSection 
+                        projectData={projectData} 
+                        conformiteResult={pipelineState.juridique} 
+                        isEmbedded={true}
+                        onComplete={(res) => {
+                          setPipelineState({
+                            ...pipelineState,
+                            juridique: res,
+                            completedSteps: Array.from(new Set([...pipelineState.completedSteps, 'audit'])),
+                          })
+                        }}
+                      />
+                    </div>
+                  </div>
+                  {pipelineState.juridique && (
+                     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-8 flex justify-center pb-12">
+                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="relative group/cta w-auto">
+                          <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-[24px] blur opacity-30 group-hover/cta:opacity-60 transition duration-500" />
+                          <Button
+                            onClick={() => {
+                              setSelectedPipelineView('marketing')
+                              setPipelineState({
+                                ...pipelineState,
+                                currentStep: 'marketing'
+                              })
+                            }}
+                            className="relative px-12 py-8 rounded-[24px] bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black uppercase tracking-widest shadow-2xl gap-3"
+                          >
+                            <TrendingUp className="w-5 h-5 group-hover/cta:scale-125 transition-transform duration-300" />
+                            Transférer à l&apos;Agent Marketing
+                            <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}>
+                              <ChevronRight className="w-5 h-5" />
+                            </motion.div>
+                          </Button>
+                        </motion.div>
+                     </motion.div>
+                  )}
+               </div>
             )}
 
             {/* ─── MARKETING STEP ─── */}
             {selectedPipelineView === 'marketing' && (
-              <div className="animate-slide-up space-y-6">
-                <div className="startify-card p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <TrendingUp className="w-5 h-5 text-pink-600" />
-                    <h3 className="text-base font-bold text-foreground">Analyse Marketing</h3>
-                  </div>
-                  {pipelineState.marketing ? (
-                    <div className="space-y-3">
-                      <div className="p-4 rounded-xl bg-pink-50/50 border border-pink-200/50">
-                        <p className="text-sm font-bold text-pink-800">Analyse concurrentielle terminée</p>
-                        <p className="text-xs text-pink-600/70 mt-1">
-                          {pipelineState.marketing.competitors.length} concurrents • {pipelineState.marketing.personas.length} personas • SWOT complet
-                        </p>
+               <div className="space-y-8 relative">
+                  {/* Ambient Glow */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-pink-200/40 rounded-full blur-[150px] -z-10 mix-blend-multiply opacity-50 pointer-events-none" />
+
+                  <div className="bg-white/60 backdrop-blur-2xl px-6 rounded-[50px] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden group min-h-[600px] flex flex-col pt-10">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-pink-100/50 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 transition-opacity duration-1000 opacity-0 group-hover:opacity-100" />
+                    
+                    <div className="flex items-center justify-between mb-6 relative z-10 border-b border-slate-100/50 pb-6 px-4">
+                      <div className="flex items-center gap-4">
+                        <motion.div 
+                          whileHover={{ scale: 1.1, rotate: 5 }}
+                          className="w-12 h-12 rounded-[18px] bg-gradient-to-br from-pink-50 to-rose-50 border border-pink-100/50 flex items-center justify-center shadow-inner"
+                        >
+                          <TrendingUp className="w-6 h-6 text-pink-600 drop-shadow-sm" />
+                        </motion.div>
+                        <div>
+                          <h3 className="text-sm font-black uppercase tracking-widest text-slate-800">Stratégie Marketing</h3>
+                          <p className="text-[11px] font-medium text-slate-500 mt-1">Analyse du marché et positionnement</p>
+                        </div>
                       </div>
-                      <Button variant="outline" size="sm" onClick={() => onNavigate('marketing')}>
-                        Voir les détails <ChevronRight className="w-3 h-3 ml-1" />
-                      </Button>
                     </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <TrendingUp className="w-8 h-8 mx-auto mb-2 text-pink-400 opacity-40" />
-                      <p className="text-sm text-muted-foreground mb-3">Lancez l&apos;analyse marketing pour votre projet</p>
-                      <Button
-                        onClick={handleMarketingAnalysis}
-                        className="bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 gap-2"
-                      >
-                        <TrendingUp className="w-4 h-4" />
-                        Lancer l&apos;analyse
-                      </Button>
+
+                    <div className="flex-1 min-h-[500px]">
+                      <MarketingSection projectData={projectData} />
                     </div>
-                  )}
-                </div>
-              </div>
+                  </div>
+                  <div className="mt-8 flex justify-center pb-12">
+                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="relative group/cta w-auto">
+                        <div className="absolute -inset-1 bg-gradient-to-r from-pink-600 to-rose-600 rounded-[24px] blur opacity-30 group-hover/cta:opacity-60 transition duration-500" />
+                        <Button
+                          onClick={() => {
+                            setSelectedPipelineView('documents')
+                            if (!pipelineState.completedSteps.includes('marketing')) {
+                                setPipelineState({
+                                  ...pipelineState,
+                                  completedSteps: [...pipelineState.completedSteps, 'marketing'],
+                                  currentStep: 'documents'
+                                })
+                            }
+                          }}
+                          className="relative px-12 py-8 rounded-[24px] bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white font-black uppercase tracking-widest shadow-2xl gap-3"
+                        >
+                          <FileText className="w-5 h-5 group-hover/cta:scale-125 transition-transform duration-300" />
+                          Générer les Documents Légaux
+                          <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}>
+                            <ChevronRight className="w-5 h-5" />
+                          </motion.div>
+                        </Button>
+                     </motion.div>
+                  </div>
+               </div>
+            )}
+
+            {/* ─── DOCUMENTS STEP ─── */}
+            {selectedPipelineView === 'documents' && (
+               <div className="space-y-8 relative">
+                  {/* Ambient Glow */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-violet-200/40 rounded-full blur-[150px] -z-10 mix-blend-multiply opacity-50 pointer-events-none" />
+
+                  <div className="bg-white/60 backdrop-blur-2xl px-6 rounded-[50px] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden group min-h-[600px] flex flex-col pt-10">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-violet-100/50 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 transition-opacity duration-1000 opacity-0 group-hover:opacity-100" />
+                    
+                    <div className="flex items-center justify-between mb-6 relative z-10 border-b border-slate-100/50 pb-6 px-4">
+                      <div className="flex items-center gap-4">
+                        <motion.div 
+                          whileHover={{ scale: 1.1, rotate: 5 }}
+                          className="w-12 h-12 rounded-[18px] bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100/50 flex items-center justify-center shadow-inner"
+                        >
+                          <FileText className="w-6 h-6 text-violet-600 drop-shadow-sm" />
+                        </motion.div>
+                        <div>
+                          <h3 className="text-sm font-black uppercase tracking-widest text-slate-800">Génération de Documents</h3>
+                          <p className="text-[11px] font-medium text-slate-500 mt-1">Rédaction automatisée des statuts et CGU</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex-1 min-h-[500px]">
+                      <DocumentsSection projectData={projectData} isEmbedded={true} />
+                    </div>
+                  </div>
+                  <div className="mt-8 flex justify-center pb-12">
+                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="relative group/cta w-auto">
+                        <div className="absolute -inset-1 bg-gradient-to-r from-violet-600 to-purple-600 rounded-[24px] blur opacity-30 group-hover/cta:opacity-60 transition duration-500" />
+                        <Button
+                          onClick={() => {
+                            setSelectedPipelineView('rapport')
+                            if (!pipelineState.completedSteps.includes('documents')) {
+                                setPipelineState({
+                                  ...pipelineState,
+                                  completedSteps: [...pipelineState.completedSteps, 'documents'],
+                                  currentStep: 'rapport'
+                                })
+                            }
+                          }}
+                          className="relative px-12 py-8 rounded-[24px] bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-black uppercase tracking-widest shadow-2xl gap-3"
+                        >
+                          <ClipboardCheck className="w-5 h-5 group-hover/cta:scale-125 transition-transform duration-300" />
+                          Finaliser le Rapport Startify
+                          <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}>
+                            <ChevronRight className="w-5 h-5" />
+                          </motion.div>
+                        </Button>
+                     </motion.div>
+                  </div>
+               </div>
             )}
 
             {/* ─── RAPPORT STEP ─── */}
             {selectedPipelineView === 'rapport' && (
-              <div className="animate-slide-up space-y-6">
-                <div className="startify-card p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <ClipboardCheck className="w-5 h-5 text-amber-600" />
-                    <h3 className="text-base font-bold text-foreground">Rapport Final</h3>
+               <div className="space-y-8 relative pb-12">
+                  {/* Ambient Glow */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-slate-200/40 rounded-full blur-[150px] -z-10 mix-blend-multiply opacity-50 pointer-events-none" />
+
+                  <div className="bg-white/60 backdrop-blur-2xl px-6 rounded-[50px] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden group min-h-[600px] flex flex-col pt-10">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-slate-100/50 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 transition-opacity duration-1000 opacity-0 group-hover:opacity-100" />
+                    
+                    <div className="flex items-center justify-between mb-6 relative z-10 border-b border-slate-100/50 pb-6 px-4">
+                      <div className="flex items-center gap-4">
+                        <motion.div 
+                          whileHover={{ scale: 1.1, rotate: 5 }}
+                          className="w-12 h-12 rounded-[18px] bg-gradient-to-br from-slate-50 to-gray-50 border border-slate-100/50 flex items-center justify-center shadow-inner"
+                        >
+                          <BarChart className="w-6 h-6 text-slate-600 drop-shadow-sm" />
+                        </motion.div>
+                        <div>
+                          <h3 className="text-sm font-black uppercase tracking-widest text-slate-800">Synthèse Globale</h3>
+                          <p className="text-[11px] font-medium text-slate-500 mt-1">Rapport final et scores de conformité</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex-1 min-h-[500px]">
+                      <ReportSection projectData={projectData} pipelineState={pipelineState} />
+                    </div>
                   </div>
-                  {pipelineState.juridique && pipelineState.marketing ? (
-                    <div className="space-y-3">
-                      <p className="text-sm text-foreground/70">Votre rapport complet est prêt, combinant l&apos;analyse juridique et marketing.</p>
-                      <Button onClick={() => onNavigate('rapport')} className="bg-gradient-to-r from-amber-500 to-orange-600 gap-2">
-                        <ClipboardCheck className="w-4 h-4" />
-                        Voir le rapport complet
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <ClipboardCheck className="w-8 h-8 mx-auto mb-2 opacity-40" />
-                      <p className="text-sm">Complétez les analyses juridique et marketing pour générer le rapport</p>
-                    </div>
-                  )}
-                </div>
-              </div>
+                  <div className="mt-8 flex justify-center">
+                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="relative group/cta w-auto">
+                        <div className="absolute -inset-2 bg-gradient-to-r from-slate-900 to-black rounded-[24px] blur-lg opacity-40 group-hover/cta:opacity-70 transition duration-500 animate-pulse" />
+                        <Button
+                          onClick={() => {
+                            // Reset or download logic
+                            alert("Rapport finalisé ! Téléchargement bientôt disponible.")
+                          }}
+                          className="relative px-12 py-8 rounded-[24px] bg-slate-900 hover:bg-black text-white font-black uppercase tracking-widest shadow-2xl gap-3"
+                        >
+                          <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}>
+                            <Rocket className="w-6 h-6" />
+                          </motion.div>
+                          Lancer la Startup
+                        </Button>
+                     </motion.div>
+                  </div>
+               </div>
             )}
+            </motion.div>
+          </AnimatePresence>
           </div>
         </div>
       </div>

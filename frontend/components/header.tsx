@@ -1,18 +1,22 @@
 import { Lightbulb, Plus, Share2, Settings, User, HelpCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
+
 
 export default function Header() {
   return (
     <header className="border-b border-border bg-card shadow-sm">
-      <div className="flex h-14 items-center justify-between px-6">
+      <div className="flex h-16 items-center justify-between px-6">
         {/* Left: Logo and Platform Name */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center justify-center rounded-lg bg-primary/10 p-1.5">
-            <Lightbulb className="h-5 w-5 text-primary" fill="currentColor" />
-          </div>
-          <div>
-            <h1 className="text-base font-semibold text-foreground">Startup Assistant</h1>
-            <p className="text-xs text-muted-foreground hidden sm:block">Votre guide légal complet</p>
+        <div className="flex items-center">
+          <div className="relative w-56 h-14">
+            <Image 
+              src="/logo.png" 
+              alt="Startify Logo" 
+              fill
+              className="object-contain object-left"
+              priority
+            />
           </div>
         </div>
 
