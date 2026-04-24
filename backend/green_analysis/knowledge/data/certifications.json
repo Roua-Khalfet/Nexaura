@@ -1,0 +1,247 @@
+{
+  "_metadata": {
+    "description": "Green certifications and eco-labels relevant to Tunisian entrepreneurs",
+    "sources": [
+      "ISO.org",
+      "ANPE Tunisia",
+      "Research compilation Feb 2026"
+    ]
+  },
+
+  "certifications": [
+    {
+      "id": "iso_14001",
+      "name": "ISO 14001",
+      "full_name": "ISO 14001 — Environmental Management System (EMS)",
+      "issuing_body": "ISO (via accredited certification bodies)",
+      "tunisia_body": "INNORPI (Tunisian standards adoption), certified by international auditors",
+      "description": "International standard providing a framework for organizations to protect the environment, respond to changing environmental conditions, and manage environmental aspects systematically.",
+      "applicable_sectors": ["all"],
+      "key_requirements": [
+        "Establish an Environmental Management System",
+        "Identify environmental aspects and impacts",
+        "Set environmental objectives and targets",
+        "Implement operational controls",
+        "Monitor and measure environmental performance",
+        "Conduct internal audits",
+        "Management review and continual improvement"
+      ],
+      "estimated_cost_tnd": "15,000–50,000 TND (SME)",
+      "estimated_timeline": "6–12 months",
+      "benefits": [
+        "International market access (especially EU)",
+        "Regulatory compliance demonstration",
+        "Cost savings through resource efficiency",
+        "Enhanced reputation and stakeholder trust",
+        "Systematic risk management"
+      ],
+      "global_certifications": "500,000+ in 180+ countries",
+      "priority_for_startups": "high",
+      "cbam_relevance": "Demonstrates environmental management for EU export compliance"
+    },
+    {
+      "id": "iso_50001",
+      "name": "ISO 50001",
+      "full_name": "ISO 50001 — Energy Management System",
+      "issuing_body": "ISO (via accredited certification bodies)",
+      "description": "Framework for establishing, implementing, maintaining and improving an energy management system to enable systematic improvement of energy performance.",
+      "applicable_sectors": ["manufacturing", "textiles", "ceramics", "food_processing", "chemical", "tourism"],
+      "key_requirements": [
+        "Establish energy management policy",
+        "Conduct energy review and identify significant energy uses",
+        "Set energy performance indicators (EnPI) and baselines",
+        "Implement energy action plans",
+        "Monitor and analyze energy data",
+        "Continual improvement of energy performance"
+      ],
+      "estimated_cost_tnd": "10,000–40,000 TND (SME)",
+      "estimated_timeline": "6–12 months",
+      "benefits": [
+        "Reduced energy costs (typically 10-30% savings)",
+        "Lower carbon footprint",
+        "ANME incentive eligibility",
+        "Complements ISO 14001"
+      ],
+      "priority_for_startups": "high (for energy-intensive sectors)",
+      "cbam_relevance": "Energy data tracking supports carbon reporting"
+    },
+    {
+      "id": "iso_14064",
+      "name": "ISO 14064",
+      "full_name": "ISO 14064 — Greenhouse Gas Accounting and Verification",
+      "issuing_body": "ISO",
+      "description": "Three-part standard for quantifying, monitoring, reporting, and verifying greenhouse gas emissions and removals.",
+      "applicable_sectors": ["all"],
+      "key_requirements": [
+        "Quantify GHG emissions (Scope 1, 2, and optionally 3)",
+        "Set organizational boundaries",
+        "Report emissions transparently",
+        "Third-party verification"
+      ],
+      "estimated_cost_tnd": "8,000–25,000 TND",
+      "estimated_timeline": "3–6 months",
+      "benefits": [
+        "Required for CBAM compliance (EU exports)",
+        "Carbon credit readiness",
+        "Investor and buyer credibility",
+        "Baseline for reduction targets"
+      ],
+      "priority_for_startups": "high (EU exporters), medium (others)",
+      "cbam_relevance": "Directly supports CBAM carbon content reporting"
+    },
+    {
+      "id": "iso_14067",
+      "name": "ISO 14067",
+      "full_name": "ISO 14067 — Carbon Footprint of Products",
+      "issuing_body": "ISO",
+      "description": "Standard for quantifying the carbon footprint of products using life cycle assessment methodology.",
+      "applicable_sectors": ["manufacturing", "food_processing", "agriculture", "textiles"],
+      "key_requirements": [
+        "Life cycle assessment of product",
+        "Quantify GHG emissions across product lifecycle",
+        "Communication of carbon footprint results"
+      ],
+      "estimated_cost_tnd": "5,000–20,000 TND per product line",
+      "estimated_timeline": "2–4 months",
+      "benefits": [
+        "Product-level carbon labeling",
+        "EU market differentiation",
+        "CBAM product-level reporting support"
+      ],
+      "priority_for_startups": "medium",
+      "cbam_relevance": "Product-level carbon data for CBAM declarations"
+    },
+    {
+      "id": "label_ecologique_tunisie",
+      "name": "Label Écologique Tunisien",
+      "full_name": "Tunisian Eco-Label (Label Écologique)",
+      "issuing_body": "ANPE (Agence Nationale de Protection de l'Environnement)",
+      "description": "National eco-label program certifying products and services that meet Tunisian environmental standards. Less costly than international certifications, designed for local market.",
+      "applicable_sectors": ["all"],
+      "key_requirements": [
+        "Meet ANPE environmental criteria for the specific product/service category",
+        "Environmental impact assessment",
+        "Compliance with Tunisian environmental regulations",
+        "Periodic renewal"
+      ],
+      "estimated_cost_tnd": "2,000–10,000 TND",
+      "estimated_timeline": "2–6 months",
+      "benefits": [
+        "Local market recognition",
+        "Lower cost than international certifications",
+        "Government procurement preference",
+        "Stepping stone to ISO 14001"
+      ],
+      "priority_for_startups": "high (local market focus)",
+      "cbam_relevance": "Limited — primarily domestic recognition"
+    },
+    {
+      "id": "bio_tunisie",
+      "name": "Bio Tunisia (Organic)",
+      "full_name": "Tunisian Organic Agriculture Certification",
+      "issuing_body": "Ministry of Agriculture / authorized certification bodies",
+      "description": "Organic agriculture certification for Tunisian producers. Aligned with EU organic regulation for export eligibility.",
+      "applicable_sectors": ["agriculture", "food_processing"],
+      "key_requirements": [
+        "No synthetic pesticides or fertilizers",
+        "Conversion period (2-3 years for crops)",
+        "Record keeping and traceability",
+        "Annual inspection"
+      ],
+      "estimated_cost_tnd": "3,000–15,000 TND",
+      "estimated_timeline": "2–3 years (conversion period)",
+      "benefits": [
+        "Premium pricing (20-50% markup)",
+        "EU organic export eligibility",
+        "Health and environmental benefits",
+        "Growing domestic demand"
+      ],
+      "priority_for_startups": "high (agriculture/food sector)",
+      "cbam_relevance": "Indirectly supports environmental credibility"
+    },
+    {
+      "id": "oeko_tex",
+      "name": "OEKO-TEX Standard 100",
+      "full_name": "OEKO-TEX Standard 100 — Textile Safety",
+      "issuing_body": "International OEKO-TEX Association",
+      "description": "Tests textiles for harmful substances at every stage of production. Essential for textile exports to EU.",
+      "applicable_sectors": ["textiles"],
+      "key_requirements": [
+        "Product tested for harmful substances",
+        "Compliance with limit values for chemicals",
+        "Annual renewal"
+      ],
+      "estimated_cost_tnd": "5,000–20,000 TND per product class",
+      "estimated_timeline": "1–3 months",
+      "benefits": [
+        "EU market access requirement for many buyers",
+        "Consumer safety assurance",
+        "Brand differentiation"
+      ],
+      "priority_for_startups": "high (textile exporters)",
+      "cbam_relevance": "Not directly, but supports overall sustainability profile"
+    },
+    {
+      "id": "green_key",
+      "name": "Green Key",
+      "full_name": "Green Key — Eco-label for Tourism",
+      "issuing_body": "Foundation for Environmental Education (FEE)",
+      "description": "International eco-label for tourism facilities (hotels, camps, restaurants). Recognizes environmental commitment in the tourism sector.",
+      "applicable_sectors": ["tourism_hospitality"],
+      "key_requirements": [
+        "Environmental management policy",
+        "Staff training on environmental practices",
+        "Water and energy conservation measures",
+        "Waste reduction and recycling",
+        "Guest information on sustainability"
+      ],
+      "estimated_cost_tnd": "3,000–10,000 TND",
+      "estimated_timeline": "3–6 months",
+      "benefits": [
+        "International recognition on booking platforms",
+        "Attracts eco-conscious tourists",
+        "Operational cost savings"
+      ],
+      "priority_for_startups": "high (tourism sector)",
+      "cbam_relevance": "Not applicable"
+    },
+    {
+      "id": "globalg_a_p",
+      "name": "GLOBALG.A.P.",
+      "full_name": "GLOBALG.A.P. — Good Agricultural Practices",
+      "issuing_body": "GLOBALG.A.P. c/o FoodPLUS GmbH",
+      "description": "Farm-level certification covering food safety, environmental sustainability, and worker welfare. Required by many EU retailers.",
+      "applicable_sectors": ["agriculture"],
+      "key_requirements": [
+        "Integrated pest management",
+        "Water management plan",
+        "Worker health and safety",
+        "Environmental impact assessment",
+        "Traceability system"
+      ],
+      "estimated_cost_tnd": "5,000–15,000 TND",
+      "estimated_timeline": "3–6 months",
+      "benefits": [
+        "Required by major EU supermarket chains",
+        "Demonstrates food safety and sustainability",
+        "Better farm management practices"
+      ],
+      "priority_for_startups": "high (agriculture exporters)",
+      "cbam_relevance": "Indirectly supports sustainability credentials"
+    }
+  ],
+
+  "cbam_info": {
+    "name": "EU CBAM — Carbon Border Adjustment Mechanism",
+    "effective_date": "Transitional phase started Oct 2023, full implementation 2026",
+    "description": "EU importers must purchase CBAM certificates corresponding to the carbon price that would have been paid had the goods been produced under EU carbon pricing rules.",
+    "affected_sectors": ["cement", "iron_steel", "aluminium", "fertilizers", "electricity", "hydrogen"],
+    "impact_on_tunisia": "Tunisian exporters in affected sectors must provide verified emissions data to EU importers. Businesses not in these sectors may still face future CBAM expansion.",
+    "recommended_actions": [
+      "Track and verify product-level carbon emissions",
+      "Obtain ISO 14064 or ISO 14067 certification",
+      "Consider ISO 14001 for overall environmental management",
+      "Engage with EU buyers on emissions data requirements"
+    ]
+  }
+}

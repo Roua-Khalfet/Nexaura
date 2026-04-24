@@ -1,0 +1,203 @@
+{
+  "_metadata": {
+    "description": "Emission factors for common Tunisian industry sectors",
+    "sources": [
+      "IPCC 2006 Guidelines (defaults)",
+      "ADEME Base Carbone (French proxy)",
+      "Research compilation Feb 2026"
+    ],
+    "units_note": "All CO2 values in kgCO2e unless otherwise noted",
+    "tunisia_grid_emission_factor_kgCO2_per_kWh": 0.55,
+    "tunisia_grid_note": "Estimated — 95% natural gas generation. Official STEG value pending."
+  },
+
+  "energy_fuels": {
+    "natural_gas": {
+      "emission_factor": 56.1,
+      "unit": "kgCO2/GJ",
+      "source": "IPCC default"
+    },
+    "diesel": {
+      "emission_factor": 74.1,
+      "unit": "kgCO2/GJ",
+      "source": "IPCC default"
+    },
+    "gasoline": {
+      "emission_factor": 69.3,
+      "unit": "kgCO2/GJ",
+      "source": "IPCC default"
+    },
+    "lpg": {
+      "emission_factor": 63.1,
+      "unit": "kgCO2/GJ",
+      "source": "IPCC default"
+    },
+    "electricity_grid_tunisia": {
+      "emission_factor": 0.55,
+      "unit": "kgCO2/kWh",
+      "source": "Estimated (95% natural gas mix)"
+    },
+    "solar_pv": {
+      "emission_factor": 0.04,
+      "unit": "kgCO2/kWh",
+      "source": "IPCC lifecycle average"
+    },
+    "wind": {
+      "emission_factor": 0.01,
+      "unit": "kgCO2/kWh",
+      "source": "IPCC lifecycle average"
+    }
+  },
+
+  "industry_sectors": {
+    "agriculture_olive_oil": {
+      "co2_per_unit": "0.5–1.5",
+      "unit": "kgCO2/L oil",
+      "typical_annual_emissions_kg": "5000–50000",
+      "scale_assumption": "Small to medium mill",
+      "energy_intensity": "medium",
+      "water_usage": "high",
+      "key_waste": ["olive pomace", "wastewater (margines)", "organic residues"],
+      "key_risks": ["wastewater pollution (margines)", "soil contamination", "seasonal water stress"]
+    },
+    "agriculture_dates": {
+      "co2_per_unit": "0.3–0.8",
+      "unit": "kgCO2/kg produce",
+      "typical_annual_emissions_kg": "2000–20000",
+      "scale_assumption": "Small to medium farm",
+      "energy_intensity": "low",
+      "water_usage": "very high",
+      "key_waste": ["organic waste", "packaging"],
+      "key_risks": ["groundwater depletion", "desertification", "pesticide use"]
+    },
+    "agriculture_general": {
+      "co2_per_unit": "0.5–2.0",
+      "unit": "kgCO2/kg product",
+      "typical_annual_emissions_kg": "3000–30000",
+      "scale_assumption": "Small farm",
+      "energy_intensity": "low to medium",
+      "water_usage": "high",
+      "key_waste": ["organic waste", "plastic (packaging/irrigation)", "chemical containers"],
+      "key_risks": ["water pollution", "soil degradation", "biodiversity loss"]
+    },
+    "food_processing": {
+      "co2_per_unit": "1–5",
+      "unit": "kgCO2/kg product",
+      "typical_annual_emissions_kg": "10000–100000",
+      "scale_assumption": "Small to medium factory",
+      "energy_intensity": "medium to high",
+      "water_usage": "high",
+      "key_waste": ["organic waste", "packaging", "wastewater"],
+      "key_risks": ["wastewater discharge", "energy consumption", "food waste"]
+    },
+    "textiles": {
+      "co2_per_unit": "15–35",
+      "unit": "kgCO2/kg fabric",
+      "typical_annual_emissions_kg": "50000–500000",
+      "scale_assumption": "Small to medium factory",
+      "energy_intensity": "high",
+      "water_usage": "very high",
+      "key_waste": ["fabric scraps", "chemical waste", "wastewater", "dyes"],
+      "key_risks": ["water pollution (dyes/chemicals)", "high energy use", "chemical exposure"]
+    },
+    "cement_construction_materials": {
+      "co2_per_unit": "600–900",
+      "unit": "kgCO2/ton product",
+      "typical_annual_emissions_kg": "500000–5000000",
+      "scale_assumption": "Medium plant",
+      "energy_intensity": "very high",
+      "water_usage": "moderate",
+      "key_waste": ["dust/particulates", "slag", "packaging"],
+      "key_risks": ["air pollution", "CO2 process emissions", "resource depletion"]
+    },
+    "ceramics_tiles": {
+      "co2_per_unit": "5–15",
+      "unit": "kgCO2/m²",
+      "typical_annual_emissions_kg": "100000–1000000",
+      "scale_assumption": "Medium factory",
+      "energy_intensity": "very high",
+      "water_usage": "moderate",
+      "key_waste": ["broken products", "dust", "wastewater"],
+      "key_risks": ["high energy (kiln)", "air emissions", "resource extraction"]
+    },
+    "tourism_hospitality": {
+      "co2_per_unit": "10–50",
+      "unit": "kgCO2/guest-night",
+      "typical_annual_emissions_kg": "20000–200000",
+      "scale_assumption": "Small to medium hotel",
+      "energy_intensity": "medium",
+      "water_usage": "high",
+      "key_waste": ["food waste", "plastic/packaging", "linens", "chemicals"],
+      "key_risks": ["energy for HVAC", "water consumption", "waste generation", "coastal impact"]
+    },
+    "it_digital_services": {
+      "co2_per_unit": "0.5–3",
+      "unit": "tCO2/employee/year",
+      "typical_annual_emissions_kg": "2000–30000",
+      "scale_assumption": "Small startup (5-20 employees)",
+      "energy_intensity": "low",
+      "water_usage": "minimal",
+      "key_waste": ["e-waste", "packaging"],
+      "key_risks": ["electricity for equipment/servers", "e-waste disposal", "supply chain (hardware)"]
+    },
+    "retail_commerce": {
+      "co2_per_unit": "0.1–0.5",
+      "unit": "tCO2/employee/year",
+      "typical_annual_emissions_kg": "1000–15000",
+      "scale_assumption": "Small shop/e-commerce",
+      "energy_intensity": "low",
+      "water_usage": "minimal",
+      "key_waste": ["packaging", "unsold goods"],
+      "key_risks": ["packaging waste", "transport emissions", "supply chain"]
+    },
+    "chemical_pharmaceutical": {
+      "co2_per_unit": "2–20",
+      "unit": "kgCO2/kg product",
+      "typical_annual_emissions_kg": "100000–2000000",
+      "scale_assumption": "Medium plant",
+      "energy_intensity": "high",
+      "water_usage": "high",
+      "key_waste": ["chemical waste", "wastewater", "packaging", "hazardous materials"],
+      "key_risks": ["toxic emissions", "water contamination", "hazardous waste", "soil pollution"]
+    },
+    "transport_logistics": {
+      "co2_per_unit": "0.1–0.3",
+      "unit": "kgCO2/ton-km (road)",
+      "typical_annual_emissions_kg": "20000–300000",
+      "scale_assumption": "Small fleet",
+      "energy_intensity": "high",
+      "water_usage": "minimal",
+      "key_waste": ["tires", "oil/lubricants", "packaging"],
+      "key_risks": ["fuel combustion", "air pollution", "noise pollution"]
+    },
+    "handicrafts_artisanal": {
+      "co2_per_unit": "0.1–1",
+      "unit": "kgCO2/item",
+      "typical_annual_emissions_kg": "500–5000",
+      "scale_assumption": "Micro/small workshop",
+      "energy_intensity": "low",
+      "water_usage": "low",
+      "key_waste": ["material scraps", "packaging"],
+      "key_risks": ["material sourcing sustainability", "chemical use (dyes/finishes)"]
+    }
+  },
+
+  "water_benchmarks": {
+    "_context": "Tunisia is water-stressed: <500 m³/capita/year (well below 1000 m³ scarcity threshold)",
+    "agriculture": {
+      "share_of_national_consumption": "80%",
+      "typical_m3_per_ha_per_year": "5000–12000",
+      "irrigation_efficiency": "60–70% (flood), 90%+ (drip)"
+    },
+    "industry": {
+      "share_of_national_consumption": "5%",
+      "textiles_m3_per_ton": "100–300",
+      "food_processing_m3_per_ton": "5–50",
+      "cement_m3_per_ton": "0.5–2"
+    },
+    "services": {
+      "hotel_liters_per_guest_night": "300–800",
+      "office_liters_per_employee_per_day": "50–100"
+    }
+  }
+}

@@ -1,11 +1,18 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { ShieldCheck, Loader2, ChevronLeft, ChevronRight, Rocket, Sparkles, ArrowRight, AlertCircle, FileText, Scale, TrendingUp, ClipboardCheck, CheckCircle2, BarChart } from 'lucide-react'
+import { useState, useEffect, useCallback, useRef, type Dispatch, type SetStateAction } from 'react'
+import { ShieldCheck, Loader2, ChevronLeft, ChevronRight, Rocket, Sparkles, ArrowRight, AlertCircle, FileText, Scale, TrendingUp, ClipboardCheck, CheckCircle2, BarChart, Leaf } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { analyzeConformite, type ConformiteResult } from '@/lib/api'
+import {
+  analyzeConformite,
+  startGreenAnalysis,
+  pollGreenAnalysis,
+  getGreenAnalysisResults,
+  type ConformiteResult,
+  type GreenAnalysisSession,
+} from '@/lib/api'
 import ConformiteSection from '@/components/conformite-section'
 import MarketingSection from '@/components/marketing-section'
 import DocumentsSection from '@/components/documents-section'
@@ -41,6 +48,14 @@ export interface PipelineState {
   activeStep: PipelineStep | null
   juridique: ConformiteResult | null
   marketing: MarketingResult | null
+  green: GreenPipelineState
+}
+
+export interface GreenPipelineState {
+  status: 'idle' | 'starting' | 'running' | 'completed' | 'failed'
+  sessionId: string | null
+  result: GreenAnalysisSession | null
+  error: string | null
 }
 
 export interface MarketingResult {
@@ -93,7 +108,16 @@ const SECTORS = [
 ]
 
 /* ── Conversational Questions ── */
-const QUESTIONS = [
+type PipelineQuestion = {
+  key: keyof ProjectData
+  label: string
+  placeholder?: string
+  description?: string
+  type?: 'select' | 'choice'
+  options?: string[]
+}
+
+const QUESTIONS: PipelineQuestion[] = [
   { key: 'nom', label: 'Quel est le nom de votre projet ?', placeholder: 'Ex : TechInnovate' },
   { key: 'sector', label: 'Dans quel secteur opérez-vous ?', type: 'select' as const },
   { key: 'typeSociete', label: 'Quelle forme juridique envisagez-vous ?', type: 'choice' as const, options: ['SUARL', 'SARL', 'SA', 'SAS'] },
@@ -110,13 +134,14 @@ interface PipelineSectionProps {
   projectData: ProjectData
   setProjectData: (data: ProjectData) => void
   pipelineState: PipelineState
-  setPipelineState: (state: PipelineState) => void
+  setPipelineState: Dispatch<SetStateAction<PipelineState>>
   onNavigate: (section: string) => void
 }
 
 export default function PipelineSection({
   projectData, setProjectData, pipelineState, setPipelineState, onNavigate,
 }: PipelineSectionProps) {
+  const greenRunInProgressRef = useRef(false)
   const [questionIndex, setQuestionIndex] = useState(0)
   const [currentAnswer, setCurrentAnswer] = useState('')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -125,6 +150,106 @@ export default function PipelineSection({
 
   /* Check if description phase is complete */
   const isDescriptionComplete = questionIndex >= QUESTIONS.length && !!(projectData.nom && projectData.description && projectData.sector)
+
+  const buildGreenBusinessDescription = useCallback(() => {
+    return [
+      `Nom du projet: ${projectData.nom || 'N/A'}`,
+      `Secteur: ${projectData.sector || 'N/A'}`,
+      `Description: ${projectData.description || 'N/A'}`,
+      `Activite principale: ${projectData.activite || 'N/A'}`,
+      `Type de societe: ${projectData.typeSociete || 'N/A'}`,
+      `Capital (TND): ${projectData.capital || projectData.budget || 'N/A'}`,
+      `Localisation: ${projectData.location || projectData.siege || 'N/A'}`,
+      `Clientele: ${projectData.clientType || projectData.cible || 'N/A'}`,
+      `Probleme resolu: ${projectData.problemSolved || 'N/A'}`,
+      `Differentiateur: ${projectData.differentiator || 'N/A'}`,
+      `Donnees traitees: ${projectData.donneesTraitees || 'N/A'}`,
+      `Stade startup: ${projectData.stage || 'N/A'}`,
+    ].join('\n')
+  }, [projectData])
+
+  const launchGreenAnalysisInBackground = useCallback(async () => {
+    if (greenRunInProgressRef.current) return
+
+    const current = pipelineState.green.status
+    if (current === 'starting' || current === 'running' || current === 'completed') return
+
+    greenRunInProgressRef.current = true
+    setPipelineState((prev) => ({
+      ...prev,
+      green: {
+        ...prev.green,
+        status: 'starting',
+        error: null,
+      },
+    }))
+
+    try {
+      const payload = buildGreenBusinessDescription()
+      const session = await startGreenAnalysis(payload, {
+        nom: projectData.nom,
+        sector: projectData.sector,
+        description: projectData.description,
+        activite: projectData.activite,
+        location: projectData.location || projectData.siege,
+        typeSociete: projectData.typeSociete,
+        capital: projectData.capital || projectData.budget,
+        clientType: projectData.clientType || projectData.cible,
+        donneesTraitees: projectData.donneesTraitees,
+        stage: projectData.stage,
+      })
+
+      setPipelineState((prev) => ({
+        ...prev,
+        green: {
+          ...prev.green,
+          status: 'running',
+          sessionId: session.id,
+          error: null,
+        },
+      }))
+
+      const pollResult = await pollGreenAnalysis(session.id, () => undefined)
+      if (pollResult.type === 'done' && pollResult.status === 'completed') {
+        const result = await getGreenAnalysisResults(session.id)
+        setPipelineState((prev) => ({
+          ...prev,
+          green: {
+            ...prev.green,
+            status: 'completed',
+            sessionId: session.id,
+            result,
+            error: null,
+          },
+        }))
+      } else {
+        setPipelineState((prev) => ({
+          ...prev,
+          green: {
+            ...prev.green,
+            status: 'failed',
+            sessionId: session.id,
+            error: pollResult.type === 'timeout'
+              ? 'Analyse verte en timeout'
+              : pollResult.type === 'clarification'
+                ? 'Clarification requise pour l\'analyse verte'
+                : 'Analyse verte échouée',
+          },
+        }))
+      }
+    } catch (e) {
+      setPipelineState((prev) => ({
+        ...prev,
+        green: {
+          ...prev.green,
+          status: 'failed',
+          error: e instanceof Error ? e.message : 'Erreur lancement analyse verte',
+        },
+      }))
+    } finally {
+      greenRunInProgressRef.current = false
+    }
+  }, [buildGreenBusinessDescription, pipelineState.green.status, setPipelineState])
 
   /* Handle conversational answer */
   const handleAnswer = useCallback(() => {
@@ -155,6 +280,11 @@ export default function PipelineSection({
       })
     }
   }, [isDescriptionComplete, pipelineState, setPipelineState])
+
+  useEffect(() => {
+    if (!isDescriptionComplete) return
+    void launchGreenAnalysisInBackground()
+  }, [isDescriptionComplete, launchGreenAnalysisInBackground])
 
   /* Launch juridique analysis */
   const handleJuridiqueAnalysis = async () => {
@@ -208,6 +338,7 @@ export default function PipelineSection({
   }
 
   const handleProjectSubmit = () => {
+    void launchGreenAnalysisInBackground()
     handleJuridiqueAnalysis()
   }
 
@@ -218,17 +349,41 @@ export default function PipelineSection({
     return 'idle'
   }
 
+  const greenStatus = pipelineState.green.status
+  const greenStatusLabel =
+    greenStatus === 'starting' ? 'Démarrage' :
+    greenStatus === 'running' ? 'En cours' :
+    greenStatus === 'completed' ? 'Terminé' :
+    greenStatus === 'failed' ? 'Erreur' :
+    'En attente'
+  const greenStatusClasses =
+    greenStatus === 'starting' || greenStatus === 'running'
+      ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+      : greenStatus === 'completed'
+        ? 'border-teal-200 bg-teal-50 text-teal-700'
+        : greenStatus === 'failed'
+          ? 'border-red-200 bg-red-50 text-red-700'
+          : 'border-slate-200 bg-white text-slate-500'
+
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Header */}
       <div className="px-6 py-5 border-b border-border bg-gradient-to-r from-teal-500/5 via-blue-500/5 to-transparent">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-teal-500 to-blue-600 flex items-center justify-center shadow-lg shadow-teal-500/20">
-            <Rocket className="w-6 h-6 text-white" />
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-teal-500 to-blue-600 flex items-center justify-center shadow-lg shadow-teal-500/20">
+              <Rocket className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h2 className="text-xl font-extrabold text-foreground tracking-tight">Pipeline Startify</h2>
+              <p className="text-xs text-muted-foreground">De la description au rapport complet</p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-xl font-extrabold text-foreground tracking-tight">Pipeline Startify</h2>
-            <p className="text-xs text-muted-foreground">De la description au rapport complet</p>
+
+          <div className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-widest ${greenStatusClasses}`}>
+            <Leaf className="w-3.5 h-3.5" />
+            <span>Green: {greenStatusLabel}</span>
+            {(greenStatus === 'starting' || greenStatus === 'running') && <Loader2 className="w-3 h-3 animate-spin" />}
           </div>
         </div>
       </div>

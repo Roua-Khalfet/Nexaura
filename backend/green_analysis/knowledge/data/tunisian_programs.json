@@ -1,0 +1,234 @@
+{
+  "_metadata": {
+    "description": "Tunisian green funding programs, incentives, and international financing for entrepreneurs",
+    "sources": [
+      "ANME Tunisia",
+      "African Development Bank",
+      "GEF, GCF, EU SWITCH Med",
+      "Research compilation Feb 2026"
+    ]
+  },
+
+  "national_programs": [
+    {
+      "id": "fte",
+      "name": "Fond de Transition Energétique (FTE)",
+      "managing_body": "ANME (Agence Nationale de Maîtrise de l'Energie)",
+      "type": "subsidy",
+      "description": "National fund financing energy efficiency and renewable energy projects. Provides subsidies covering 20-70% of eligible investment costs for energy audits, efficiency upgrades, and renewable energy installations.",
+      "eligible_sectors": ["manufacturing", "tourism", "services", "agriculture"],
+      "eligible_activities": [
+        "Energy audits and studies",
+        "Energy efficiency equipment upgrades",
+        "Solar PV installations",
+        "Solar water heaters",
+        "Thermal insulation",
+        "Energy recovery systems"
+      ],
+      "coverage": "20–70% of eligible investment",
+      "conditions": [
+        "Mandatory energy audit for large consumers (>800 TOE/year)",
+        "Project must be validated by ANME",
+        "Equipment must meet ANME specifications"
+      ],
+      "how_to_apply": "Submit project proposal to ANME regional office with energy audit results and investment plan. ANME reviews and approves within 1-3 months.",
+      "website": "http://www.anme.tn",
+      "priority_for_startups": "high"
+    },
+    {
+      "id": "prosol",
+      "name": "PROSOL (Programme Solaire)",
+      "managing_body": "ANME / STEG",
+      "type": "subsidy_and_financing",
+      "description": "National program promoting solar water heaters for residential, commercial, and industrial use. Provides subsidy plus subsidized credit mechanism via STEG billing.",
+      "eligible_sectors": ["residential", "tourism", "services", "industry"],
+      "eligible_activities": [
+        "Solar water heater installation (residential)",
+        "Solar water heater installation (commercial/industrial)"
+      ],
+      "coverage": "Up to 600 TND subsidy per solar water heater (residential). Commercial rates vary. Credit repaid via STEG electricity bill.",
+      "conditions": [
+        "Equipment must be approved by ANME",
+        "Installation by authorized installer"
+      ],
+      "how_to_apply": "Through authorized dealers and installers. Subsidy applied at purchase. Credit repaid via STEG bill.",
+      "priority_for_startups": "medium"
+    },
+    {
+      "id": "decarbonact",
+      "name": "DecarboAct",
+      "managing_body": "ANME (with GIZ / international partners)",
+      "type": "technical_assistance",
+      "description": "Program supporting industrial enterprises in decarbonization. Provides technical assistance for carbon footprint measurement, energy efficiency, and developing decarbonization roadmaps.",
+      "eligible_sectors": ["manufacturing", "food_processing", "textiles", "ceramics", "chemical"],
+      "eligible_activities": [
+        "Carbon footprint calculation",
+        "Decarbonization roadmap development",
+        "Technical assistance for clean technology adoption",
+        "Training and capacity building"
+      ],
+      "coverage": "Free technical assistance and training",
+      "conditions": [
+        "Industrial enterprise operating in Tunisia",
+        "Willingness to commit to decarbonization targets"
+      ],
+      "how_to_apply": "Apply through ANME or GIZ Tunisia office.",
+      "priority_for_startups": "high (manufacturing)"
+    },
+    {
+      "id": "fodep",
+      "name": "FODEP (Fonds de Dépollution)",
+      "managing_body": "ANPE (Agence Nationale de Protection de l'Environnement)",
+      "type": "subsidy",
+      "description": "National depollution fund providing subsidies for pollution reduction investments. Covers wastewater treatment, air pollution control, and solid waste management.",
+      "eligible_sectors": ["manufacturing", "food_processing", "textiles", "chemical", "agriculture"],
+      "eligible_activities": [
+        "Wastewater treatment systems",
+        "Air pollution abatement equipment",
+        "Solid waste management facilities",
+        "Environmental compliance upgrades"
+      ],
+      "coverage": "Up to 20% of eligible investment (can be combined with other incentives)",
+      "conditions": [
+        "Must address identified pollution problem",
+        "Environmental impact assessment required",
+        "ANPE validation"
+      ],
+      "how_to_apply": "File application with ANPE. Submit environmental assessment and investment plan.",
+      "priority_for_startups": "medium"
+    },
+    {
+      "id": "tax_incentives_renewable",
+      "name": "Tax Incentives for Renewable Energy",
+      "managing_body": "Ministry of Finance / ANME",
+      "type": "tax_incentive",
+      "description": "Various tax deductions and exemptions for investments in renewable energy and energy efficiency equipment.",
+      "eligible_sectors": ["all"],
+      "eligible_activities": [
+        "Import of renewable energy equipment (customs duty reduction)",
+        "Investment in energy efficiency (tax deductions)",
+        "Self-generation of solar energy"
+      ],
+      "coverage": "Reduced customs duties on renewable energy equipment. Tax deductions on qualifying investments.",
+      "conditions": [
+        "Equipment listed in ANME-approved categories",
+        "Investment declaration filed"
+      ],
+      "how_to_apply": "Through standard investment declaration process. Consult ANME for approved equipment list.",
+      "priority_for_startups": "high"
+    },
+    {
+      "id": "autoproduction_regime",
+      "name": "Self-Generation Regime (Autoproduction)",
+      "managing_body": "Ministry of Energy / STEG / ANME",
+      "type": "regulatory_framework",
+      "description": "Legal framework allowing businesses to produce their own electricity from renewable sources and sell surplus to STEG grid. Governed by Decree 2009 and subsequent amendments.",
+      "eligible_sectors": ["all"],
+      "eligible_activities": [
+        "Solar PV self-generation",
+        "Wind energy self-generation",
+        "Biomass energy self-generation",
+        "Surplus sale to STEG"
+      ],
+      "coverage": "Feed-in tariff for surplus electricity. Priority grid connection.",
+      "conditions": [
+        "Authorization from Ministry of Energy",
+        "Connection agreement with STEG",
+        "Technical standards compliance"
+      ],
+      "how_to_apply": "Submit authorization application to Ministry of Energy. Negotiate grid connection with STEG.",
+      "priority_for_startups": "medium"
+    }
+  ],
+
+  "international_financing": [
+    {
+      "id": "afdb_tunisia",
+      "name": "African Development Bank (AfDB) — Tunisia Green Investment",
+      "type": "multilateral_financing",
+      "description": "AfDB has committed approximately $110 million to Tunisia energy transition since 2019. Finances large-scale renewable energy (Kairouan solar, Gabes wind), grid modernization, and energy efficiency through credit lines via local banks.",
+      "typical_instruments": ["Credit lines via Tunisian banks", "Project finance", "Technical assistance grants"],
+      "relevance_for_startups": "Access via local partner banks (BFPME, BNA). Preferential rates for green investments.",
+      "how_to_access": "Through Tunisian partner banks offering AfDB green credit lines."
+    },
+    {
+      "id": "gcf",
+      "name": "Green Climate Fund (GCF)",
+      "type": "multilateral_fund",
+      "description": "UN-backed fund supporting developing countries in climate mitigation and adaptation. Tunisia is an eligible recipient. Funds channeled through accredited entities.",
+      "typical_instruments": ["Grants", "Concessional loans", "Technical assistance"],
+      "relevance_for_startups": "Typically finances larger programs. Startups benefit indirectly through national programs funded by GCF.",
+      "how_to_access": "Through GCF Nationally Designated Authority (NDA) in Tunisia — Ministry of Environment."
+    },
+    {
+      "id": "gef",
+      "name": "Global Environment Facility (GEF)",
+      "type": "multilateral_fund",
+      "description": "Funds projects addressing biodiversity, climate change, land degradation, and international waters. Tunisia has accessed GEF for multiple environmental projects.",
+      "typical_instruments": ["Grants", "Co-financing"],
+      "relevance_for_startups": "Indirect — through national programs. Some GEF small grants program accessible to SMEs and NGOs.",
+      "how_to_access": "Through UNDP Tunisia or Ministry of Environment (GEF Operational Focal Point)."
+    },
+    {
+      "id": "eu_switch_med",
+      "name": "EU SwitchMed / SWITCH to Green",
+      "type": "eu_program",
+      "description": "EU-funded program supporting Mediterranean countries in transitioning to sustainable consumption and production. Provides training, networking, and green entrepreneurship support in Tunisia.",
+      "typical_instruments": ["Grants", "Technical assistance", "Incubation programs"],
+      "relevance_for_startups": "Highly relevant — specifically targets Mediterranean startups and SMEs for green business models.",
+      "how_to_access": "Apply through SwitchMed open calls. Check switchmed.eu for current opportunities."
+    },
+    {
+      "id": "eib_femip",
+      "name": "European Investment Bank (EIB) — FEMIP",
+      "type": "development_finance",
+      "description": "EIB's Facility for Euro-Mediterranean Investment and Partnership provides financing for private sector development and infrastructure in Mediterranean partner countries including Tunisia.",
+      "typical_instruments": ["Credit lines via local banks", "Direct project finance", "Technical assistance"],
+      "relevance_for_startups": "Access via local partner banks. Green investment credit lines available.",
+      "how_to_access": "Through Tunisian partner banks (Amen Bank, BIAT, etc.) offering EIB credit lines."
+    },
+    {
+      "id": "kfw_afd",
+      "name": "KfW / AFD Tunisia Green Lines",
+      "type": "bilateral_finance",
+      "description": "German (KfW) and French (AFD) development banks provide green credit lines through Tunisian banks for energy efficiency, renewable energy, and environmental investments.",
+      "typical_instruments": ["Subsidized credit lines via local banks", "Technical assistance"],
+      "relevance_for_startups": "Green credit at preferential rates through local partner banks.",
+      "how_to_access": "Through Tunisian partner banks offering KfW/AFD green credit lines (BFPME, Amen Bank, BIAT, BNA)."
+    },
+    {
+      "id": "ebrd_green",
+      "name": "EBRD Green Economy Transition (GET)",
+      "type": "multilateral_finance",
+      "description": "EBRD supports Tunisia's green economy transition with financing and advisory for businesses investing in green technologies and sustainability measures.",
+      "typical_instruments": ["Direct finance", "Credit lines", "Equity", "Technical assistance"],
+      "relevance_for_startups": "Growing EBRD presence in Tunisia. Green finance for SMEs via partner banks.",
+      "how_to_access": "Direct application for larger projects, or via local partner banks for SME financing."
+    }
+  ],
+
+  "summary": {
+    "quick_recommendations": {
+      "for_all_startups": [
+        "Apply for FTE subsidies for energy efficiency/solar",
+        "Explore tax incentives for renewable energy equipment",
+        "Check EU SwitchMed for green entrepreneurship support"
+      ],
+      "for_exporters_to_eu": [
+        "Prioritize ISO 14064 for carbon accounting (CBAM)",
+        "Obtain sector-specific certifications (OEKO-TEX, GLOBALG.A.P.)",
+        "Track product-level carbon footprint (ISO 14067)"
+      ],
+      "for_manufacturing": [
+        "Mandatory energy audit if >800 TOE/year",
+        "Apply for FODEP for pollution reduction",
+        "Explore DecarboAct for decarbonization roadmap"
+      ],
+      "for_agriculture": [
+        "Consider Bio Tunisia organic certification",
+        "GLOBALG.A.P. for EU export access",
+        "Solar irrigation via FTE/PROSOL"
+      ]
+    }
+  }
+}
