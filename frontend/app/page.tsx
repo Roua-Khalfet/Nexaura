@@ -7,10 +7,8 @@ import DocumentsSection from '@/components/documents-section'
 import ConformiteSection from '@/components/conformite-section'
 
 import VeilleSection from '@/components/veille-section'
-import GraphSection from '@/components/graph-section'
-import PipelineSection, { type ProjectData, type PipelineState, type MarketingResult } from '@/components/pipeline-section'
+import PipelineSection, { type ProjectData, type PipelineState } from '@/components/pipeline-section'
 import MarketingSection from '@/components/marketing-section'
-import ReportSection from '@/components/report-section'
 import GreenAnalysisSection from '@/components/green-analysis-section'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -74,6 +72,7 @@ export default function Page() {
         onSectionChange={setActiveSection}
         collapsed={sidebarCollapsed}
         onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        pipelineState={pipelineState}
       />
       <main className="flex-1 overflow-hidden relative">
         <AnimatePresence mode="wait">
@@ -93,19 +92,61 @@ export default function Page() {
               <ChatSection />
             </motion.div>
           )}
+
+          {activeSection === 'audit' && (
+            <motion.div key="audit" variants={sectionVariants} initial="initial" animate="animate" exit="exit" className="absolute inset-0">
+              <ConformiteSection
+                projectData={projectData}
+                conformiteResult={pipelineState.juridique}
+                onComplete={(res) => {
+                  setPipelineState((prev) => ({
+                    ...prev,
+                    juridique: res,
+                    completedSteps: Array.from(new Set([...prev.completedSteps, 'audit'])),
+                    currentStep: prev.currentStep === 'audit' ? 'marketing' : prev.currentStep,
+                  }))
+                }}
+              />
+            </motion.div>
+          )}
+
+          {activeSection === 'marketing' && (
+            <motion.div key="marketing" variants={sectionVariants} initial="initial" animate="animate" exit="exit" className="absolute inset-0">
+              <MarketingSection projectData={projectData} />
+            </motion.div>
+          )}
+
           {activeSection === 'veille' && (
             <motion.div key="veille" variants={sectionVariants} initial="initial" animate="animate" exit="exit" className="absolute inset-0">
               <VeilleSection />
             </motion.div>
           )}
-          {activeSection === 'graph' && (
-            <motion.div key="graph" variants={sectionVariants} initial="initial" animate="animate" exit="exit" className="absolute inset-0">
-              <GraphSection />
-            </motion.div>
-          )}
+
           {activeSection === 'green' && (
             <motion.div key="green" variants={sectionVariants} initial="initial" animate="animate" exit="exit" className="absolute inset-0">
-              <GreenAnalysisSection />
+              <GreenAnalysisSection
+                projectData={projectData}
+                initialResult={pipelineState.green.result}
+                onComplete={(data) => {
+                  setPipelineState((prev) => ({
+                    ...prev,
+                    green: {
+                      ...prev.green,
+                      status: 'completed',
+                      sessionId: data.id,
+                      result: data,
+                      error: null,
+                    },
+                    completedSteps: Array.from(new Set([...prev.completedSteps, 'green'])),
+                  }))
+                }}
+              />
+            </motion.div>
+          )}
+
+          {activeSection === 'documents' && (
+            <motion.div key="documents" variants={sectionVariants} initial="initial" animate="animate" exit="exit" className="absolute inset-0">
+              <DocumentsSection projectData={projectData} />
             </motion.div>
           )}
         </AnimatePresence>

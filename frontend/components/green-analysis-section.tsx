@@ -21,9 +21,63 @@ import {
 } from '@/lib/api'
 import RoadmapView from '@/components/green-analysis/RoadmapView'
 
+type SharedProjectData = {
+  nom?: string
+  description?: string
+  sector?: string
+  capital?: string
+  budget?: string
+  typeSociete?: string
+  activite?: string
+  location?: string
+  siege?: string
+  clientType?: string
+  cible?: string
+  donneesTraitees?: string
+  stage?: string
+}
+
+interface GreenAnalysisSectionProps {
+  projectData?: SharedProjectData
+  initialResult?: GreenAnalysisSession | null
+  onComplete?: (data: GreenAnalysisSession) => void
+}
+
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const EXAMPLE_INPUT = `I am planning to start a small olive oil production business in Sfax, Tunisia. We will process olives from local farms, produce extra virgin olive oil, and export primarily to the European Union. We plan to use hydraulic pressing and have about 15 employees. We will need water for washing olives and energy for the pressing and bottling machinery.`
+
+function buildGreenBusinessDescription(projectData?: SharedProjectData): string {
+  if (!projectData) return ''
+  return [
+    `Nom du projet: ${projectData.nom || 'N/A'}`,
+    `Secteur: ${projectData.sector || 'N/A'}`,
+    `Description: ${projectData.description || 'N/A'}`,
+    `Activite principale: ${projectData.activite || 'N/A'}`,
+    `Type de societe: ${projectData.typeSociete || 'N/A'}`,
+    `Capital (TND): ${projectData.capital || projectData.budget || 'N/A'}`,
+    `Localisation: ${projectData.location || projectData.siege || 'N/A'}`,
+    `Clientele: ${projectData.clientType || projectData.cible || 'N/A'}`,
+    `Donnees traitees: ${projectData.donneesTraitees || 'N/A'}`,
+    `Stade startup: ${projectData.stage || 'N/A'}`,
+  ].join('\n')
+}
+
+function toGreenProjectPayload(projectData?: SharedProjectData): Record<string, unknown> | undefined {
+  if (!projectData) return undefined
+  return {
+    nom: projectData.nom,
+    sector: projectData.sector,
+    description: projectData.description,
+    activite: projectData.activite,
+    location: projectData.location || projectData.siege,
+    typeSociete: projectData.typeSociete,
+    capital: projectData.capital || projectData.budget,
+    clientType: projectData.clientType || projectData.cible,
+    donneesTraitees: projectData.donneesTraitees,
+    stage: projectData.stage,
+  }
+}
 
 const AGENTS = [
   { id: 'input_parser', label: 'Analyse des Entrées', subtitle: 'Extraction de données structurées', icon: Target, color: 'emerald' },
@@ -46,12 +100,12 @@ const COLOR_MAP: Record<string, { bg: string; border: string; text: string; icon
 const staggerContainer = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { staggerChildren: 0.08 } },
-}
+} as const
 
 const staggerItem = {
   hidden: { opacity: 0, y: 20, scale: 0.95 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring' as const, stiffness: 300, damping: 24 } },
-}
+  show: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 300, damping: 24 } },
+} as const
 
 // ─── Agent Pipeline Card ─────────────────────────────────────────────────────
 
@@ -420,13 +474,24 @@ function FullReport({ report }: { report: string }) {
 
 // ─── Main Section Component ──────────────────────────────────────────────────
 
-export default function GreenAnalysisSection() {
-  const [input, setInput] = useState('')
+export default function GreenAnalysisSection({ projectData, initialResult = null, onComplete }: GreenAnalysisSectionProps) {
+  const [input, setInput] = useState(() => buildGreenBusinessDescription(projectData))
   const [agentStatuses, setAgentStatuses] = useState<Record<string, string>>({})
   const [agentTraces, setAgentTraces] = useState<Record<string, GreenTraceStep[]>>({})
-  const [results, setResults] = useState<GreenAnalysisSession | null>(null)
+  const [results, setResults] = useState<GreenAnalysisSession | null>(initialResult)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!projectData) return
+    if (input.trim()) return
+    setInput(buildGreenBusinessDescription(projectData))
+  }, [projectData, input])
+
+  useEffect(() => {
+    if (!initialResult) return
+    setResults(initialResult)
+  }, [initialResult])
 
   const handleAnalyze = useCallback(async () => {
     if (!input.trim() || loading) return
@@ -438,7 +503,7 @@ export default function GreenAnalysisSection() {
     setAgentTraces({})
 
     try {
-      const { id } = await startGreenAnalysis(input)
+      const { id } = await startGreenAnalysis(input, toGreenProjectPayload(projectData))
 
       await pollGreenAnalysis(
         id,
@@ -448,12 +513,13 @@ export default function GreenAnalysisSection() {
 
       const data = await getGreenAnalysisResults(id)
       setResults(data)
+      onComplete?.(data)
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue')
     } finally {
       setLoading(false)
     }
-  }, [input, loading])
+  }, [input, loading, onComplete, projectData])
 
   const completedAgents = Object.values(agentStatuses).filter((s) => s === 'completed').length
   const totalAgents = AGENTS.length

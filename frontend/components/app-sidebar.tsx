@@ -1,20 +1,23 @@
 'use client'
 
-import { MessageSquare, FileText, ShieldCheck, Brain, Radio, Network, ChevronLeft, ChevronRight, Rocket, LayoutDashboard, TrendingUp, Leaf } from 'lucide-react'
+import { MessageSquare, FileText, ShieldCheck, Radio, ChevronLeft, LayoutDashboard, TrendingUp, Leaf } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 
 
 import { motion, AnimatePresence } from 'framer-motion'
+import { type PipelineState } from './pipeline-section'
 
-export type SectionId = 'studio' | 'chat' | 'veille' | 'graph' | 'green'
+export type SectionId = 'studio' | 'audit' | 'marketing' | 'green' | 'documents' | 'chat' | 'veille'
 
 const NAV_ITEMS: { id: SectionId; label: string; icon: React.ElementType; color: string; gradient: string; separator?: boolean }[] = [
   { id: 'studio', label: 'Studio Startup', icon: LayoutDashboard, color: 'text-teal-600', gradient: 'from-teal-500/15 to-emerald-500/15' },
+  { id: 'audit', label: 'Audit Juridique', icon: ShieldCheck, color: 'text-emerald-600', gradient: 'from-emerald-500/15 to-teal-500/15', separator: true },
+  { id: 'marketing', label: 'Analyse Marché', icon: TrendingUp, color: 'text-pink-600', gradient: 'from-pink-500/15 to-rose-500/15' },
+  { id: 'green', label: 'Analyse Verte', icon: Leaf, color: 'text-emerald-600', gradient: 'from-emerald-500/15 to-teal-500/15' },
+  { id: 'documents', label: 'Documents', icon: FileText, color: 'text-violet-600', gradient: 'from-violet-500/15 to-purple-500/15', separator: true },
   { id: 'chat', label: 'Chat Juridique', icon: MessageSquare, color: 'text-blue-600', gradient: 'from-blue-500/15 to-indigo-500/15', separator: true },
   { id: 'veille', label: 'Veille Légale', icon: Radio, color: 'text-rose-600', gradient: 'from-rose-500/15 to-pink-500/15', separator: true },
-  { id: 'graph', label: 'Graphe de Lois', icon: Network, color: 'text-sky-600', gradient: 'from-sky-500/15 to-cyan-500/15' },
-  { id: 'green', label: 'Analyse Verte', icon: Leaf, color: 'text-emerald-600', gradient: 'from-emerald-500/15 to-teal-500/15', separator: true },
 ]
 
 interface AppSidebarProps {
@@ -22,9 +25,17 @@ interface AppSidebarProps {
   onSectionChange: (id: SectionId) => void
   collapsed: boolean
   onToggleCollapse: () => void
+  pipelineState?: PipelineState
 }
 
-export default function AppSidebar({ activeSection, onSectionChange, collapsed, onToggleCollapse }: AppSidebarProps) {
+export default function AppSidebar({ activeSection, onSectionChange, collapsed, onToggleCollapse, pipelineState }: AppSidebarProps) {
+  const legalScore = pipelineState?.juridique?.combinedScore ?? pipelineState?.juridique?.score_global ?? null
+  const greenScore = pipelineState?.green?.result?.esg_score?.composite_score ?? null
+  
+  const studioScore = legalScore !== null && greenScore !== null 
+    ? Math.round((legalScore + greenScore) / 2)
+    : legalScore ?? greenScore
+
   return (
     <motion.aside 
       animate={{ width: collapsed ? 68 : 250 }}
@@ -111,11 +122,32 @@ export default function AppSidebar({ activeSection, onSectionChange, collapsed, 
                     </motion.span>
                   )}
                 </AnimatePresence>
+
+                {/* Score Badges */}
+                {!collapsed && (
+                   <div className="ml-auto flex items-center gap-2">
+                      {item.id === 'studio' && studioScore !== null && (
+                        <div className="px-2 py-0.5 rounded-full bg-teal-100 text-teal-700 text-[9px] font-black">{studioScore}%</div>
+                      )}
+                      {item.id === 'audit' && legalScore !== null && (
+                        <div className={`px-2 py-0.5 rounded-full text-[9px] font-black ${
+                          legalScore >= 75 ? 'bg-emerald-100 text-emerald-700' : 
+                          legalScore >= 50 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
+                        }`}>
+                          {legalScore}%
+                        </div>
+                      )}
+                      {item.id === 'green' && greenScore !== null && (
+                        <div className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[9px] font-black">{greenScore}%</div>
+                      )}
+                   </div>
+                )}
+                
                 {isActive && !collapsed && (
                   <motion.div 
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className={cn("ml-auto w-1.5 h-1.5 rounded-full animate-pulse", item.color.replace('text-', 'bg-'))} 
+                    className={cn("ml-2 w-1.5 h-1.5 rounded-full animate-pulse", item.color.replace('text-', 'bg-'))} 
                   />
                 )}
               </motion.button>

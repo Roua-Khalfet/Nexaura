@@ -251,20 +251,37 @@ class ComplianceGuardRetriever(BaseRetriever):
 
     def _fetch_doc_by_id(self, doc_id: str, payload: dict[str, Any], score: float) -> Document | None:
         doc_query = """
-        MATCH (d:Document {id: $doc_id})
-        OPTIONAL MATCH (d)-[:MENTIONS]->(e)
-        RETURN d.text AS text,
-               d.reference AS reference,
-               d.source_file AS source_file,
-               collect(DISTINCT coalesce(e.description, e.id))[0..5] AS entities
+         MATCH (d:Document)
+         WITH d, properties(d) AS dprops
+         WHERE $doc_id IN [
+             toString(coalesce(dprops['doc_id'], '')),
+             toString(coalesce(dprops['id'], '')),
+             toString(coalesce(dprops['chunk_id'], '')),
+             toString(coalesce(dprops['reference'], '')),
+             elementId(d)
+         ]
+         OPTIONAL MATCH (d)-[m]->(e)
+         WHERE type(m) = 'MENTIONS'
+         WITH d, dprops, e, properties(e) AS eprops
+         RETURN coalesce(dprops['text'], dprops['content'], dprops['description']) AS text,
+             coalesce(dprops['reference'], dprops['source'], dprops['source_file']) AS reference,
+             dprops['source_file'] AS source_file,
+             collect(DISTINCT coalesce(eprops['description'], eprops['reference'], eprops['valeur'], elementId(e)))[0..5] AS entities
         LIMIT 1
         """
         chunk_query = """
         MATCH (c:Chunk)
-        WHERE c.id = $doc_id OR c.chunk_id = $doc_id
-        RETURN c.text AS text,
-               c.reference AS reference,
-               c.source_file AS source_file,
+         WITH c, properties(c) AS cprops
+         WHERE $doc_id IN [
+             toString(coalesce(cprops['doc_id'], '')),
+             toString(coalesce(cprops['id'], '')),
+             toString(coalesce(cprops['chunk_id'], '')),
+             toString(coalesce(cprops['reference'], '')),
+             elementId(c)
+         ]
+         RETURN coalesce(cprops['text'], cprops['content'], cprops['description']) AS text,
+             coalesce(cprops['reference'], cprops['source'], cprops['source_file']) AS reference,
+             cprops['source_file'] AS source_file,
                [] AS entities
         LIMIT 1
         """
@@ -376,18 +393,19 @@ class ComplianceGuardRetriever(BaseRetriever):
         cypher = """
         CALL db.index.fulltext.queryNodes('legal_entities', $query)
         YIELD node, score
-        WITH node, score
+                WITH node, score, properties(node) AS nprops
         ORDER BY score DESC
         LIMIT $limit
         OPTIONAL MATCH (node)-[r]->(related)
-         RETURN coalesce(node.description, node.valeur, node.reference, node.id) AS description,
-             coalesce(node.reference, node.id) AS reference,
-               labels(node) AS types,
-             collect({
-                 type: type(r),
-                 target: coalesce(related.description, related.valeur, related.reference, related.id)
-             }) AS relations,
-               score
+                WITH node, nprops, score, labels(node) AS types, r, related, properties(related) AS rprops
+                RETURN coalesce(nprops['description'], nprops['valeur'], nprops['reference'], elementId(node)) AS description,
+                             coalesce(nprops['reference'], nprops['description'], elementId(node)) AS reference,
+                             types,
+                             collect({
+                                     type: type(r),
+                                     target: coalesce(rprops['description'], rprops['valeur'], rprops['reference'], elementId(related))
+                             }) AS relations,
+                             score
         """
         try:
             results = self._run_graph_query_with_retry(
@@ -430,19 +448,20 @@ class ComplianceGuardRetriever(BaseRetriever):
 
             relation_cypher = """
             MATCH (a)-[r]->(b)
+                        WITH a, b, r, properties(a) AS aprop, properties(b) AS bprop
             WHERE type(r) IN $rel_types
               AND (
                 size($tokens) = 0 OR
                 any(tok IN $tokens WHERE
-                  toLower(coalesce(a.reference, '')) CONTAINS tok OR
-                  toLower(coalesce(b.reference, '')) CONTAINS tok OR
-                  toLower(coalesce(a.description, '')) CONTAINS tok OR
-                  toLower(coalesce(b.description, '')) CONTAINS tok
+                                    toLower(coalesce(aprop['reference'], '')) CONTAINS tok OR
+                                    toLower(coalesce(bprop['reference'], '')) CONTAINS tok OR
+                                    toLower(coalesce(aprop['description'], '')) CONTAINS tok OR
+                                    toLower(coalesce(bprop['description'], '')) CONTAINS tok
                 )
               )
-            RETURN coalesce(a.reference, a.id) AS src,
+                        RETURN coalesce(aprop['reference'], aprop['description'], elementId(a)) AS src,
                    type(r) AS rel,
-                   coalesce(b.reference, b.id) AS tgt
+                                     coalesce(bprop['reference'], bprop['description'], elementId(b)) AS tgt
             LIMIT $limit
             """
 
@@ -459,10 +478,11 @@ class ComplianceGuardRetriever(BaseRetriever):
                 rel_rows = self._run_graph_query_with_retry(
                     """
                     MATCH (a)-[r]->(b)
+                      WITH a, b, r, properties(a) AS aprop, properties(b) AS bprop
                     WHERE type(r) IN $rel_types
-                    RETURN coalesce(a.reference, a.id) AS src,
+                      RETURN coalesce(aprop['reference'], aprop['description'], elementId(a)) AS src,
                            type(r) AS rel,
-                           coalesce(b.reference, b.id) AS tgt
+                          coalesce(bprop['reference'], bprop['description'], elementId(b)) AS tgt
                     LIMIT $limit
                     """,
                     params={"rel_types": rel_types, "limit": self.k_graph},

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ShieldCheck, Loader2, AlertTriangle, CheckCircle2, XCircle, ArrowRight, Brain, ChevronRight, Sparkles, ClipboardCheck, Scale, Check, X } from 'lucide-react'
+import { ShieldCheck, Loader2, AlertTriangle, CheckCircle2, XCircle, ArrowRight, Brain, ChevronRight, Sparkles, ClipboardCheck, Scale, Check, X, BarChart3, RefreshCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -12,17 +12,17 @@ import { motion, AnimatePresence } from 'framer-motion'
 const cardHover = {
   rest: { y: 0, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' },
   hover: { y: -4, boxShadow: '0 20px 40px rgba(0,0,0,0.08)', transition: { type: 'spring', stiffness: 300, damping: 20 } },
-}
+} as const
 
 const staggerContainer = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { staggerChildren: 0.08 } },
-}
+} as const
 
 const staggerItem = {
   hidden: { opacity: 0, y: 20, scale: 0.95 },
   show: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 300, damping: 24 } },
-}
+} as const
 
 const SECTORS = [
   { id: 'Fintech', label: 'Fintech', emoji: '💳', risk: 'élevé' },
@@ -104,7 +104,7 @@ export default function ConformiteSection({ projectData, conformiteResult, isEmb
   projectData?: { description?: string; sector?: string; capital?: string; typeSociete?: string; budget?: string; location?: string; activite?: string }
   conformiteResult?: ConformiteResult | null
   isEmbedded?: boolean
-  onComplete?: (res: ConformiteResult) => void
+  onComplete?: (res: ConformiteResult & { auditScorePct: number; combinedScore: number }) => void
 }) {
   const [description, setDescription] = useState('')
   const [sector, setSector] = useState('')
@@ -157,7 +157,14 @@ export default function ConformiteSection({ projectData, conformiteResult, isEmb
         audit_results: isPostAudit ? { questions, answers } : null
       })
       setResult(res)
-      if (isPostAudit && onComplete) onComplete(res)
+      if (isPostAudit && onComplete) {
+        const localCombined = Math.round((res.score_global * 0.4) + (auditScorePct * 0.6))
+        onComplete({
+          ...res,
+          auditScorePct,
+          combinedScore: localCombined
+        })
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erreur analyse')
     } finally {
@@ -213,7 +220,7 @@ export default function ConformiteSection({ projectData, conformiteResult, isEmb
     return s
   }, 0)
   const auditScorePct = auditTotalWeight > 0 ? Math.round((auditEarnedWeight / auditTotalWeight) * 100) : 0
-  const combinedScore = result ? Math.round((result.score_global * 0.4) + (auditScorePct * 0.6)) : auditScorePct
+  const combinedScore = result?.combinedScore ?? (result ? Math.round((result.score_global * 0.4) + (auditScorePct * 0.6)) : auditScorePct)
 
   const catScores = questions.reduce<Record<string, { earned: number; total: number }>>((acc, q, i) => {
     if (!acc[q.category]) acc[q.category] = { earned: 0, total: 0 }
@@ -242,14 +249,14 @@ export default function ConformiteSection({ projectData, conformiteResult, isEmb
               </motion.div>
               <div>
                 <h2 className="text-xl font-black uppercase tracking-wider text-slate-800">
-                  Agent Juridique
+                  Audit Juridique
                 </h2>
                 <div className="flex items-center gap-2 mt-1">
                   <span className="relative flex h-2.5 w-2.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
                   </span>
-                  <p className="text-xs font-bold text-slate-500 tracking-wider">EN LIGNE ET PRÊT</p>
+                  <p className="text-xs font-bold text-slate-500 tracking-wider">ANALYSE DE CONFORMITÉ</p>
                 </div>
               </div>
             </div>
@@ -570,12 +577,8 @@ export default function ConformiteSection({ projectData, conformiteResult, isEmb
                 className="md:col-span-5 lg:col-span-4 bg-white/60 backdrop-blur-2xl p-8 rounded-[40px] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center justify-center space-y-8 relative overflow-hidden group hover:-translate-y-1 transition-all duration-500"
               >
                   <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  <div className="flex items-center gap-6 relative z-10">
-                     <ScoreGauge score={result.score_global} label="Initial" size="sm" />
-                     <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
-                       <ArrowRight className="text-teal-400 w-4 h-4" />
-                     </div>
-                     <ScoreGauge score={combinedScore} label="Audit" size="md" />
+                  <div className="flex items-center justify-center relative z-10">
+                     <ScoreGauge score={combinedScore} label="Score Unique" size="md" />
                   </div>
                   <div className={`px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-[0.2em] relative z-10 shadow-sm border ${
                     combinedScore >= 75 ? 'bg-emerald-50 text-emerald-600 border-emerald-100/50' : 'bg-amber-50 text-amber-600 border-amber-100/50'
@@ -591,7 +594,7 @@ export default function ConformiteSection({ projectData, conformiteResult, isEmb
               >
                 {[
                   { label: 'Profil de Risque', value: result.risk_profile.niveau, icon: Scale, color: result.risk_profile.niveau === 'élevé' ? 'text-red-500' : 'text-teal-600', bg: result.risk_profile.niveau === 'élevé' ? 'bg-red-50' : 'bg-teal-50/50' },
-                  { label: 'Socle Capital', value: `${result.risk_profile.capital_recommande.toLocaleString()} TND`, icon: ShieldCheck, color: 'text-indigo-600', bg: 'bg-indigo-50/50' },
+                  { label: 'Capital Social', value: `${(capital ? parseInt(capital.replace(/[^0-9]/g, '')) : result.risk_profile.capital_recommande).toLocaleString()} TND`, icon: ShieldCheck, color: 'text-indigo-600', bg: 'bg-indigo-50/50' },
                   { label: 'Estimation Délai', value: result.risk_profile.delai_conformite, icon: Brain, color: 'text-emerald-600', bg: 'bg-emerald-50/50' },
                   { label: 'Structure', value: typeSociete, icon: ClipboardCheck, color: 'text-blue-600', bg: 'bg-blue-50/50' },
                 ].map((item, i) => (

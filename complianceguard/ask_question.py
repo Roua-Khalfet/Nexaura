@@ -28,6 +28,7 @@ LEGAL_REF_FULL_TITLES: dict[str, str] = {
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(PROJECT_ROOT / ".env")
+_CRAWL4AI_MISSING_WARNED = False
 
 # Compat: certains environnements utilisent QDRANT_COLLECTION au lieu de
 # QDRANT_COLLECTION_NAME.
@@ -254,6 +255,7 @@ def _is_greeting_or_non_question(text: str) -> bool:
 
 def _web_search(query: str) -> tuple[str, list[str]]:
     """Recherche web via Serper API et Crawl4AI."""
+    global _CRAWL4AI_MISSING_WARNED
     serper_key = os.getenv("SERPER_API_KEY", "").strip()
     if not serper_key:
         return "", []
@@ -294,7 +296,9 @@ def _web_search(query: str) -> tuple[str, list[str]]:
             except Exception as e:
                 print(f"[Web] Erreur d'extraction pour {url}: {e}")
     except ImportError:
-        print("[Web] Erreur: crawl4ai n'est pas installé. Les snippets Serper seuls seront utilisés.")
+        if not _CRAWL4AI_MISSING_WARNED:
+            print("[Web] crawl4ai non installe: fallback sur snippets Serper uniquement (optionnel: pip install crawl4ai).")
+            _CRAWL4AI_MISSING_WARNED = True
     except Exception as e:
         print(f"[Web] Erreur globale Crawl4AI: {e}")
     
