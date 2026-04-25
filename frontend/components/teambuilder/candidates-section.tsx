@@ -133,10 +133,10 @@ export default function CandidatesSection() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '32px' }}>
         <div>
           <h1 style={{ fontSize: '28px', fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--text-primary)', margin: '0 0 8px 0' }}>
-            Candidate Pool
+            Vivier de candidats
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '15px', margin: 0 }}>
-            {candidates.length} candidates available in your pool
+            {candidates.length} candidats disponibles dans votre vivier
           </p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
@@ -149,7 +149,7 @@ export default function CandidatesSection() {
       <SearchBar
         value={searchQuery}
         onChange={setSearchQuery}
-        placeholder="Search by name, email, phone, skills..."
+        placeholder="Rechercher par nom, email, téléphone, compétences..."
         style={{ marginBottom: '24px' }}
       />
 
@@ -157,12 +157,12 @@ export default function CandidatesSection() {
       <div className="card" style={{ padding: '20px', marginBottom: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
           <Filter size={18} style={{ color: 'var(--text-secondary)' }} />
-          <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>Filters</h3>
+          <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>Filtres</h3>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
           <div>
             <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)' }}>
-              Seniority Level
+              Niveau d'expérience
             </label>
             <div style={{ position: 'relative' }}>
               <select
@@ -260,8 +260,8 @@ export default function CandidatesSection() {
                 }}
               >
                 <option value="">All statuses</option>
-                <option value="available">✅ Available</option>
-                <option value="busy">⏳ Busy</option>
+                <option value="available">✅ Disponible</option>
+                <option value="busy">⏳ Occupé</option>
               </select>
               <div style={{ 
                 position: 'absolute', 

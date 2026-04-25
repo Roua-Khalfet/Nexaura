@@ -76,12 +76,12 @@ export default function HistorySection() {
 
   const handleDelete = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!window.confirm('Delete this search history?')) return;
+    if (!window.confirm('Supprimer cet historique de recherche?')) return;
     try {
       await deleteSession(id);
       setSessions(sessions.filter((s: any) => s.id !== id));
     } catch (err) {
-      alert('Failed to delete session');
+      alert('Échec de la suppression de la session');
     }
   };
 
@@ -203,10 +203,10 @@ export default function HistorySection() {
     <div>
       <div style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '28px', fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--text-primary)', margin: '0 0 8px 0' }}>
-          Search History
+          Historique des recherches
         </h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '15px', margin: 0 }}>
-          Review and manage your past AI team building searches
+          Consultez et gérez vos recherches passées de constitution d'équipe IA
         </p>
       </div>
 
@@ -220,7 +220,7 @@ export default function HistorySection() {
             <Search size={16} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
             <input
               type="text"
-              placeholder="Search past queries..."
+              placeholder="Rechercher les requêtes passées..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               style={{ border: 'none', background: 'transparent', outline: 'none', padding: '10px 0', fontSize: '14px', color: 'var(--text-primary)', width: '100%', fontFamily: 'Inter, sans-serif' }}
@@ -235,12 +235,12 @@ export default function HistorySection() {
               style={{ padding: '8px 12px', fontSize: '13px', minWidth: '120px', background: 'var(--bg-secondary)', border: 'none', borderRadius: '8px' }}
             >
               {regions.map((r: string) => (
-                <option key={r} value={r}>{r === 'all' ? 'All Regions' : r}</option>
+                <option key={r} value={r}>{r === 'all' ? 'Toutes les régions' : r}</option>
               ))}
             </select>
           </div>
           <span style={{ fontSize: '13px', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
-            {filteredSessions.length} of {sessions.length} results
+            {filteredSessions.length} sur {sessions.length} résultats
           </span>
         </motion.div>
       )}
@@ -251,9 +251,9 @@ export default function HistorySection() {
           <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '72px', height: '72px', borderRadius: '50%', background: 'var(--bg-secondary)', marginBottom: '24px' }}>
             <HistoryIcon size={32} style={{ color: 'var(--accent-primary)' }} />
           </div>
-          <h3 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px' }}>No Search History Found</h3>
+          <h3 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px' }}>Aucun historique de recherche trouvé</h3>
           <p style={{ color: 'var(--text-secondary)', maxWidth: '420px', margin: '0 auto', lineHeight: '1.6' }}>
-            Your team building searches and insights will appear here for easy retrieval.
+            Vos recherches de constitution d'équipe et insights apparaîtront ici pour une récupération facile.
           </p>
         </motion.div>
       )}
@@ -363,7 +363,7 @@ export default function HistorySection() {
                                               }}
                                               onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-card-hover)'}
                                               onMouseLeave={(e) => e.currentTarget.style.background = 'var(--bg-secondary)'}
-                                              title="View Resume"
+                                              title="Voir le CV"
                                             >
                                               <FileText size={12} />
                                             </button>
@@ -382,7 +382,7 @@ export default function HistorySection() {
                                               }}
                                               onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
                                               onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                                              title="Send Invitation"
+                                              title="Envoyer une invitation"
                                             >
                                               <Send size={12} />
                                             </button>
@@ -425,7 +425,7 @@ export default function HistorySection() {
             {loadingCandidate ? (
               <div style={{ textAlign: 'center', padding: '48px' }}>
                 <div className="spinner" style={{ margin: '0 auto 16px' }} />
-                <p style={{ color: 'var(--text-secondary)' }}>Loading candidate details...</p>
+                <p style={{ color: 'var(--text-secondary)' }}>Chargement des détails du candidat...</p>
               </div>
             ) : selectedCandidate && (
               <>
@@ -470,7 +470,7 @@ export default function HistorySection() {
                 {selectedCandidate.skills && selectedCandidate.skills.length > 0 && (
                   <div style={{ marginBottom: '20px' }}>
                     <h3 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '12px', color: 'var(--text-secondary)' }}>
-                      Skills
+                      Compétences
                     </h3>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                       {selectedCandidate.skills.map((skill, idx) => (
@@ -511,10 +511,10 @@ export default function HistorySection() {
                 {selectedCandidate.experience_years && (
                   <div style={{ marginBottom: '20px' }}>
                     <h3 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '12px', color: 'var(--text-secondary)' }}>
-                      Experience
+                      Expérience
                     </h3>
                     <p style={{ fontSize: '14px', color: 'var(--text-primary)' }}>
-                      {selectedCandidate.experience_years} years
+                      {selectedCandidate.experience_years} ans
                     </p>
                   </div>
                 )}
@@ -522,7 +522,7 @@ export default function HistorySection() {
                 {selectedCandidate.education && (
                   <div style={{ marginBottom: '20px' }}>
                     <h3 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '12px', color: 'var(--text-secondary)' }}>
-                      Education
+                      Formation
                     </h3>
                     <p style={{ fontSize: '14px', color: 'var(--text-primary)', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
                       {selectedCandidate.education}
@@ -540,7 +540,7 @@ export default function HistorySection() {
                       style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}
                     >
                       <FileText size={16} />
-                      View/Download Original CV
+                      Voir/Télécharger le CV original
                     </a>
                   </div>
                 )}
@@ -577,7 +577,7 @@ export default function HistorySection() {
                       style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}
                     >
                       <Globe2 size={16} />
-                      View External Profile
+                      Voir le profil externe
                     </a>
                   </div>
                 )}
@@ -590,14 +590,14 @@ export default function HistorySection() {
                       style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}
                     >
                       <FileText size={16} />
-                      View Full Profile Page
+                      Voir la page de profil complète
                     </a>
                   </div>
                 )}
 
                 <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', paddingTop: '20px', borderTop: '1px solid var(--border-color)' }}>
                   <button className="btn btn-secondary" onClick={() => setCandidateDetailModal(false)} style={{ padding: '10px 20px' }}>
-                    Close
+                    Fermer
                   </button>
                   <button 
                     className="btn btn-primary" 

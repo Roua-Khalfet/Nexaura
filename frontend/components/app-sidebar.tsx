@@ -27,11 +27,11 @@ const NAV_ITEMS: { id: SectionId; label: string; icon: React.ElementType; color:
 ]
 
 const TEAMBUILDER_ITEMS: { id: SectionId; label: string; icon: React.ElementType; color: string }[] = [
-  { id: 'tb-dashboard', label: 'Dashboard', icon: LayoutDashboard, color: 'text-indigo-600' },
-  { id: 'tb-ai', label: 'AI Assistant', icon: Bot, color: 'text-purple-600' },
-  { id: 'tb-upload', label: 'Upload CVs', icon: Upload, color: 'text-blue-600' },
-  { id: 'tb-candidates', label: 'Candidates', icon: Users, color: 'text-pink-600' },
-  { id: 'tb-history', label: 'History', icon: History, color: 'text-gray-600' },
+  { id: 'tb-dashboard', label: 'Tableau de bord', icon: LayoutDashboard, color: 'text-indigo-600' },
+  { id: 'tb-ai', label: 'Assistant IA', icon: Bot, color: 'text-purple-600' },
+  { id: 'tb-upload', label: 'Télécharger CVs', icon: Upload, color: 'text-blue-600' },
+  { id: 'tb-candidates', label: 'Candidats', icon: Users, color: 'text-pink-600' },
+  { id: 'tb-history', label: 'Historique', icon: History, color: 'text-gray-600' },
 ]
 
 interface AppSidebarProps {

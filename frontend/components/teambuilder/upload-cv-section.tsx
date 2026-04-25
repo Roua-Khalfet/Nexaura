@@ -31,7 +31,7 @@ export default function UploadCVSection() {
     });
 
     if (validFiles.length !== newFiles.length) {
-      setError('Some files were ignored. Only PDF, DOCX and images (JPG, PNG) are accepted.');
+      setError('Certains fichiers ont été ignorés. Seuls les PDF, DOCX et images (JPG, PNG) sont acceptés.');
     } else {
       setError(null);
     }
@@ -68,7 +68,7 @@ export default function UploadCVSection() {
     console.log('Upload button clicked!', { filesCount: files.length, consent });
     
     if (files.length === 0 || !consent) {
-      setError('Please select at least one file and accept the consent');
+      setError('Veuillez sélectionner au moins un fichier et accepter le consentement');
       return;
     }
 
@@ -99,7 +99,7 @@ export default function UploadCVSection() {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         console.error('Upload failed:', errorData);
-        throw new Error(errorData.error || 'Upload failed');
+        throw new Error(errorData.error || 'Échec du téléchargement');
       }
 
       const data = await response.json();
@@ -110,10 +110,10 @@ export default function UploadCVSection() {
       setFiles([]);
       setConsent(false);
       
-      alert(`✅ Successfully uploaded ${data.processed} CVs!\n${data.failed > 0 ? `⚠️ ${data.failed} failed` : ''}`);
+      alert(`✅ ${data.processed} CVs téléchargés avec succès!\n${data.failed > 0 ? `⚠️ ${data.failed} ont échoué` : ''}`);
     } catch (err: any) {
       console.error('Upload error:', err);
-      setError(err.message || 'Failed to upload CVs');
+      setError(err.message || 'Échec du téléchargement des CVs');
     } finally {
       setUploading(false);
     }
@@ -124,10 +124,10 @@ export default function UploadCVSection() {
       {/* Header */}
       <div style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '28px', fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--text-primary)', margin: '0 0 8px 0' }}>
-          Upload Candidate CVs
+          Télécharger des CVs de candidats
         </h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: '15px', margin: 0 }}>
-          Upload one or more CVs to add them to your candidate pool
+          Téléchargez un ou plusieurs CVs pour les ajouter à votre vivier de candidats
         </p>
       </div>
 
@@ -186,15 +186,15 @@ export default function UploadCVSection() {
             )}
             {files.length > 0 ? (
               <p style={{ color: 'var(--accent-emerald)', fontWeight: 600, fontSize: '15px', margin: 0 }}>
-                ✓ {files.length} file{files.length > 1 ? 's' : ''} selected
+                ✓ {files.length} fichier{files.length > 1 ? 's' : ''} sélectionné{files.length > 1 ? 's' : ''}
               </p>
             ) : (
               <>
                 <p style={{ color: 'var(--text-primary)', fontWeight: 500, fontSize: '15px', margin: '0 0 8px 0' }}>
-                  Click or drag files here
+                  Cliquez ou glissez des fichiers ici
                 </p>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '13px', margin: 0 }}>
-                  PDF, DOCX or Images (JPG, PNG) • Multiple files accepted
+                  PDF, DOCX ou Images (JPG, PNG) • Plusieurs fichiers acceptés
                 </p>
               </>
             )}
@@ -205,7 +205,7 @@ export default function UploadCVSection() {
         {files.length > 0 && (
           <div style={{ marginBottom: '24px' }}>
             <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px' }}>
-              Selected Files ({files.length})
+              Fichiers sélectionnés ({files.length})
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {files.map((file, index) => (
@@ -264,7 +264,7 @@ export default function UploadCVSection() {
               style={{ marginTop: '2px' }}
             />
             <span style={{ color: 'var(--text-primary)', fontSize: '14px', lineHeight: '1.5' }}>
-              I confirm that candidates have given explicit consent for processing their personal data (GDPR)
+              Je confirme que les candidats ont donné leur consentement explicite pour le traitement de leurs données personnelles (RGPD)
             </span>
           </label>
         </div>
@@ -290,7 +290,7 @@ export default function UploadCVSection() {
           {uploading ? (
             <>
               <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} />
-              <span>Uploading...</span>
+              <span>Téléchargement...</span>
             </>
           ) : (
             <span>Analyser et Enregistrer ({files.length})</span>

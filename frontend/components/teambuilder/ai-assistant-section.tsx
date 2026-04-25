@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Send, Sparkles, Users, DollarSign, Briefcase, TrendingUp,
@@ -88,7 +89,9 @@ export default function AIAssistantSection() {
   
   // Manage Jobs Mode state
   const [jobs, setJobs] = useState<any[]>([]);
+  const [sessions, setSessions] = useState<any>({});
   const [showCreateJob, setShowCreateJob] = useState<boolean>(false);
+  const [selectedJob, setSelectedJob] = useState<any>(null);
   const [newJob, setNewJob] = useState<any>({
     title: '',
     seniority: 'mid',
@@ -170,11 +173,42 @@ export default function AIAssistantSection() {
     if (mode === 'manage_jobs' && jobs.length === 0) {
       setLoading(true);
       getJobs()
-        .then(data => setJobs(data))
+        .then(data => {
+          setJobs(data);
+          // Fetch session data for jobs that have session_id
+          const sessionIds = [...new Set(data.map((job: any) => job.session_id).filter(Boolean))] as string[];
+          if (sessionIds.length > 0) {
+            fetchSessions(sessionIds);
+          }
+        })
         .catch(err => setError(err.message))
         .finally(() => setLoading(false));
     }
   }, [mode, jobs.length]);
+
+  const fetchSessions = async (sessionIds: string[]) => {
+    try {
+      const response = await fetch('http://localhost:8001/api/v1/sessions', {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': API_KEY
+        }
+      });
+      const allSessions = await response.json();
+      
+      // Create a map of session_id to session data
+      const sessionMap: any = {};
+      allSessions.forEach((session: any) => {
+        if (sessionIds.includes(session.id)) {
+          sessionMap[session.id] = session;
+        }
+      });
+      setSessions(sessionMap);
+    } catch (error) {
+      console.error('Error fetching sessions:', error);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!teamQuery.trim()) return;
@@ -199,7 +233,7 @@ export default function AIAssistantSection() {
       const data = await response.json();
       setResult(data);
     } catch (err: any) {
-      setError(err.message || 'Failed to build team. Is the backend running?');
+      setError(err.message || 'Échec de la création de l\'équipe. Le backend est-il en cours d\'exécution?');
     } finally {
       setLoading(false);
     }
@@ -229,12 +263,12 @@ export default function AIAssistantSection() {
   };
 
   return (
+    <>
     <div style={{
       height: '100vh',
       display: 'flex',
       flexDirection: 'column',
-      background: 'var(--bg-primary)',
-      position: 'relative'
+      background: 'var(--bg-primary)'
     }}>
 
       {/* AI Assistant Bar - Fixed at Top */}
@@ -282,7 +316,7 @@ export default function AIAssistantSection() {
                 color: 'var(--text-primary)',
                 letterSpacing: '-0.03em'
               }}>
-                AI Recruitment Assistant
+                Assistant de recrutement IA
               </h2>
               <p style={{
                 fontSize: '16px',
@@ -291,7 +325,7 @@ export default function AIAssistantSection() {
                 maxWidth: '500px',
                 margin: '0 auto'
               }}>
-                Select a workflow from the navbar to begin
+                Sélectionnez un workflow dans la barre de navigation pour commencer
               </p>
             </div>
 
@@ -342,14 +376,14 @@ export default function AIAssistantSection() {
                       <Users size={20} style={{ color: '#6366f1' }} />
                     </div>
                     <h3 style={{ fontSize: '17px', fontWeight: 600, margin: 0, color: 'var(--text-primary)' }}>
-                      Build Team
+                      Créer une équipe
                     </h3>
                   </div>
                   <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.6 }}>
-                    AI-powered team composition with role recommendations and salary estimates
+                    Composition d'équipe par IA avec recommandations de rôles et estimations salariales
                   </p>
                   <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 500, color: '#6366f1' }}>
-                    Start workflow <ArrowRight size={14} />
+                    Démarrer le workflow <ArrowRight size={14} />
                   </div>
                 </div>
               </motion.div>
@@ -393,14 +427,14 @@ export default function AIAssistantSection() {
                       <DollarSign size={20} style={{ color: '#06b6d4' }} />
                     </div>
                     <h3 style={{ fontSize: '17px', fontWeight: 600, margin: 0, color: 'var(--text-primary)' }}>
-                      Salary Intelligence
+                      Intelligence salariale
                     </h3>
                   </div>
                   <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.6 }}>
-                    Market compensation data and benchmarking across roles and regions
+                    Données de rémunération du marché et benchmarking par rôles et régions
                   </p>
                   <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 500, color: '#06b6d4' }}>
-                    View insights <ArrowRight size={14} />
+                    Voir les insights <ArrowRight size={14} />
                   </div>
                 </div>
               </motion.div>
@@ -444,14 +478,14 @@ export default function AIAssistantSection() {
                       <Target size={20} style={{ color: '#ec4899' }} />
                     </div>
                     <h3 style={{ fontSize: '17px', fontWeight: 600, margin: 0, color: 'var(--text-primary)' }}>
-                      Candidate Matching
+                      Matching de candidats
                     </h3>
                   </div>
                   <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.6 }}>
-                    Semantic search and intelligent matching to find qualified candidates
+                    Recherche sémantique et matching intelligent pour trouver des candidats qualifiés
                   </p>
                   <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 500, color: '#ec4899' }}>
-                    Search pool <ArrowRight size={14} />
+                    Rechercher dans le vivier <ArrowRight size={14} />
                   </div>
                 </div>
               </motion.div>
@@ -495,14 +529,14 @@ export default function AIAssistantSection() {
                       <Briefcase size={20} style={{ color: '#f59e0b' }} />
                     </div>
                     <h3 style={{ fontSize: '17px', fontWeight: 600, margin: 0, color: 'var(--text-primary)' }}>
-                      Job Management
+                      Gestion des emplois
                     </h3>
                   </div>
                   <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.6 }}>
-                    Create, track, and manage job postings with analytics and insights
+                    Créer, suivre et gérer les offres d'emploi avec analyses et insights
                   </p>
                   <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 500, color: '#f59e0b' }}>
-                    Manage postings <ArrowRight size={14} />
+                    Gérer les offres <ArrowRight size={14} />
                   </div>
                 </div>
               </motion.div>
@@ -542,10 +576,10 @@ export default function AIAssistantSection() {
                   </div>
                   <div>
                     <h3 style={{ fontSize: '16px', fontWeight: 600, margin: '0 0 4px 0', color: 'var(--text-primary)' }}>
-                      {interestedCandidates.length} Interested Candidates
+                      {interestedCandidates.length} Candidats intéressés
                     </h3>
                     <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0 }}>
-                      Review responses and take action
+                      Examiner les réponses et prendre des mesures
                     </p>
                   </div>
                 </div>
@@ -613,10 +647,10 @@ export default function AIAssistantSection() {
                 }}>
                   <div>
                     <h3 style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 4px 0', color: 'var(--text-primary)' }}>
-                      Interested Candidates
+                      Candidats intéressés
                     </h3>
                     <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: 0 }}>
-                      {interestedCandidates.length} candidates have responded positively
+                      {interestedCandidates.length} candidats ont répondu positivement
                     </p>
                   </div>
                   <button
@@ -698,10 +732,10 @@ export default function AIAssistantSection() {
                                 gap: '4px'
                               }}>
                                 <CheckCircle size={10} />
-                                Interested
+                                Intéressé
                               </div>
                               <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                                • Responded {candidate.respondedAt}
+                                • A répondu {candidate.respondedAt}
                               </span>
                             </div>
                           </div>
@@ -728,7 +762,7 @@ export default function AIAssistantSection() {
                             }}
                           >
                             <Mail size={14} />
-                            Contact
+                            Contacter
                           </motion.a>
                           <motion.button
                             whileHover={{ scale: 1.02 }}
@@ -743,7 +777,7 @@ export default function AIAssistantSection() {
                               alignItems: 'center',
                               transition: 'all 0.2s'
                             }}
-                            title="View profile"
+                            title="Voir le profil"
                           >
                             <Eye size={16} style={{ color: 'var(--text-secondary)' }} />
                           </motion.button>
@@ -778,7 +812,7 @@ export default function AIAssistantSection() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <DollarSign size={24} style={{ color: '#6366f1' }} />
                   <h3 style={{ fontSize: '18px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
-                    Salary Statistics
+                    Statistiques salariales
                   </h3>
                 </div>
                 <button
@@ -804,7 +838,7 @@ export default function AIAssistantSection() {
                   border: '1px solid var(--border-color)'
                 }}>
                   <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>
-                    Average Salary by Role
+                    Salaire moyen par rôle
                   </h4>
                   <ResponsiveContainer width="100%" height={200}>
                     <BarChart data={salaryData.byRole} layout="vertical">
@@ -838,7 +872,7 @@ export default function AIAssistantSection() {
                   border: '1px solid var(--border-color)'
                 }}>
                   <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>
-                    Candidates by Seniority
+                    Candidats par niveau
                   </h4>
                   <ResponsiveContainer width="100%" height={200}>
                     <PieChart>
@@ -928,17 +962,17 @@ export default function AIAssistantSection() {
               }}>
                 <div style={{ marginBottom: '32px' }}>
                   <h3 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '12px', color: 'var(--text-primary)' }}>
-                    Build Your Team
+                    Créer votre équipe
                   </h3>
                   <p style={{ fontSize: '15px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                    Describe your project and team needs in natural language. Try queries like:
+                    Décrivez votre projet et vos besoins en équipe en langage naturel. Essayez des requêtes comme :
                   </p>
                   <div style={{ marginTop: '16px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                     {[
-                      'Building a SaaS platform, need backend and frontend engineers',
-                      'Mobile app startup, solo founder, budget 60k',
-                      'AI product, have 2 engineers, need ML specialist and designer',
-                      'E-commerce marketplace, MVP in 4 months'
+                      'Création d\'une plateforme SaaS, besoin d\'ingénieurs backend et frontend',
+                      'Startup d\'application mobile, fondateur solo, budget 60k',
+                      'Produit IA, j\'ai 2 ingénieurs, besoin d\'un spécialiste ML et designer',
+                      'Marketplace e-commerce, MVP en 4 mois'
                     ].map((example: string, i: number) => (
                       <motion.button
                         key={i}
@@ -964,7 +998,7 @@ export default function AIAssistantSection() {
 
                 <div>
                   <textarea
-                    placeholder="Tell me about your project... e.g., 'We're building a B2B SaaS platform for logistics. Currently just me (non-technical founder). Need to launch MVP in 6 months with a budget of 80,000 TND. Looking for backend engineer, frontend developer, and designer.'"
+                    placeholder="Parlez-moi de votre projet... par exemple, 'Nous créons une plateforme SaaS B2B pour la logistique. Actuellement juste moi (fondateur non technique). Besoin de lancer le MVP en 6 mois avec un budget de 80 000 TND. Recherche ingénieur backend, développeur frontend et designer.'"
                     value={teamQuery}
                     onChange={(e) => setTeamQuery(e.target.value)}
                     rows={4}
@@ -989,7 +1023,7 @@ export default function AIAssistantSection() {
                   />
                   <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Sparkles size={14} style={{ color: '#6366f1' }} />
-                    AI will analyze your project, current team, budget, and timeline to recommend the perfect team composition
+                    L'IA analysera votre projet, équipe actuelle, budget et calendrier pour recommander la composition d'équipe parfaite
                   </p>
                 </div>
               </div>
@@ -999,7 +1033,7 @@ export default function AIAssistantSection() {
             {loading && (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', padding: '48px' }}>
                 <Loader2 size={48} style={{ color: '#6366f1' }} className="animate-spin" />
-                <p style={{ color: 'var(--text-secondary)', fontSize: '15px' }}>Building your perfect team...</p>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '15px' }}>Création de votre équipe parfaite...</p>
               </div>
             )}
 
@@ -1019,7 +1053,7 @@ export default function AIAssistantSection() {
                     marginBottom: '24px'
                   }}>
                     <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '12px', color: 'var(--text-primary)' }}>
-                      AI Analysis
+                      Analyse IA
                     </h3>
                     <p style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
                       {result.chat_response}
@@ -1032,7 +1066,7 @@ export default function AIAssistantSection() {
                   <div style={{ marginBottom: '24px' }}>
                     <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <Users size={20} style={{ color: '#6366f1' }} />
-                      Recommended Team
+                      Équipe recommandée
                       <span style={{
                         padding: '4px 10px',
                         background: 'rgba(99, 102, 241, 0.1)',
@@ -1041,7 +1075,7 @@ export default function AIAssistantSection() {
                         fontSize: '12px',
                         fontWeight: 700
                       }}>
-                        {result.recommended_team.length} roles
+                        {result.recommended_team.length} rôles
                       </span>
                     </h3>
 
@@ -1101,7 +1135,7 @@ export default function AIAssistantSection() {
                                 onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
                                 onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
                               >
-                                <span>{member.top_candidates.length} {member.top_candidates.length === 1 ? 'candidate' : 'candidates'} found</span>
+                                <span>{member.top_candidates.length} {member.top_candidates.length === 1 ? 'candidat' : 'candidats'} trouvé{member.top_candidates.length === 1 ? '' : 's'}</span>
                                 <ChevronDown 
                                   size={16} 
                                   style={{ 
@@ -1194,12 +1228,12 @@ export default function AIAssistantSection() {
                   }}>
                     <h3 style={{ fontSize: '16px', fontWeight: 700, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <DollarSign size={20} style={{ color: '#10b981' }} />
-                      Total Budget Estimate
+                      Estimation budgétaire totale
                     </h3>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                       <div>
                         <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '6px' }}>
-                          Estimated Annual Cost
+                          Coût annuel estimé
                         </div>
                         <div style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text-primary)' }}>
                           {result.a2a_payload.total_estimated_cost_min.toLocaleString()} - {result.a2a_payload.total_estimated_cost_max.toLocaleString()} {result.a2a_payload.currency}
@@ -1208,7 +1242,7 @@ export default function AIAssistantSection() {
                       {result.a2a_payload.budget && (
                         <div>
                           <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '6px' }}>
-                            Your Budget
+                            Votre budget
                           </div>
                           <div style={{
                             fontSize: '24px',
@@ -1245,17 +1279,17 @@ export default function AIAssistantSection() {
               }}>
                 <div style={{ marginBottom: '32px' }}>
                   <h3 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '12px', color: 'var(--text-primary)' }}>
-                    Salary Intelligence
+                    Intelligence salariale
                   </h3>
                   <p style={{ fontSize: '15px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                    Ask me anything about salaries. Try questions like:
+                    Posez-moi des questions sur les salaires. Essayez des questions comme :
                   </p>
                   <div style={{ marginTop: '16px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                     {[
-                      'Show me salary for senior backend engineer',
-                      'What does a mid-level product manager earn?',
-                      'Salary curve for data scientists',
-                      'Compare salaries across seniority levels'
+                      'Montrez-moi le salaire d\'un ingénieur backend senior',
+                      'Combien gagne un chef de produit de niveau intermédiaire?',
+                      'Courbe salariale pour les data scientists',
+                      'Comparer les salaires selon les niveaux d\'expérience'
                     ].map((example: string, i: number) => (
                       <motion.button
                         key={i}
@@ -1281,7 +1315,7 @@ export default function AIAssistantSection() {
 
                 <div>
                   <textarea
-                    placeholder="Ask me about salaries... e.g., 'What's the salary for a senior backend engineer in Tunisia?' or 'Show me salary trends for product managers'"
+                    placeholder="Posez-moi des questions sur les salaires... par exemple, 'Quel est le salaire d\'un ingénieur backend senior en Tunisie?' ou 'Montrez-moi les tendances salariales pour les chefs de produit'"
                     value={salaryQuery}
                     onChange={(e) => setSalaryQuery(e.target.value)}
                     rows={4}
@@ -1306,7 +1340,7 @@ export default function AIAssistantSection() {
                   />
                   <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Sparkles size={14} style={{ color: '#06b6d4' }} />
-                    AI will understand your question and extract the role, seniority, and region automatically
+                    L'IA comprendra votre question et extraira automatiquement le rôle, le niveau d'expérience et la région
                   </p>
                 </div>
               </div>
@@ -1316,7 +1350,7 @@ export default function AIAssistantSection() {
             {loading && (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', padding: '48px' }}>
                 <Loader2 size={48} style={{ color: '#06b6d4' }} className="animate-spin" />
-                <p style={{ color: 'var(--text-secondary)', fontSize: '15px' }}>Analyzing salary data...</p>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '15px' }}>Analyse des données salariales...</p>
               </div>
             )}
 
@@ -1349,13 +1383,13 @@ export default function AIAssistantSection() {
                     marginBottom: '24px'
                   }}>
                     <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
-                      Annual Salary Range
+                      Fourchette salariale annuelle
                     </div>
                     <div style={{ fontSize: '32px', fontWeight: 700, color: '#06b6d4' }}>
                       {salaryResult.annual_min?.toLocaleString()} - {salaryResult.annual_max?.toLocaleString()} {salaryResult.currency}
                     </div>
                     <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '8px' }}>
-                      Average: {Math.round((salaryResult.annual_min + salaryResult.annual_max) / 2).toLocaleString()} {salaryResult.currency}/year
+                      Moyenne: {Math.round((salaryResult.annual_min + salaryResult.annual_max) / 2).toLocaleString()} {salaryResult.currency}/an
                     </div>
                   </div>
 
@@ -1382,7 +1416,7 @@ export default function AIAssistantSection() {
                       }}
                     >
                       <BarChart3 size={16} />
-                      {showSalaryStats ? 'Hide Statistics' : 'View Market Statistics'}
+                      {showSalaryStats ? 'Masquer les statistiques' : 'Voir les statistiques du marché'}
                     </motion.button>
                     
                     <motion.button
@@ -1405,7 +1439,7 @@ export default function AIAssistantSection() {
                         transition: 'all 0.2s'
                       }}
                     >
-                      New Search
+                      Nouvelle recherche
                     </motion.button>
                   </div>
                 </div>
@@ -1432,17 +1466,17 @@ export default function AIAssistantSection() {
               }}>
                 <div style={{ marginBottom: '32px' }}>
                   <h3 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '12px', color: 'var(--text-primary)' }}>
-                    Find Candidates
+                    Trouver des candidats
                   </h3>
                   <p style={{ fontSize: '15px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                    Describe who you're looking for in natural language. Try queries like:
+                    Décrivez qui vous recherchez en langage naturel. Essayez des requêtes comme :
                   </p>
                   <div style={{ marginTop: '16px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                     {[
-                      'Find senior developers with Python and React',
-                      'Show me mid-level product managers',
-                      'Candidates with 5+ years in backend',
-                      'Junior designers with Figma experience'
+                      'Trouver des développeurs seniors avec Python et React',
+                      'Montrez-moi des chefs de produit de niveau intermédiaire',
+                      'Candidats avec 5+ ans d\'expérience en backend',
+                      'Designers juniors avec expérience Figma'
                     ].map((example: string, i: number) => (
                       <motion.button
                         key={i}
@@ -1468,7 +1502,7 @@ export default function AIAssistantSection() {
 
                 <div>
                   <textarea
-                    placeholder="Describe the candidate you're looking for... e.g., 'Find senior backend engineers with Python, Django, and PostgreSQL experience' or 'Show me mid-level product managers with SaaS background'"
+                    placeholder="Décrivez le candidat que vous recherchez... par exemple, 'Trouver des ingénieurs backend seniors avec expérience Python, Django et PostgreSQL' ou 'Montrez-moi des chefs de produit de niveau intermédiaire avec expérience SaaS'"
                     value={searchRole}
                     onChange={(e) => setSearchRole(e.target.value)}
                     rows={4}
@@ -1493,7 +1527,7 @@ export default function AIAssistantSection() {
                   />
                   <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Sparkles size={14} style={{ color: '#ec4899' }} />
-                    AI will parse your query and search for matching candidates based on skills, experience, and seniority
+                    L'IA analysera votre requête et recherchera des candidats correspondants en fonction des compétences, de l'expérience et du niveau d'ancienneté
                   </p>
                 </div>
               </div>
@@ -1503,7 +1537,7 @@ export default function AIAssistantSection() {
             {loading && (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', padding: '48px' }}>
                 <Loader2 size={48} style={{ color: '#ec4899' }} className="animate-spin" />
-                <p style={{ color: 'var(--text-secondary)', fontSize: '15px' }}>Searching candidates...</p>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '15px' }}>Recherche de candidats...</p>
               </div>
             )}
 
@@ -1515,7 +1549,7 @@ export default function AIAssistantSection() {
               >
                 <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)' }}>
-                    Found {candidateResults.length} candidates
+                    {candidateResults.length} candidats trouvés
                   </h3>
                   <motion.button
                     whileHover={{ scale: 1.02 }}
@@ -1538,7 +1572,7 @@ export default function AIAssistantSection() {
                       transition: 'all 0.2s'
                     }}
                   >
-                    New Search
+                    Nouvelle recherche
                   </motion.button>
                 </div>
 
@@ -1581,7 +1615,7 @@ export default function AIAssistantSection() {
                             {candidate.name}
                           </h4>
                           <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: '0 0 6px 0' }}>
-                            {candidate.seniority} • {candidate.experience_years} years exp
+                            {candidate.seniority} • {candidate.experience_years} ans d'exp
                           </p>
                           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                             {candidate.skills?.slice(0, 4).map((skill: string, idx: number) => (
@@ -1599,7 +1633,7 @@ export default function AIAssistantSection() {
                             ))}
                             {candidate.skills?.length > 4 && (
                               <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                                +{candidate.skills.length - 4} more
+                                +{candidate.skills.length - 4} de plus
                               </span>
                             )}
                           </div>
@@ -1649,10 +1683,10 @@ export default function AIAssistantSection() {
             <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '4px', color: 'var(--text-primary)' }}>
-                  Job Postings
+                  Offres d'emploi
                 </h3>
                 <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
-                  {jobs.length} active positions
+                  {jobs.length} postes actifs
                 </p>
               </div>
               <motion.button
@@ -1676,7 +1710,7 @@ export default function AIAssistantSection() {
                 }}
               >
                 <Plus size={16} />
-                Create Job
+                Créer un emploi
               </motion.button>
             </div>
 
@@ -1725,21 +1759,21 @@ export default function AIAssistantSection() {
                   >
                     <div style={{ marginBottom: '24px' }}>
                       <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '8px', color: 'var(--text-primary)' }}>
-                        Create New Job
+                        Créer un nouvel emploi
                       </h3>
                       <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
-                        Add a new position to your recruitment pipeline
+                        Ajouter un nouveau poste à votre pipeline de recrutement
                       </p>
                     </div>
 
                     <div style={{ display: 'grid', gap: '16px', marginBottom: '24px' }}>
                       <div>
                         <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '8px', color: 'var(--text-primary)' }}>
-                          Job Title
+                          Titre du poste
                         </label>
                         <input
                           type="text"
-                          placeholder="e.g., Senior Backend Engineer"
+                          placeholder="par ex., Ingénieur Backend Senior"
                           value={newJob.title}
                           onChange={(e) => setNewJob({...newJob, title: e.target.value})}
                           autoFocus
@@ -1758,7 +1792,7 @@ export default function AIAssistantSection() {
 
                       <div>
                         <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '8px', color: 'var(--text-primary)' }}>
-                          Seniority Level
+                          Niveau d'expérience
                         </label>
                         <select
                           value={newJob.seniority}
@@ -1775,7 +1809,7 @@ export default function AIAssistantSection() {
                           }}
                         >
                           <option value="junior">Junior</option>
-                          <option value="mid">Mid-level</option>
+                          <option value="mid">Intermédiaire</option>
                           <option value="senior">Senior</option>
                           <option value="lead">Lead</option>
                         </select>
@@ -1783,11 +1817,11 @@ export default function AIAssistantSection() {
 
                       <div>
                         <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '8px', color: 'var(--text-primary)' }}>
-                          Required Skills (comma-separated)
+                          Compétences requises (séparées par des virgules)
                         </label>
                         <input
                           type="text"
-                          placeholder="e.g., Python, Django, PostgreSQL"
+                          placeholder="par ex., Python, Django, PostgreSQL"
                           value={newJob.required_skills}
                           onChange={(e) => setNewJob({...newJob, required_skills: e.target.value})}
                           style={{
@@ -1808,7 +1842,7 @@ export default function AIAssistantSection() {
                           Description
                         </label>
                         <textarea
-                          placeholder="Job description and requirements..."
+                          placeholder="Description du poste et exigences..."
                           value={newJob.description}
                           onChange={(e) => setNewJob({...newJob, description: e.target.value})}
                           rows={4}
@@ -1869,7 +1903,7 @@ export default function AIAssistantSection() {
                           transition: 'all 0.2s'
                         }}
                       >
-                        {loading ? 'Creating...' : 'Create Job'}
+                        {loading ? 'Création...' : 'Créer un emploi'}
                       </motion.button>
                       <motion.button
                         whileHover={{ scale: 1.02 }}
@@ -1887,7 +1921,7 @@ export default function AIAssistantSection() {
                           transition: 'all 0.2s'
                         }}
                       >
-                        Cancel
+                        Annuler
                       </motion.button>
                     </div>
                   </motion.div>
@@ -1899,7 +1933,7 @@ export default function AIAssistantSection() {
             {loading && jobs.length === 0 ? (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', padding: '48px' }}>
                 <Loader2 size={48} style={{ color: '#f59e0b' }} className="animate-spin" />
-                <p style={{ color: 'var(--text-secondary)', fontSize: '15px' }}>Loading jobs...</p>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '15px' }}>Chargement des emplois...</p>
               </div>
             ) : jobs.length === 0 ? (
               <div style={{
@@ -1911,101 +1945,201 @@ export default function AIAssistantSection() {
               }}>
                 <Briefcase size={48} style={{ color: '#f59e0b', margin: '0 auto 16px' }} />
                 <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '8px', color: 'var(--text-primary)' }}>
-                  No jobs yet
+                  Aucun emploi pour le moment
                 </h3>
                 <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
-                  Create your first job posting to start recruiting
+                  Créez votre première offre d'emploi pour commencer le recrutement
                 </p>
               </div>
             ) : (
-              <div style={{ display: 'grid', gap: '16px' }}>
-                {jobs.map((job: any, i: number) => (
-                  <motion.div
-                    key={job.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                    style={{
-                      padding: '24px',
-                      background: 'var(--bg-card)',
-                      border: '1px solid var(--border-color)',
-                      borderRadius: '12px',
-                      transition: 'all 0.2s'
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '16px' }}>
-                      <div style={{ flex: 1 }}>
-                        <h4 style={{ fontSize: '17px', fontWeight: 700, margin: '0 0 8px 0', color: 'var(--text-primary)' }}>
-                          {job.title}
-                        </h4>
-                        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '12px' }}>
-                          <span style={{
-                            padding: '4px 10px',
-                            background: job.status === 'open' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(156, 163, 175, 0.1)',
-                            border: `1px solid ${job.status === 'open' ? '#10b981' : '#9ca3af'}`,
-                            borderRadius: '6px',
-                            fontSize: '12px',
+              // Group jobs by session_id
+              (() => {
+                const groupedJobs = jobs.reduce((acc: any, job: any) => {
+                  const sessionKey = job.session_id || 'manual';
+                  if (!acc[sessionKey]) {
+                    acc[sessionKey] = [];
+                  }
+                  acc[sessionKey].push(job);
+                  return acc;
+                }, {});
+
+                // Sort groups: manual jobs first, then by most recent
+                const sortedGroups = Object.entries(groupedJobs).sort(([keyA], [keyB]) => {
+                  if (keyA === 'manual') return -1;
+                  if (keyB === 'manual') return 1;
+                  return 0;
+                });
+
+                return (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+                    {sortedGroups.map(([sessionId, sessionJobs]: [string, any]) => (
+                      <div key={sessionId} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        {/* Group Header */}
+                        <div style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          paddingBottom: '12px',
+                          borderBottom: '2px solid var(--border-color)'
+                        }}>
+                          <h2 style={{
+                            fontSize: '18px',
                             fontWeight: 600,
-                            color: job.status === 'open' ? '#10b981' : '#9ca3af',
-                            textTransform: 'capitalize'
+                            color: 'var(--text-primary)',
+                            margin: 0,
+                            flex: 1,
+                            minWidth: 0
                           }}>
-                            {job.status}
+                            {sessionId === 'manual' 
+                              ? '📝 Emplois créés manuellement' 
+                              : sessions[sessionId] 
+                                ? `🤖 ${sessions[sessionId].raw_input.length > 60 
+                                    ? sessions[sessionId].raw_input.substring(0, 60) + '...' 
+                                    : sessions[sessionId].raw_input}` 
+                                : '🤖 Session de création d\'équipe'
+                            }
+                          </h2>
+                          <span style={{
+                            padding: '4px 12px',
+                            background: 'var(--bg-secondary)',
+                            borderRadius: '12px',
+                            fontSize: '13px',
+                            fontWeight: 600,
+                            color: 'var(--text-secondary)',
+                            flexShrink: 0
+                          }}>
+                            {sessionJobs.length} {sessionJobs.length === 1 ? 'emploi' : 'emplois'}
                           </span>
-                          <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-                            {job.seniority} level
-                          </span>
-                          {job.candidates_count > 0 && (
-                            <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-                              • {job.candidates_count} candidates
+                          {sessionId !== 'manual' && sessions[sessionId] && (
+                            <span style={{
+                              fontSize: '12px',
+                              color: 'var(--text-muted)',
+                              flexShrink: 0,
+                              whiteSpace: 'nowrap'
+                            }}>
+                              {new Date(sessions[sessionId].created_at).toLocaleDateString('fr-FR', { 
+                                month: 'short', 
+                                day: 'numeric',
+                                year: 'numeric'
+                              })}
                             </span>
                           )}
                         </div>
-                        {job.required_skills && job.required_skills.length > 0 && (
-                          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                            {job.required_skills.slice(0, 5).map((skill: string, idx: number) => (
-                              <span key={idx} style={{
-                                padding: '3px 8px',
-                                background: 'rgba(245, 158, 11, 0.1)',
-                                border: '1px solid rgba(245, 158, 11, 0.2)',
-                                borderRadius: '6px',
-                                fontSize: '11px',
-                                fontWeight: 600,
-                                color: '#f59e0b'
-                              }}>
-                                {skill}
-                              </span>
-                            ))}
-                            {job.required_skills.length > 5 && (
-                              <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                                +{job.required_skills.length - 5} more
-                              </span>
-                            )}
-                          </div>
-                        )}
+
+                        {/* Jobs Grid for this session */}
+                        <div style={{ display: 'grid', gap: '16px' }}>
+                          {sessionJobs.map((job: any, i: number) => (
+                            <motion.div
+                              key={job.id}
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: i * 0.05 }}
+                              style={{
+                                padding: '24px',
+                                background: 'var(--bg-card)',
+                                border: '1px solid var(--border-color)',
+                                borderRadius: '12px',
+                                transition: 'all 0.2s'
+                              }}
+                            >
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '16px' }}>
+                                <div style={{ flex: 1 }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', flexWrap: 'wrap' }}>
+                                    <h4 style={{ fontSize: '17px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+                                      {job.title}
+                                    </h4>
+                                    {/* A2A Badge: Auto-created from Build Team */}
+                                    {job.session_id && (
+                                      <span style={{
+                                        padding: '3px 8px',
+                                        background: 'rgba(139, 92, 246, 0.1)',
+                                        border: '1px solid rgba(139, 92, 246, 0.3)',
+                                        borderRadius: '6px',
+                                        fontSize: '11px',
+                                        fontWeight: 600,
+                                        color: '#8b5cf6',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '4px'
+                                      }}>
+                                        🤖 Auto-créé
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '12px' }}>
+                                    <span style={{
+                                      padding: '4px 10px',
+                                      background: job.status === 'open' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(156, 163, 175, 0.1)',
+                                      border: `1px solid ${job.status === 'open' ? '#10b981' : '#9ca3af'}`,
+                                      borderRadius: '6px',
+                                      fontSize: '12px',
+                                      fontWeight: 600,
+                                      color: job.status === 'open' ? '#10b981' : '#9ca3af',
+                                      textTransform: 'capitalize'
+                                    }}>
+                                      {job.status}
+                                    </span>
+                                    <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+                                      {job.seniority}
+                                    </span>
+                                    {job.candidates_count > 0 && (
+                                      <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+                                        • {job.candidates_count} candidats
+                                      </span>
+                                    )}
+                                  </div>
+                                  {job.required_skills && job.required_skills.length > 0 && (
+                                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                      {job.required_skills.slice(0, 5).map((skill: string, idx: number) => (
+                                        <span key={idx} style={{
+                                          padding: '3px 8px',
+                                          background: 'rgba(245, 158, 11, 0.1)',
+                                          border: '1px solid rgba(245, 158, 11, 0.2)',
+                                          borderRadius: '6px',
+                                          fontSize: '11px',
+                                          fontWeight: 600,
+                                          color: '#f59e0b'
+                                        }}>
+                                          {skill}
+                                        </span>
+                                      ))}
+                                      {job.required_skills.length > 5 && (
+                                        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                                          +{job.required_skills.length - 5} de plus
+                                        </span>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                  <motion.button
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={() => setSelectedJob(job)}
+                                    style={{
+                                      padding: '8px 16px',
+                                      background: 'var(--bg-secondary)',
+                                      border: '1px solid var(--border-color)',
+                                      borderRadius: '8px',
+                                      fontSize: '13px',
+                                      fontWeight: 600,
+                                      color: 'var(--text-primary)',
+                                      cursor: 'pointer',
+                                      transition: 'all 0.2s'
+                                    }}
+                                  >
+                                    Voir les détails
+                                  </motion.button>
+                                </div>
+                              </div>
+                            </motion.div>
+                          ))}
+                        </div>
                       </div>
-                      <div style={{ display: 'flex', gap: '8px' }}>
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          style={{
-                            padding: '8px 16px',
-                            background: 'var(--bg-secondary)',
-                            border: '1px solid var(--border-color)',
-                            borderRadius: '8px',
-                            fontSize: '13px',
-                            fontWeight: 600,
-                            color: 'var(--text-primary)',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s'
-                          }}
-                        >
-                          View Details
-                        </motion.button>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+                    ))}
+                  </div>
+                );
+              })()
             )}
           </motion.div>
         )}
@@ -2055,7 +2189,7 @@ export default function AIAssistantSection() {
               }}
             >
               <Sparkles size={16} />
-              Build Team
+              Créer une équipe
             </motion.button>
           )}
 
@@ -2087,7 +2221,7 @@ export default function AIAssistantSection() {
               }}
             >
               <Sparkles size={16} />
-              Start New Search
+              Nouvelle recherche
             </motion.button>
           )}
 
@@ -2150,7 +2284,7 @@ export default function AIAssistantSection() {
               }}
             >
               <Sparkles size={16} />
-              Analyze Salary
+              Analyser le salaire
             </motion.button>
           )}
 
@@ -2210,7 +2344,7 @@ export default function AIAssistantSection() {
               }}
             >
               <Sparkles size={16} />
-              Find Candidates
+              Trouver des candidats
             </motion.button>
           )}
         </div>
@@ -2239,7 +2373,7 @@ export default function AIAssistantSection() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <X size={20} />
               <div>
-                <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '4px' }}>Error</div>
+                <div style={{ fontSize: '14px', fontWeight: 600, marginBottom: '4px' }}>Erreur</div>
                 <div style={{ fontSize: '13px', opacity: 0.9 }}>{error}</div>
               </div>
               <button
@@ -2262,5 +2396,320 @@ export default function AIAssistantSection() {
 
 
     </div>
+
+    {/* MODALS - Rendered via Portal to document.body for proper centering */}
+    {typeof window !== 'undefined' && createPortal(
+      <>
+        {/* Job Details Modal */}
+        <AnimatePresence>
+          {selectedJob && (
+            <div className="fixed inset-0 z-[99999] flex items-center justify-center">
+              {/* Background Blur Overlay */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setSelectedJob(null)}
+                className="absolute inset-0 bg-black/50"
+              />
+
+              {/* Modal Content */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                  background: 'var(--bg-card, #ffffff)',
+                  borderColor: 'var(--border-color, #e5e7eb)'
+                }}
+                className="relative w-[90%] max-w-[700px] max-h-[85vh] border rounded-2xl shadow-2xl overflow-hidden flex flex-col dark:bg-gray-900"
+              >
+            {/* Header */}
+            <div style={{
+              padding: '24px 32px',
+              borderBottom: '1px solid var(--border-color)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'start'
+            }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', flexWrap: 'wrap' }}>
+                  <h3 style={{ fontSize: '20px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+                    {selectedJob.title}
+                  </h3>
+                  {selectedJob.session_id && (
+                    <span style={{
+                      padding: '3px 8px',
+                      background: 'rgba(139, 92, 246, 0.1)',
+                      border: '1px solid rgba(139, 92, 246, 0.3)',
+                      borderRadius: '6px',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      color: '#8b5cf6',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}>
+                      🤖 Auto-créé
+                    </span>
+                  )}
+                </div>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <span style={{
+                    padding: '4px 10px',
+                    background: selectedJob.status === 'open' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(156, 163, 175, 0.1)',
+                    border: `1px solid ${selectedJob.status === 'open' ? '#10b981' : '#9ca3af'}`,
+                    borderRadius: '6px',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    color: selectedJob.status === 'open' ? '#10b981' : '#9ca3af',
+                    textTransform: 'capitalize'
+                  }}>
+                    {selectedJob.status}
+                  </span>
+                  <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+                    {selectedJob.seniority}
+                  </span>
+                  {selectedJob.employment_type && (
+                    <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+                      • {selectedJob.employment_type}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <button
+                onClick={() => setSelectedJob(null)}
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--border-color)',
+                  background: 'transparent',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'var(--text-secondary)',
+                  transition: 'all 0.2s',
+                  flexShrink: 0,
+                  marginLeft: '16px'
+                }}
+                onMouseEnter={(e) => (e.target as HTMLButtonElement).style.background = 'var(--bg-secondary)'}
+                onMouseLeave={(e) => (e.target as HTMLButtonElement).style.background = 'transparent'}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Scrollable Content */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px' }}>
+              {/* Description */}
+              {selectedJob.description && (
+                <div style={{ marginBottom: '24px' }}>
+                  <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: 'var(--text-primary)' }}>
+                    Description
+                  </h4>
+                  <p style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
+                    {selectedJob.description}
+                  </p>
+                </div>
+              )}
+
+              {/* Required Skills */}
+              {selectedJob.required_skills && selectedJob.required_skills.length > 0 && (
+                <div style={{ marginBottom: '24px' }}>
+                  <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '12px', color: 'var(--text-primary)' }}>
+                    Compétences requises
+                  </h4>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {selectedJob.required_skills.map((skill: string, idx: number) => (
+                      <span key={idx} style={{
+                        padding: '6px 12px',
+                        background: 'rgba(245, 158, 11, 0.1)',
+                        border: '1px solid rgba(245, 158, 11, 0.2)',
+                        borderRadius: '8px',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        color: '#f59e0b'
+                      }}>
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Salary Range */}
+              {(selectedJob.estimated_annual_cost_min || selectedJob.estimated_annual_cost_max) && (
+                <div style={{ marginBottom: '24px' }}>
+                  <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: 'var(--text-primary)' }}>
+                    Fourchette salariale
+                  </h4>
+                  <div style={{
+                    padding: '16px',
+                    background: 'var(--bg-secondary)',
+                    borderRadius: '10px',
+                    border: '1px solid var(--border-color)'
+                  }}>
+                    <div style={{ fontSize: '20px', fontWeight: 700, color: '#10b981', marginBottom: '4px' }}>
+                      {selectedJob.estimated_annual_cost_min?.toLocaleString()} - {selectedJob.estimated_annual_cost_max?.toLocaleString()} {selectedJob.currency || 'TND'}
+                    </div>
+                    <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                      Par an • Source: {selectedJob.salary_source || 'Estimation'}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Candidates */}
+              {selectedJob.candidates_count > 0 && (
+                <div style={{ marginBottom: '24px' }}>
+                  <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '12px', color: 'var(--text-primary)' }}>
+                    Candidats
+                  </h4>
+                  <div style={{
+                    padding: '16px',
+                    background: 'var(--bg-secondary)',
+                    borderRadius: '10px',
+                    border: '1px solid var(--border-color)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px'
+                  }}>
+                    <Users size={24} style={{ color: '#6366f1' }} />
+                    <div>
+                      <div style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)' }}>
+                        {selectedJob.candidates_count}
+                      </div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                        Candidats correspondants
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Session Info */}
+              {selectedJob.session_id && sessions[selectedJob.session_id] && (
+                <div style={{ marginBottom: '24px' }}>
+                  <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '12px', color: 'var(--text-primary)' }}>
+                    Créé par l'IA
+                  </h4>
+                  <div style={{
+                    padding: '16px',
+                    background: 'rgba(139, 92, 246, 0.05)',
+                    borderRadius: '10px',
+                    border: '1px solid rgba(139, 92, 246, 0.2)'
+                  }}>
+                    <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
+                      Requête originale:
+                    </div>
+                    <div style={{ fontSize: '14px', color: 'var(--text-primary)', fontStyle: 'italic', marginBottom: '8px' }}>
+                      "{sessions[selectedJob.session_id].raw_input}"
+                    </div>
+                    <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                      {new Date(sessions[selectedJob.session_id].created_at).toLocaleDateString('fr-FR', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Metadata */}
+              <div style={{
+                padding: '16px',
+                background: 'var(--bg-secondary)',
+                borderRadius: '10px',
+                border: '1px solid var(--border-color)'
+              }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', fontSize: '13px' }}>
+                  <div>
+                    <div style={{ color: 'var(--text-muted)', marginBottom: '4px' }}>Créé le</div>
+                    <div style={{ color: 'var(--text-primary)', fontWeight: 600 }}>
+                      {new Date(selectedJob.created_at).toLocaleDateString('fr-FR', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                      })}
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ color: 'var(--text-muted)', marginBottom: '4px' }}>Priorité</div>
+                    <div style={{ color: 'var(--text-primary)', fontWeight: 600, textTransform: 'capitalize' }}>
+                      {selectedJob.priority || 'Normal'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer Actions */}
+            <div style={{
+              padding: '20px 32px',
+              borderTop: '1px solid var(--border-color)',
+              display: 'flex',
+              gap: '12px'
+            }}>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => {
+                  // TODO: Navigate to candidates matching this job
+                  console.log('View candidates for job:', selectedJob.id);
+                  setSelectedJob(null);
+                }}
+                style={{
+                  flex: 1,
+                  padding: '12px',
+                  background: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '10px',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  transition: 'all 0.2s'
+                }}
+              >
+                <Users size={16} />
+                Voir les candidats
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setSelectedJob(null)}
+                style={{
+                  padding: '12px 24px',
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: '10px',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  color: 'var(--text-primary)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                Fermer
+              </motion.button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+    </>,
+    document.body
+  )}
+    </>
   );
 }

@@ -54,7 +54,7 @@ export default function DashboardSection() {
         setStats(s);
         setRecentSessions(sessions.slice(0, 5));
       } catch (e) {
-        setError('Could not connect to backend.');
+        setError('Impossible de se connecter au backend.');
       } finally {
         setLoading(false);
       }
@@ -86,17 +86,17 @@ export default function DashboardSection() {
         const newStats = await newStatsResponse.json();
         setStats(newStats);
       } else {
-        setSyncMessage(`❌ ${data.error || 'Sync failed'}`);
+        setSyncMessage(`❌ ${data.error || 'Échec de la synchronisation'}`);
       }
     } catch (error) {
-        setSyncMessage('❌ Failed to sync Gmail');
+        setSyncMessage('❌ Échec de la synchronisation Gmail');
     } finally {
       setSyncing(false);
       setTimeout(() => setSyncMessage(''), 5000);
     }
   };
 
-  if (loading) return <div className="loading-overlay"><div className="spinner" /><p>Loading dashboard...</p></div>;
+  if (loading) return <div className="loading-overlay"><div className="spinner" /><p>Chargement du tableau de bord...</p></div>;
 
   const COLORS = ['#6366f1', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#06b6d4'];
   const GRADIENTS = [
@@ -109,7 +109,7 @@ export default function DashboardSection() {
   ];
   
   const seniorityChartData = stats?.seniority_breakdown?.map((item: any, idx: number) => ({
-    name: (item.seniority || 'Not specified').charAt(0).toUpperCase() + (item.seniority || 'Not specified').slice(1),
+    name: (item.seniority || 'Non spécifié').charAt(0).toUpperCase() + (item.seniority || 'Non spécifié').slice(1),
     value: item.count,
     color: COLORS[idx % COLORS.length]
   })) || [];
@@ -122,10 +122,10 @@ export default function DashboardSection() {
   const hasData = stats && stats.total_candidates > 0;
 
   const timeRangeOptions = [
-    { value: '7', label: 'Last 7 days' },
-    { value: '30', label: 'Last 30 days' },
-    { value: '90', label: 'Last 90 days' },
-    { value: 'all', label: 'All time' },
+    { value: '7', label: '7 derniers jours' },
+    { value: '30', label: '30 derniers jours' },
+    { value: '90', label: '90 derniers jours' },
+    { value: 'all', label: 'Tout' },
   ];
 
   return (
@@ -133,8 +133,8 @@ export default function DashboardSection() {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 style={{ fontSize: '28px', fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--text-primary)', margin: '0 0 8px 0' }}>Overview</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', margin: 0 }}>Monitor your AI recruitment agent and team building activity.</p>
+          <h1 style={{ fontSize: '28px', fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--text-primary)', margin: '0 0 8px 0' }}>Tableau de bord</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', margin: 0 }}>Surveillez votre agent de recrutement IA et l'activité de constitution d'équipe.</p>
         </div>
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
           {/* Time Range Filter */}
@@ -186,7 +186,7 @@ export default function DashboardSection() {
             }}
           >
             <RefreshCw size={16} className={syncing ? 'spinning' : ''} />
-            {syncing ? 'Syncing...' : 'Sync Gmail'}
+            {syncing ? 'Synchronisation...' : 'Synchroniser Gmail'}
           </button>
           <Link href="/" className="btn" style={{ 
             background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: 'white', 
@@ -194,7 +194,7 @@ export default function DashboardSection() {
             borderRadius: '8px', fontSize: '14px', fontWeight: 500, border: 'none',
             boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)'
           }}>
-            <Plus size={16} /> New Team
+            <Plus size={16} /> Nouvelle équipe
           </Link>
         </div>
       </div>
@@ -225,10 +225,10 @@ export default function DashboardSection() {
           style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginBottom: '32px' }}>
           
           {[
-            { label: 'Total Candidates', value: stats.total_candidates || 0, icon: Users, gradient: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', change: stats.recent_candidates_30d > 0 ? `+${stats.recent_candidates_30d} this month` : null },
-            { label: 'Teams Built', value: stats.total_sessions || 0, icon: Search, gradient: 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)', change: stats.recent_sessions_30d > 0 ? `+${stats.recent_sessions_30d} this month` : null },
-            { label: 'Invitations Sent', value: stats.total_invitations || 0, icon: Mail, gradient: 'linear-gradient(135deg, #ec4899 0%, #f59e0b 100%)', change: stats.pending_invitations > 0 ? `${stats.pending_invitations} pending` : null },
-            { label: 'Interested', value: stats.interested_candidates || 0, icon: UserCheck, gradient: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)', change: stats.total_invitations > 0 ? `${((stats.interested_candidates / stats.total_invitations) * 100).toFixed(0)}% rate` : null }
+            { label: 'Total Candidats', value: stats.total_candidates || 0, icon: Users, gradient: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', change: stats.recent_candidates_30d > 0 ? `+${stats.recent_candidates_30d} ce mois` : null },
+            { label: 'Équipes créées', value: stats.total_sessions || 0, icon: Search, gradient: 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)', change: stats.recent_sessions_30d > 0 ? `+${stats.recent_sessions_30d} ce mois` : null },
+            { label: 'Invitations envoyées', value: stats.total_invitations || 0, icon: Mail, gradient: 'linear-gradient(135deg, #ec4899 0%, #f59e0b 100%)', change: stats.pending_invitations > 0 ? `${stats.pending_invitations} en attente` : null },
+            { label: 'Intéressés', value: stats.interested_candidates || 0, icon: UserCheck, gradient: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)', change: stats.total_invitations > 0 ? `${((stats.interested_candidates / stats.total_invitations) * 100).toFixed(0)}% taux` : null }
           ].map((stat, i: number) => (
             <motion.div key={i} variants={item} style={{ 
               background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '16px', 
@@ -295,7 +295,7 @@ export default function DashboardSection() {
               }} />
               
               <h3 style={{ fontSize: '17px', fontWeight: 600, margin: '0 0 24px 0', color: 'var(--text-primary)', position: 'relative' }}>
-                Candidates by Seniority
+                Candidats par niveau
               </h3>
               {seniorityChartData.length > 0 ? (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '32px', position: 'relative', minHeight: '260px' }}>
@@ -387,7 +387,7 @@ export default function DashboardSection() {
                               {item.name}
                             </div>
                             <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                              {item.value} candidates ({percentage}%)
+                              {item.value} candidats ({percentage}%)
                             </div>
                           </div>
                         </motion.div>
@@ -397,7 +397,7 @@ export default function DashboardSection() {
                 </div>
               ) : (
                 <div style={{ textAlign: 'center', padding: '48px 0', color: 'var(--text-secondary)', fontSize: '14px' }}>
-                  No seniority data yet
+                  Aucune donnée de niveau pour le moment
                 </div>
               )}
             </motion.div>
@@ -430,14 +430,14 @@ export default function DashboardSection() {
               }} />
               
               <h3 style={{ fontSize: '17px', fontWeight: 600, margin: '0 0 24px 0', color: 'var(--text-primary)', position: 'relative' }}>
-                Recruitment Metrics
+                Métriques de recrutement
               </h3>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', position: 'relative' }}>
                 {/* Interest Rate */}
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>Interest Rate</span>
+                    <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>Taux d'intérêt</span>
                     <span style={{ fontSize: '18px', fontWeight: 700, color: '#10b981' }}>
                       {stats?.total_invitations > 0 
                         ? `${Math.round((stats.interested_candidates / stats.total_invitations) * 100)}%`
@@ -461,14 +461,14 @@ export default function DashboardSection() {
                     }} />
                   </div>
                   <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '6px' }}>
-                    {stats.interested_candidates} of {stats.total_invitations} invited candidates showed interest
+                    {stats.interested_candidates} sur {stats.total_invitations} candidats invités ont montré de l'intérêt
                   </p>
                 </div>
 
                 {/* Response Rate */}
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>Response Rate</span>
+                    <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>Taux de réponse</span>
                     <span style={{ fontSize: '18px', fontWeight: 700, color: '#6366f1' }}>
                       {stats?.total_invitations > 0 
                         ? `${Math.round(((stats.total_invitations - stats.pending_invitations) / stats.total_invitations) * 100)}%`
@@ -492,14 +492,14 @@ export default function DashboardSection() {
                     }} />
                   </div>
                   <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '6px' }}>
-                    {stats.total_invitations - stats.pending_invitations} of {stats.total_invitations} responded (pending: {stats.pending_invitations})
+                    {stats.total_invitations - stats.pending_invitations} sur {stats.total_invitations} ont répondu (en attente: {stats.pending_invitations})
                   </p>
                 </div>
 
                 {/* Pool Growth */}
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>Pool Growth (30d)</span>
+                    <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>Croissance du vivier (30j)</span>
                     <span style={{ fontSize: '18px', fontWeight: 700, color: '#ec4899' }}>
                       +{stats.recent_candidates_30d}
                     </span>
@@ -520,14 +520,14 @@ export default function DashboardSection() {
                     }} />
                   </div>
                   <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '6px' }}>
-                    New candidates added (target: 20/month for full bar)
+                    Nouveaux candidats ajoutés (objectif: 20/mois pour barre complète)
                   </p>
                 </div>
 
                 {/* Average Response Time */}
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>Avg Response Time</span>
+                    <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>Temps de réponse moyen</span>
                     <span style={{ fontSize: '18px', fontWeight: 700, color: '#8b5cf6' }}>
                       {stats.avg_response_days !== undefined && stats.avg_response_days !== null
                         ? `${stats.avg_response_days}d`
@@ -552,8 +552,8 @@ export default function DashboardSection() {
                   </div>
                   <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '6px' }}>
                     {stats.avg_response_days !== undefined && stats.avg_response_days !== null
-                      ? `Average time for candidates to respond`
-                      : 'Waiting for first response'
+                      ? `Temps moyen de réponse des candidats`
+                      : 'En attente de la première réponse'
                     }
                   </p>
                 </div>
@@ -600,7 +600,7 @@ export default function DashboardSection() {
             }} />
             
             <h3 style={{ fontSize: '17px', fontWeight: 600, margin: '0 0 24px 0', color: 'var(--text-primary)', position: 'relative' }}>
-              Top Skills in Candidate Pool
+              Compétences principales du vivier
             </h3>
             {skillsChartData.length > 0 ? (
               <div style={{ height: `${Math.max(320, skillsChartData.length * 50)}px`, minWidth: '300px', position: 'relative' }}>
@@ -673,7 +673,7 @@ export default function DashboardSection() {
               </div>
             ) : (
               <div style={{ textAlign: 'center', padding: '48px 0', color: 'var(--text-secondary)', fontSize: '14px' }}>
-                No skills data yet
+                Aucune donnée de compétences pour le moment
               </div>
             )}
           </motion.div>
@@ -684,16 +684,16 @@ export default function DashboardSection() {
       <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
         style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '12px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)' }}>
         <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3 style={{ fontSize: '15px', fontWeight: 600, margin: 0 }}>Recent AI Activity</h3>
+          <h3 style={{ fontSize: '15px', fontWeight: 600, margin: 0 }}>Activité IA récente</h3>
           <Link href="/" style={{ fontSize: '13px', color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '4px', transition: 'color 0.2s' }}>
-            View All <ChevronRight size={14} />
+            Voir tout <ChevronRight size={14} />
           </Link>
         </div>
         
         {recentSessions.length === 0 ? (
           <div style={{ padding: '48px 24px', textAlign: 'center' }}>
             <Clock size={24} style={{ color: 'var(--text-muted)', margin: '0 auto 12px' }} />
-            <p style={{ color: 'var(--text-secondary)', fontSize: '14px', margin: 0 }}>No searches yet.</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '14px', margin: 0 }}>Aucune recherche pour le moment.</p>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column' }}>

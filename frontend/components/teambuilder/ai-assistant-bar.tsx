@@ -18,34 +18,34 @@ export default function AIAssistantBar({ isLoading = false, currentMode = null, 
     {
       id: 'build_team',
       icon: Users,
-      label: 'Build',
+      label: 'Créer',
       color: '#6366f1',
       gradient: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-      loadingText: 'Building team...'
+      loadingText: 'Création...'
     },
     {
       id: 'salary',
       icon: DollarSign,
-      label: 'Salary',
+      label: 'Salaire',
       color: '#06b6d4',
       gradient: 'linear-gradient(135deg, #06b6d4, #0891b2)',
-      loadingText: 'Looking up...'
+      loadingText: 'Recherche...'
     },
     {
       id: 'find_candidates',
       icon: Target,
-      label: 'Find',
+      label: 'Trouver',
       color: '#ec4899',
       gradient: 'linear-gradient(135deg, #ec4899, #f472b6)',
-      loadingText: 'Searching...'
+      loadingText: 'Recherche...'
     },
     {
       id: 'manage_jobs',
       icon: Briefcase,
-      label: 'Jobs',
+      label: 'Emplois',
       color: '#f59e0b',
       gradient: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
-      loadingText: 'Loading...'
+      loadingText: 'Chargement...'
     }
   ];
 

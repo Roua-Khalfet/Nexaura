@@ -23,11 +23,11 @@ export default function LoginPage() {
         window.location.href = data.auth_url;
       } else {
         console.error('No auth_url in response:', data);
-        alert('Failed to initiate login. Please try again.');
+        alert('Échec de l\'initialisation de la connexion. Veuillez réessayer.');
       }
     } catch (error) {
       console.error('Login error:', error);
-      alert('Failed to initiate login. Please try again.');
+      alert('Échec de l\'initialisation de la connexion. Veuillez réessayer.');
     }
   };
 
@@ -90,14 +90,14 @@ export default function LoginPage() {
           color: 'var(--text-primary)',
           marginBottom: '8px',
         }}>
-          Welcome to Startify
+          Bienvenue sur Startify
         </h1>
         <p style={{
           color: 'var(--text-secondary)',
           fontSize: '14px',
           marginBottom: '32px',
         }}>
-          Sign in to access TeamBuilder features
+          Connectez-vous pour accéder aux fonctionnalités TeamBuilder
         </p>
 
         {/* Google Login Button */}
@@ -134,7 +134,7 @@ export default function LoginPage() {
             <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707 0-.593.102-1.17.282-1.709V4.958H.957C.347 6.173 0 7.548 0 9c0 1.452.348 2.827.957 4.042l3.007-2.335z"/>
             <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
           </svg>
-          Continue with Google
+          Continuer avec Google
         </button>
 
         {/* Info */}
@@ -144,7 +144,7 @@ export default function LoginPage() {
           color: 'var(--text-muted)',
           lineHeight: '1.5',
         }}>
-          By signing in, you agree to our Terms of Service and Privacy Policy
+          En vous connectant, vous acceptez nos Conditions d'utilisation et notre Politique de confidentialité
         </p>
       </div>
     </div>
