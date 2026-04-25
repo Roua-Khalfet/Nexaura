@@ -99,6 +99,8 @@ export default function DashboardSection() {
   if (loading) return <div className="loading-overlay"><div className="spinner" /><p>Chargement du tableau de bord...</p></div>;
 
   const COLORS = ['#6366f1', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#06b6d4'];
+  // Single consistent gradient for skills chart
+  const SKILL_GRADIENT = { start: '#6366f1', end: '#8b5cf6' };
   const GRADIENTS = [
     { id: 'gradient1', start: '#6366f1', end: '#8b5cf6' },
     { id: 'gradient2', start: '#8b5cf6', end: '#ec4899' },
@@ -321,7 +323,7 @@ export default function DashboardSection() {
                           animationBegin={0}
                           animationDuration={800}
                         >
-                          {seniorityChartData.map((_, index: number) => (
+                          {seniorityChartData.map((entry: any, index: number) => (
                             <Cell 
                               key={`cell-${index}`} 
                               fill={`url(#${GRADIENTS[index % GRADIENTS.length].id})`}
@@ -600,7 +602,7 @@ export default function DashboardSection() {
             }} />
             
             <h3 style={{ fontSize: '17px', fontWeight: 600, margin: '0 0 24px 0', color: 'var(--text-primary)', position: 'relative' }}>
-              Compétences principales du vivier
+              Compétences les plus fréquentes
             </h3>
             {skillsChartData.length > 0 ? (
               <div style={{ height: `${Math.max(320, skillsChartData.length * 50)}px`, minWidth: '300px', position: 'relative' }}>
@@ -612,15 +614,10 @@ export default function DashboardSection() {
                     barSize={24}
                   >
                     <defs>
-                      {skillsChartData.map((_, idx: number) => {
-                        const gradient = GRADIENTS[idx % GRADIENTS.length];
-                        return (
-                          <linearGradient key={`skillGrad${idx}`} id={`skillGrad${idx}`} x1="0" y1="0" x2="1" y2="0">
-                            <stop offset="0%" stopColor={gradient.start} stopOpacity={0.9} />
-                            <stop offset="100%" stopColor={gradient.end} stopOpacity={0.7} />
-                          </linearGradient>
-                        );
-                      })}
+                      <linearGradient id="skillGradient" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor={SKILL_GRADIENT.start} stopOpacity={0.9} />
+                        <stop offset="100%" stopColor={SKILL_GRADIENT.end} stopOpacity={0.7} />
+                      </linearGradient>
                     </defs>
                     <CartesianGrid 
                       strokeDasharray="3 3" 
@@ -655,19 +652,15 @@ export default function DashboardSection() {
                       cursor={{ fill: 'rgba(99,102,241,0.05)', radius: 8 }}
                       labelStyle={{ fontWeight: 600, marginBottom: '4px' }}
                     />
-                    {skillsChartData.map((_, index: number) => (
-                      <Bar 
-                        key={`bar-${index}`}
-                        dataKey="count" 
-                        fill={`url(#skillGrad${index})`}
-                        radius={[0, 10, 10, 0]}
-                        animationBegin={index * 100}
-                        animationDuration={800}
-                        style={{
-                          filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.1))'
-                        }}
-                      />
-                    ))}
+                    <Bar 
+                      dataKey="count" 
+                      fill="url(#skillGradient)"
+                      radius={[0, 10, 10, 0]}
+                      animationDuration={800}
+                      style={{
+                        filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.1))'
+                      }}
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

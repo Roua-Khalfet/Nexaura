@@ -2069,12 +2069,11 @@ export default function AIAssistantSection() {
                                   <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '12px' }}>
                                     <span style={{
                                       padding: '4px 10px',
-                                      background: job.status === 'open' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(156, 163, 175, 0.1)',
-                                      border: `1px solid ${job.status === 'open' ? '#10b981' : '#9ca3af'}`,
+                                      background: job.status === 'open' ? '#10b981' : '#6b7280',
                                       borderRadius: '6px',
                                       fontSize: '12px',
                                       fontWeight: 600,
-                                      color: job.status === 'open' ? '#10b981' : '#9ca3af',
+                                      color: 'white',
                                       textTransform: 'capitalize'
                                     }}>
                                       {job.status}
@@ -2458,12 +2457,11 @@ export default function AIAssistantSection() {
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
                   <span style={{
                     padding: '4px 10px',
-                    background: selectedJob.status === 'open' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(156, 163, 175, 0.1)',
-                    border: `1px solid ${selectedJob.status === 'open' ? '#10b981' : '#9ca3af'}`,
+                    background: selectedJob.status === 'open' ? '#10b981' : '#6b7280',
                     borderRadius: '6px',
                     fontSize: '12px',
                     fontWeight: 600,
-                    color: selectedJob.status === 'open' ? '#10b981' : '#9ca3af',
+                    color: 'white',
                     textTransform: 'capitalize'
                   }}>
                     {selectedJob.status}

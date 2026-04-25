@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -70,17 +71,18 @@ export default function LoginPage() {
       }}>
         {/* Logo */}
         <div style={{
-          width: '60px',
-          height: '60px',
+          width: '80px',
+          height: '80px',
           margin: '0 auto 24px',
-          background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-          borderRadius: '12px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '28px',
+          position: 'relative',
         }}>
-          🚀
+          <Image 
+            src="/logo.png" 
+            alt="Startify Logo" 
+            width={80}
+            height={80}
+            style={{ objectFit: 'contain' }}
+          />
         </div>
 
         {/* Title */}
