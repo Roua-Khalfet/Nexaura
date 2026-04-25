@@ -117,3 +117,10 @@ REST_FRAMEWORK = {
 
 # ComplianceGuard settings
 COMPLIANCEGUARD_ROOT = PROJECT_ROOT / "complianceguard"
+
+# Session settings for OAuth
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_AGE = 1209600  # 2 weeks

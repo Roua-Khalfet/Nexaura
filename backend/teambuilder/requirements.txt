@@ -1,0 +1,43 @@
+# Django Core
+django
+djangorestframework
+django-cors-headers
+django-environ
+psycopg2-binary
+gunicorn
+
+# Agent
+langchain
+langchain-ollama
+langgraph
+pydantic
+
+# Vector Store
+chromadb
+
+# Cache
+redis
+
+# HTTP + Scraping
+httpx
+beautifulsoup4
+requests
+
+# CV Parsing
+PyPDF2
+python-docx
+pytesseract
+Pillow
+
+# Notifications
+twilio
+
+# Google OAuth2 & Gmail API
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client
+
+# Observability
+langfuse
+structlog

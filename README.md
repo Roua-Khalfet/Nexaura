@@ -1,12 +1,15 @@
-# ComplianceGuard 🛡️
+# Startify Platform 🚀
 
-**Assistant juridique intelligent pour les startups en Tunisie** — Système multi-agents basé sur GraphRAG, CRAG, et LangChain avec interface web complète.
+**Integrated AI Platform for Tunisian Startups** — Combines ComplianceGuard (legal compliance assistant) and TeamBuilder (AI-powered recruitment) in one unified platform.
 
 ---
 
 ## 📋 Description
 
-ComplianceGuard est une plateforme d'IA qui aide les entrepreneurs tunisiens à naviguer dans le cadre réglementaire du **Startup Act** et des lois connexes. Le système combine cinq agents spécialisés autour d'une architecture hybride :
+Startify is a comprehensive AI platform that helps Tunisian entrepreneurs with:
+
+### ComplianceGuard Module
+Legal compliance assistant that helps navigate the **Startup Act** regulatory framework. The system combines five specialized agents around a hybrid architecture:
 
 - **Vector DB** (Qdrant) — Recherche sémantique par similarité sur les chunks de texte juridique
 - **Knowledge Graph** (Neo4j) — Graphe de relations entre lois, articles, organismes et obligations
@@ -16,107 +19,140 @@ ComplianceGuard est une plateforme d'IA qui aide les entrepreneurs tunisiens à 
 - **Agent Veille** — Surveillance des changements réglementaires sur les sites officiels tunisiens
 - **Frontend Next.js** + **Backend Django REST** — Interface complète avec 6 sections intégrées
 
+### TeamBuilder Module
+AI-powered recruitment platform that helps HR professionals:
+- **CV Upload & Parsing** — Upload PDF, DOCX, or image CVs with automatic data extraction using LLM
+- **Candidate Pool Management** — Organize and filter candidates by seniority, skills, and availability
+- **AI Team Builder** — Describe your project needs and get AI-recommended team compositions
+- **Email Invitations** — Send professional job invitations directly from your Gmail account
+- **Dashboard Analytics** — Track candidates, invitations, acceptance rates, and skill distributions
+
 ---
 
 ## 🏗️ Architecture Globale
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                            ComplianceGuard                                      │
-├──────────────────────────────┬──────────────────────────────────────────────────┤
-│      FRONTEND (Next.js)      │              BACKEND (Django REST)               │
-│                              │                                                  │
-│  ┌────────────────────────┐  │  ┌──────────────────────────────────────────┐    │
-│  │ 💬 Chat Juridique      │  │  │  POST /api/chat/     → GraphRAG / CRAG  │    │
-│  │ (GraphRAG + CRAG +     │──┼──│  POST /api/upload/   → fast_ingest_file │    │
-│  │  Upload PDF)           │  │  │  POST /api/conformite/ → Scoring Engine │    │
-│  ├────────────────────────┤  │  │  POST /api/documents/  → AgentRédacteur │    │
-│  │ 📝 Documents           │──┼──│  GET  /api/graph/     → Neo4j Visualize │    │
-│  │ (Statuts, CGU, Contrat)│  │  │  GET  /api/veille/    → AgentVeille     │    │
-│  ├────────────────────────┤  │  │  POST /api/suggestions/ → Smart Suggest │    │
-│  │ ✅ Conformité          │──┼──└──────────────┬───────────────────────────┘    │
-│  │ (Scoring par critère)  │  │                 │                                │
-│  ├────────────────────────┤  │                 │                                │
-│  │ 🧠 Quiz Conformité     │  │                 │                                │
-│  │ (Auto-évaluation)      │  │                 │                                │
-│  ├────────────────────────┤  │                 │                                │
-│  │ 📡 Veille              │──┼─────────────────┘                                │
-│  │ (Surveillance sites)   │  │                                                  │
-│  ├────────────────────────┤  │                                                  │
-│  │ 🔗 Graphe de Lois      │──┼──────────────────                                │
-│  │ (Visualisation Neo4j)  │  │                                                  │
-│  └────────────────────────┘  │                                                  │
-│         SIDEBAR NAV          │                                                  │
-├──────────────────────────────┴──────────────────────────────────────────────────┤
-│                          CORE ENGINE                                            │
-│                                                                                 │
-│  ┌──────────────────────────────────────────────────────────────────────────┐   │
-│  │                         ask_question.py (Mode KB)                       │   │
-│  │                                                                         │   │
-│  │   Question ──► HybridRetriever ──► Contexte suffisant ?                 │   │
-│  │                   │        │              │          │                   │   │
-│  │              Qdrant    Neo4j           OUI         NON                  │   │
-│  │             (Vector)  (Graph)           │           │                   │   │
-│  │                                         │    Web Fallback               │   │
-│  │                                         │    (Serper + Scraping)        │   │
-│  │                                         │           │                   │   │
-│  │                                         └─────┬─────┘                   │   │
-│  │                                               │                         │   │
-│  │                                          LLM (Groq / Azure)             │   │
-│  │                                               │                         │   │
-│  │                                           Réponse                       │   │
-│  └──────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                 │
-│  ┌──────────────────────────────────────────────────────────────────────────┐   │
-│  │                         crag.py (Mode Notebook / CRAG)                  │   │
-│  │                                                                         │   │
-│  │   Question ──► Retrieve ──► Grade Documents ──► Decide Action           │   │
-│  │                                │                     │                  │   │
-│  │                         Score [-1, 1]          ┌─────┼─────┐            │   │
-│  │                         par document          use  combine web_search   │   │
-│  │                                                │     │      │           │   │
-│  │                                         Refine Docs  │  Rewrite Query   │   │
-│  │                                         (Strips)     │  + Web Search    │   │
-│  │                                                │     │      │           │   │
-│  │                                                └─────┼──────┘           │   │
-│  │                                                      │                  │   │
-│  │                                                 LLM Answer              │   │
-│  │                                                 + Metadata              │   │
-│  └──────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                 │
-│  ┌──────────────────────────────────────────────────────────────────────────┐   │
-│  │                     Retriever Hybride (retriever.py)                    │   │
-│  │                                                                         │   │
-│  │   ┌─────────────────┐    ┌──────────────────────┐    ┌──────────────┐   │   │
-│  │   │   Qdrant        │    │   Neo4j               │    │   Ollama     │   │   │
-│  │   │  (Vectors)      │    │  (Knowledge Graph)    │    │  Embeddings  │   │   │
-│  │   │                 │    │                        │    │  qwen3-emb   │   │   │
-│  │   │ • corpus chunks │    │ • Fulltext index       │    │  :0.6b       │   │   │
-│  │   │ • user uploads  │    │ • Relation traversal   │    │              │   │   │
-│  │   └────────┬────────┘    │ • Path extraction      │    └──────┬───────┘   │   │
-│  │            │             │ • Rel summary          │           │           │   │
-│  │            │             └───────────┬────────────┘           │           │   │
-│  │            └─────────────────────────┼───────────────────────┘           │   │
-│  │                                      │                                   │   │
-│  │                           Deduplicate + Merge                            │   │
-│  │                                      │                                   │   │
-│  │                              List[Document]                              │   │
-│  └──────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                 │
-│  ┌──────────────────┐  ┌────────────────────┐  ┌────────────────────────────┐   │
-│  │  Agent Rédacteur │  │  Agent Veille Web  │  │ Agent Web (chain.py)      │   │
-│  │  (Docs juridiques│  │  (Surveillance     │  │ (Recherche + Scraping     │   │
-│  │   statuts, CGU,  │  │   réglementaire,   │  │  LangChain bind_tools)   │   │
-│  │   contrats...)   │  │   hash comparison) │  │                           │   │
-│  └──────────────────┘  └────────────────────┘  └────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────┘
+Startify Platform
+├── ComplianceGuard Backend (Django) - Port 8000
+│   ├── GraphRAG + CRAG agents
+│   ├── Document generation
+│   ├── Compliance scoring
+│   └── Uses: Neo4j (7687), Qdrant (6333), SQLite
+│
+├── TeamBuilder Backend (Django) - Port 8001
+│   ├── CV Upload & Parsing
+│   ├── Candidate Management
+│   ├── AI Team Builder (LangGraph)
+│   └── Uses: PostgreSQL (5433), Redis (6380), ChromaDB
+│
+└── Frontend (Next.js) - Port 3000
+    ├── ComplianceGuard sections (Chat, Documents, Conformité, Quiz, Veille, Graphe)
+    └── TeamBuilder sections (Dashboard, AI Assistant, Upload CVs, Candidates, History)
 ```
 
 ---
 
-## 🖥️ Interface Web — 6 Sections Intégrées
+## 🚀 Quick Start
 
-L'interface est construite avec une **sidebar de navigation** colorée et 6 sections complètes :
+### Prerequisites
+- **Python 3.12+**
+- **Node.js 18+**
+- **Docker Desktop** (for databases)
+- **[Ollama](https://ollama.com/download)** (for embeddings)
+- Clé API **Groq** ou **Azure OpenAI**
+- Clé API **Serper** (recherche web)
+
+### Step 1: Start Docker Services
+
+```bash
+cd Startify
+
+# Start ComplianceGuard services (Neo4j + Qdrant)
+.\scripts\start-local-stack.ps1
+
+# Start TeamBuilder services (PostgreSQL + Redis)
+cd backend/teambuilder
+docker compose up -d
+cd ../..
+```
+
+### Step 2: Configure Environment
+
+**ComplianceGuard (.env in Startify root):**
+```bash
+cp .env.example .env
+# Edit .env with your credentials
+```
+
+**TeamBuilder (.env in backend/teambuilder):**
+```bash
+cd backend/teambuilder
+# Edit .env with your Google OAuth credentials
+# IMPORTANT: Update redirect URI to http://localhost:8001/api/v1/auth/google/callback
+```
+
+### Step 3: Install Dependencies & Run Migrations
+
+**ComplianceGuard:**
+```bash
+cd Startify
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+
+cd backend
+python manage.py migrate
+```
+
+**TeamBuilder:**
+```bash
+cd Startify/backend/teambuilder
+# Use the same .venv from Startify
+../../.venv/bin/python manage.py migrate
+```
+
+### Step 4: Download Ollama Model
+
+```bash
+ollama pull qwen3-embedding:0.6b
+ollama pull llama3.2
+```
+
+### Step 5: Start Backends (2 terminals)
+
+**Terminal 1 - ComplianceGuard Backend:**
+```bash
+cd Startify/backend
+python manage.py runserver
+# Runs on http://localhost:8000
+```
+
+**Terminal 2 - TeamBuilder Backend:**
+```bash
+cd Startify/backend/teambuilder
+../../.venv/bin/python manage.py runserver 8001
+# Runs on http://localhost:8001
+```
+
+### Step 6: Start Frontend
+
+**Terminal 3:**
+```bash
+cd Startify/frontend
+npm install  # First time only
+npm run dev
+# Runs on http://localhost:3000
+```
+
+### Step 7: Access Application
+
+Open browser: **http://localhost:3000**
+
+---
+
+## 🖥️ Interface Web — Sections Intégrées
+
+### ComplianceGuard Sections (Port 8000)
 
 | Section | Description | Backend |
 |---------|-------------|---------|
@@ -126,6 +162,16 @@ L'interface est construite avec une **sidebar de navigation** colorée et 6 sect
 | 🧠 **Quiz Conformité** | Auto-évaluation : 10 questions aléatoires sur la conformité de VOTRE société. Score pondéré par domaine + recommandations | Client-side (22 questions, 9 catégories) |
 | 📡 **Veille** | Surveillance des sites officiels (startup.gov.tn, BCT, APII). Statut OK/changé, date du dernier check | `GET /api/veille/` |
 | 🔗 **Graphe de Lois** | Visualisation des nœuds Neo4j (lois, articles, entités) avec relations colorées, sélection interactive, zoom | `GET /api/graph/` |
+
+### TeamBuilder Sections (Port 8001)
+
+| Section | Description | Backend |
+|---------|-------------|---------|
+| 📊 **Dashboard** | Analytics dashboard with metrics, charts, and recent activity | `GET /api/v1/stats` |
+| 🤖 **AI Assistant** | 4 conversational workflows: Build Team, Salary Intelligence, Candidate Matching, Job Management | `POST /api/v1/team-builder` |
+| 📤 **Upload CVs** | Drag & drop CV upload with automatic parsing (PDF, DOCX, images) | `POST /api/v1/hr/upload-cv` |
+| 👥 **Candidates** | Browse and manage candidate pool with filters and search | `GET /api/v1/hr/candidates` |
+| 📜 **History** | View past team building searches and recommendations | `GET /api/v1/sessions` |
 
 ---
 
@@ -380,97 +426,81 @@ PDF Upload ──► Unstructured/pypdf ──► Chunks sémantiques ──► 
 
 ---
 
-## 🚀 Installation
+## � Port Configuration
 
-### Prérequis
+| Service | Port | URL | Module |
+|---------|------|-----|--------|
+| **Frontend** | 3000 | http://localhost:3000 | Both |
+| **ComplianceGuard Backend** | 8000 | http://localhost:8000 | ComplianceGuard |
+| **TeamBuilder Backend** | 8001 | http://localhost:8001 | TeamBuilder |
+| **Neo4j Browser** | 7474 | http://localhost:7474 | ComplianceGuard |
+| **Neo4j Bolt** | 7687 | bolt://localhost:7687 | ComplianceGuard |
+| **Qdrant** | 6333 | http://localhost:6333 | ComplianceGuard |
+| **PostgreSQL** | 5433 | localhost:5433 | TeamBuilder |
+| **Redis** | 6380 | localhost:6380 | TeamBuilder |
 
-- **Python 3.12+**
-- **Node.js 18+** (pour le frontend)
-- **Docker Desktop** (pour Neo4j + Qdrant en local)
-- **[Ollama](https://ollama.com/download)** (pour les embeddings locaux)
-- Clé API **Groq** ou **Azure OpenAI**
-- Clé API **Serper** (recherche web)
+## ✅ Verify Services
 
-### 1. Cloner et configurer l'environnement Python
+Check all services are running:
 
-```powershell
-git clone <repo-url>
-cd "AI project"
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+```bash
+# ComplianceGuard services
+curl http://localhost:7474  # Neo4j
+curl http://localhost:6333  # Qdrant
+curl http://localhost:8000/api/  # ComplianceGuard backend
+
+# TeamBuilder services
+docker ps | grep teambuilder  # PostgreSQL & Redis
+curl http://localhost:8001/health  # TeamBuilder backend
+
+# Frontend
+curl http://localhost:3000
 ```
 
-### 2. Lancer le stack local (Neo4j + Qdrant)
+## 🛠️ Troubleshooting
 
-```powershell
-.\scripts\start-local-stack.ps1
+### Port Already in Use
+```bash
+# Find what's using the port
+lsof -i :8001  # or any port
+
+# Kill the process
+kill -9 <PID>
 ```
 
-Cela démarre deux conteneurs Docker :
-- **Neo4j** : http://localhost:7474 (user: `neo4j`, password: `neo4j123`)
-- **Qdrant** : http://localhost:6333
+### Database Connection Error (TeamBuilder)
+```bash
+cd Startify/backend/teambuilder
 
-### 3. Configurer les variables d'environnement
+# Check PostgreSQL is running
+docker compose ps
 
-Créer un fichier `.env` à la racine :
+# Check logs
+docker compose logs postgres
 
-```env
-# LLM Provider
-LLM_PROVIDER=groq
-GROQ_API_KEY=your_groq_api_key
-GROQ_MODEL=meta-llama/llama-4-scout-17b-16e-instruct
-GROQ_BASE_URL=https://api.groq.com/openai/v1
-
-# Azure OpenAI (alternative)
-AZURE_API_KEY=your_azure_api_key
-AZURE_API_BASE=https://your-resource.services.ai.azure.com
-AZURE_API_VERSION=2024-05-01-preview
-model=azure/YourModel
-
-# Neo4j
-NEO4J_URI=bolt://localhost:7687
-NEO4J_USERNAME=neo4j
-NEO4J_PASSWORD=neo4j123
-NEO4J_DATABASE=neo4j
-
-# Qdrant
-QDRANT_URL=http://localhost:6333
-QDRANT_COLLECTION_NAME=complianceguard_chunks
-QDRANT_USER_COLLECTION_NAME=user_uploads
-
-# Serper (recherche web)
-SERPER_API_KEY=your_serper_key
+# Restart if needed
+docker compose restart postgres
 ```
 
-### 4. Télécharger le modèle d'embedding
-
-```powershell
-ollama pull qwen3-embedding:0.6b
+### Redis Connection Error (TeamBuilder)
+```bash
+# Test connection
+redis-cli -p 6380 ping
+# Should return: PONG
 ```
 
-### 5. Ingérer les documents juridiques
+### Backend Not Starting
+```bash
+# Check if port is in use
+lsof -i :8001
 
-```powershell
-python -m complianceguard.ingest
+# Check Python dependencies
+pip list | grep Django
+
+# Check database connection
+cd Startify/backend/teambuilder
+../../.venv/bin/python manage.py check
 ```
-
-### 6. Lancer le backend Django
-
-```powershell
-cd backend
-python manage.py runserver
-```
-
-### 7. Lancer le frontend Next.js
-
-```powershell
-cd frontend
-npm install
-npm run dev
-```
-
-L'application est accessible sur **http://localhost:3000**.
 
 ---
 

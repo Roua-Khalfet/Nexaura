@@ -1,16 +1,22 @@
 'use client'
 
-import { MessageSquare, FileText, ShieldCheck, Radio, ChevronLeft, LayoutDashboard, TrendingUp, Leaf } from 'lucide-react'
+import { 
+  MessageSquare, FileText, ShieldCheck, Radio, ChevronLeft, LayoutDashboard, 
+  TrendingUp, Leaf, LogOut, User, Bot, Upload, Users,
+  History, ChevronDown 
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
-
-
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { type PipelineState } from './pipeline-section'
+import { getCurrentUser, logout, type User as AuthUser } from '@/lib/auth'
+import { useRouter } from 'next/navigation'
 
-export type SectionId = 'studio' | 'audit' | 'marketing' | 'green' | 'documents' | 'chat' | 'veille'
+export type SectionId = 'studio' | 'audit' | 'marketing' | 'green' | 'documents' | 'chat' | 'veille' | 
+  'tb-dashboard' | 'tb-ai' | 'tb-upload' | 'tb-candidates' | 'tb-history'
 
-const NAV_ITEMS: { id: SectionId; label: string; icon: React.ElementType; color: string; gradient: string; separator?: boolean }[] = [
+const NAV_ITEMS: { id: SectionId; label: string; icon: React.ElementType; color: string; gradient: string; separator?: boolean; parent?: string }[] = [
   { id: 'studio', label: 'Studio Startup', icon: LayoutDashboard, color: 'text-teal-600', gradient: 'from-teal-500/15 to-emerald-500/15' },
   { id: 'audit', label: 'Audit Juridique', icon: ShieldCheck, color: 'text-emerald-600', gradient: 'from-emerald-500/15 to-teal-500/15', separator: true },
   { id: 'marketing', label: 'Analyse Marché', icon: TrendingUp, color: 'text-pink-600', gradient: 'from-pink-500/15 to-rose-500/15' },
@@ -18,6 +24,14 @@ const NAV_ITEMS: { id: SectionId; label: string; icon: React.ElementType; color:
   { id: 'documents', label: 'Documents', icon: FileText, color: 'text-violet-600', gradient: 'from-violet-500/15 to-purple-500/15', separator: true },
   { id: 'chat', label: 'Chat Juridique', icon: MessageSquare, color: 'text-blue-600', gradient: 'from-blue-500/15 to-indigo-500/15', separator: true },
   { id: 'veille', label: 'Veille Légale', icon: Radio, color: 'text-rose-600', gradient: 'from-rose-500/15 to-pink-500/15', separator: true },
+]
+
+const TEAMBUILDER_ITEMS: { id: SectionId; label: string; icon: React.ElementType; color: string }[] = [
+  { id: 'tb-dashboard', label: 'Dashboard', icon: LayoutDashboard, color: 'text-indigo-600' },
+  { id: 'tb-ai', label: 'AI Assistant', icon: Bot, color: 'text-purple-600' },
+  { id: 'tb-upload', label: 'Upload CVs', icon: Upload, color: 'text-blue-600' },
+  { id: 'tb-candidates', label: 'Candidates', icon: Users, color: 'text-pink-600' },
+  { id: 'tb-history', label: 'History', icon: History, color: 'text-gray-600' },
 ]
 
 interface AppSidebarProps {
@@ -29,12 +43,27 @@ interface AppSidebarProps {
 }
 
 export default function AppSidebar({ activeSection, onSectionChange, collapsed, onToggleCollapse, pipelineState }: AppSidebarProps) {
+  const router = useRouter()
+  const [user, setUser] = useState<AuthUser | null>(null)
+  const [showUserMenu, setShowUserMenu] = useState(false)
+  const [teamBuilderExpanded, setTeamBuilderExpanded] = useState(false)
+  
   const legalScore = pipelineState?.juridique?.combinedScore ?? pipelineState?.juridique?.score_global ?? null
   const greenScore = pipelineState?.green?.result?.esg_score?.composite_score ?? null
   
   const studioScore = legalScore !== null && greenScore !== null 
     ? Math.round((legalScore + greenScore) / 2)
     : legalScore ?? greenScore
+
+  useEffect(() => {
+    getCurrentUser().then(setUser)
+  }, [])
+
+  const handleLogout = async () => {
+    await logout()
+    setUser(null)
+    router.push('/login')
+  }
 
   return (
     <motion.aside 
@@ -45,14 +74,14 @@ export default function AppSidebar({ activeSection, onSectionChange, collapsed, 
       )}
     >
       {/* Logo */}
-      <div className="flex items-center justify-center px-1 py-4 border-b border-sidebar-border h-[120px]">
+      <div className="flex items-center px-4 py-4 border-b border-sidebar-border">
         <motion.div 
           animate={{ 
-            width: collapsed ? 56 : '100%',
-            height: collapsed ? 56 : '100%',
+            width: collapsed ? 40 : 140,
+            height: collapsed ? 40 : 40,
           }}
           transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-          className="relative max-h-[100px]"
+          className="relative"
         >
           <Image 
             src="/logo.png" 
@@ -154,7 +183,122 @@ export default function AppSidebar({ activeSection, onSectionChange, collapsed, 
             </div>
           )
         })}
+
+        {/* TeamBuilder Section - Expandable */}
+        <div className="my-3 mx-2 border-t border-sidebar-border/40" />
+        
+        <div className="relative">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => setTeamBuilderExpanded(!teamBuilderExpanded)}
+            className={cn(
+              'relative w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 group',
+              'text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50'
+            )}
+          >
+            <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-lg text-sidebar-foreground/40 group-hover:text-sidebar-foreground/80 transition-colors">
+              <Bot className="w-[18px] h-[18px]" />
+            </div>
+            {!collapsed && (
+              <>
+                <span className="truncate font-semibold">TeamBuilder</span>
+                <motion.div
+                  animate={{ rotate: teamBuilderExpanded ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="ml-auto"
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </motion.div>
+              </>
+            )}
+          </motion.button>
+
+          {/* TeamBuilder Sub-items */}
+          <AnimatePresence>
+            {teamBuilderExpanded && !collapsed && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
+              >
+                <div className="pl-6 pt-1 space-y-1">
+                  {TEAMBUILDER_ITEMS.map((item) => {
+                    const Icon = item.icon
+                    const isActive = activeSection === item.id
+                    return (
+                      <motion.button
+                        key={item.id}
+                        whileHover={{ x: 2 }}
+                        onClick={() => onSectionChange(item.id)}
+                        className={cn(
+                          'w-full flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium transition-all',
+                          isActive 
+                            ? `${item.color} bg-sidebar-accent` 
+                            : 'text-sidebar-foreground/50 hover:text-sidebar-foreground hover:bg-sidebar-accent/50'
+                        )}
+                      >
+                        <Icon className="w-4 h-4" />
+                        <span>{item.label}</span>
+                      </motion.button>
+                    )
+                  })}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </nav>
+
+      {/* User Profile */}
+      {user && (
+        <div className="p-3 border-t border-sidebar-border">
+          <div className="relative">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setShowUserMenu(!showUserMenu)}
+              className="w-full flex items-center gap-3 rounded-lg p-2 hover:bg-sidebar-accent transition-colors"
+            >
+              {user.picture ? (
+                <img src={user.picture} alt={user.name} className="w-8 h-8 rounded-full" />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                  <User size={16} className="text-white" />
+                </div>
+              )}
+              {!collapsed && (
+                <div className="flex-1 text-left overflow-hidden">
+                  <div className="text-sm font-medium text-sidebar-foreground truncate">{user.name}</div>
+                  <div className="text-xs text-sidebar-foreground/60 truncate">{user.email}</div>
+                </div>
+              )}
+            </motion.button>
+
+            {/* User Menu */}
+            <AnimatePresence>
+              {showUserMenu && !collapsed && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="absolute bottom-full left-0 right-0 mb-2 bg-sidebar border border-sidebar-border rounded-lg shadow-lg overflow-hidden"
+                >
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
+                  >
+                    <LogOut size={16} />
+                    <span>Déconnexion</span>
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+      )}
 
       {/* Collapse Toggle */}
       <div className="p-3 border-t border-sidebar-border">

@@ -1,0 +1,65 @@
+version: "3.9"
+
+services:
+  # PostgreSQL for TeamBuilder
+  postgres:
+    image: postgres:16-alpine
+    container_name: teambuilder-postgres
+    environment:
+      POSTGRES_DB: teambuilder
+      POSTGRES_USER: tb_user
+      POSTGRES_PASSWORD: tb_pass
+    volumes:
+      - tb_pgdata:/var/lib/postgresql/data
+      - ./db/seeds:/docker-entrypoint-initdb.d
+    ports:
+      - "5433:5432"  # Changed from 5432 to avoid conflicts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tb_user -d teambuilder"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Redis for TeamBuilder
+  redis:
+    image: redis:7-alpine
+    container_name: teambuilder-redis
+    ports:
+      - "6380:6379"  # Changed from 6379 to avoid conflicts
+    restart: unless-stopped
+
+  # Langfuse PostgreSQL (Optional - for LLM observability)
+  langfuse_db:
+    image: postgres:16-alpine
+    container_name: teambuilder-langfuse-db
+    environment:
+      POSTGRES_DB: langfuse
+      POSTGRES_USER: langfuse_user
+      POSTGRES_PASSWORD: langfuse_pass
+    volumes:
+      - tb_langfuse_pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+    profiles:
+      - langfuse
+
+  # Langfuse (Optional - for LLM observability)
+  langfuse:
+    image: ghcr.io/langfuse/langfuse:latest
+    container_name: teambuilder-langfuse
+    ports:
+      - "3001:3000"  # Changed from 3000 to avoid conflicts with frontend
+    environment:
+      DATABASE_URL: postgresql://langfuse_user:langfuse_pass@langfuse_db/langfuse
+      NEXTAUTH_SECRET: changeme
+      NEXTAUTH_URL: http://localhost:3001
+      SALT: changeme
+    depends_on:
+      - langfuse_db
+    restart: unless-stopped
+    profiles:
+      - langfuse
+
+volumes:
+  tb_pgdata:
+  tb_langfuse_pgdata:

@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import AppSidebar, { type SectionId } from '@/components/app-sidebar'
 import ChatSection from '@/components/chat-section'
 import DocumentsSection from '@/components/documents-section'
@@ -10,6 +11,11 @@ import VeilleSection from '@/components/veille-section'
 import PipelineSection, { type ProjectData, type PipelineState } from '@/components/pipeline-section'
 import MarketingSection from '@/components/marketing-section'
 import GreenAnalysisSection from '@/components/green-analysis-section'
+import DashboardSection from '@/components/teambuilder/dashboard-section'
+import AIAssistantSection from '@/components/teambuilder/ai-assistant-section'
+import HistorySection from '@/components/teambuilder/history-section'
+import UploadCVSection from '@/components/teambuilder/upload-cv-section'
+import CandidatesSection from '@/components/teambuilder/candidates-section'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const DEFAULT_PROJECT: ProjectData = {
@@ -53,12 +59,50 @@ const sectionVariants = {
 } as const
 
 export default function Page() {
+  const router = useRouter()
   const [activeSection, setActiveSection] = useState<SectionId>('studio')
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   // Shared project data (flows through the entire pipeline)
   const [projectData, setProjectData] = useState<ProjectData>(DEFAULT_PROJECT)
   const [pipelineState, setPipelineState] = useState<PipelineState>(DEFAULT_PIPELINE)
+
+  // Check authentication on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('http://localhost:8001/api/v1/auth/user', {
+          credentials: 'include',
+          headers: {
+            'X-API-Key': 'your_api_key',
+          },
+        })
+        
+        if (response.ok) {
+          const data = await response.json()
+          if (data.email) {
+            setIsAuthenticated(true)
+          } else {
+            // Not logged in - redirect to login
+            router.push('/login')
+          }
+        } else {
+          // Auth check failed - redirect to login
+          router.push('/login')
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error)
+        // Auth check failed - redirect to login
+        router.push('/login')
+      } finally {
+        setIsCheckingAuth(false)
+      }
+    }
+
+    checkAuth()
+  }, [router])
 
   // Navigation handler
   const handleNavigate = useCallback((section: string) => {
@@ -147,6 +191,45 @@ export default function Page() {
           {activeSection === 'documents' && (
             <motion.div key="documents" variants={sectionVariants} initial="initial" animate="animate" exit="exit" className="absolute inset-0">
               <DocumentsSection projectData={projectData} />
+            </motion.div>
+          )}
+
+          {/* TeamBuilder Sections */}
+          {activeSection === 'tb-dashboard' && (
+            <motion.div key="tb-dashboard" variants={sectionVariants} initial="initial" animate="animate" exit="exit" className="absolute inset-0">
+              <div className="h-full overflow-auto p-8">
+                <DashboardSection />
+              </div>
+            </motion.div>
+          )}
+
+          {activeSection === 'tb-ai' && (
+            <motion.div key="tb-ai" variants={sectionVariants} initial="initial" animate="animate" exit="exit" className="absolute inset-0">
+              <AIAssistantSection />
+            </motion.div>
+          )}
+
+          {activeSection === 'tb-upload' && (
+            <motion.div key="tb-upload" variants={sectionVariants} initial="initial" animate="animate" exit="exit" className="absolute inset-0">
+              <div className="h-full overflow-auto p-8">
+                <UploadCVSection />
+              </div>
+            </motion.div>
+          )}
+
+          {activeSection === 'tb-candidates' && (
+            <motion.div key="tb-candidates" variants={sectionVariants} initial="initial" animate="animate" exit="exit" className="absolute inset-0">
+              <div className="h-full overflow-auto p-8">
+                <CandidatesSection />
+              </div>
+            </motion.div>
+          )}
+
+          {activeSection === 'tb-history' && (
+            <motion.div key="tb-history" variants={sectionVariants} initial="initial" animate="animate" exit="exit" className="absolute inset-0">
+              <div className="h-full overflow-auto p-8">
+                <HistorySection />
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
