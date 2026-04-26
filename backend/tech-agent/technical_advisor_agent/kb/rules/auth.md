@@ -1,0 +1,1 @@
+Auth rules: enforce MFA for privileged accounts, prefer OIDC/OAuth2 with short-lived tokens, store passwords with strong hashing (bcrypt/argon2), rotate secrets, and implement session revocation and device trust where applicable.

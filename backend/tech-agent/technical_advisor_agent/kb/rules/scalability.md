@@ -1,0 +1,1 @@
+Scalability rules: design for stateless services with horizontal scaling, use managed databases with read replicas where needed, add caching (CDN/object cache) for hot paths, employ message queues for async workloads, and monitor with SLOs/alerts.

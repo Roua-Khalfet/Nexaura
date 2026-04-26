@@ -1,0 +1,17 @@
+{
+  "compute": {
+    "t3.micro": { "vcpu": 2, "ram_gb": 1, "usd_per_month": 8.47 },
+    "t3.small": { "vcpu": 2, "ram_gb": 2, "usd_per_month": 16.94 },
+    "t3.medium": { "vcpu": 2, "ram_gb": 4, "usd_per_month": 33.87 }
+  },
+  "database": {
+    "db.t3.micro": { "engine": "postgres", "usd_per_month": 14.40 },
+    "db.t3.small": { "engine": "postgres", "usd_per_month": 28.80 }
+  },
+  "storage": {
+    "s3": { "usd_per_gb_month": 0.023 }
+  },
+  "serverless": {
+    "lambda": { "usd_per_1m_requests": 0.20, "usd_per_gb_second": 0.0000166667 }
+  }
+}

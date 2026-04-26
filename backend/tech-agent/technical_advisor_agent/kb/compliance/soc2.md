@@ -1,0 +1,1 @@
+SOC 2 focus: security, availability, confidentiality. Key controls: strong access management (MFA, least privilege), change management with approvals, logging/monitoring for anomalous access, data encryption in transit/at rest, backup and recovery tested, vendor risk management, vulnerability management with remediation SLAs, and incident response playbooks with postmortems.

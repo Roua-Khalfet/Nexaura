@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+.env
+.env.*
+.venv/
+venv/
+.git/
+.gitignore
+.vscode/
+Dockerfile
+nohup.out

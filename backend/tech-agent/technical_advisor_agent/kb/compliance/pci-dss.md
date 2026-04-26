@@ -1,0 +1,1 @@
+PCI-DSS essentials: maintain secure network segmentation for cardholder data, enforce strong access control and MFA, encrypt PAN in transit/at rest, prohibit storage of CVV, run quarterly ASV scans and annual penetration tests, monitor/log access to cardholder data, maintain vulnerability management and patching, and document incident response procedures.

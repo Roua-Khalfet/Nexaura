@@ -1,0 +1,1 @@
+API rules: use idempotent, well-versioned endpoints, validate and sanitize all inputs, apply rate limiting and request timeouts, prefer JWT or mTLS for service-to-service auth, log requests with correlation IDs, and document error contracts.

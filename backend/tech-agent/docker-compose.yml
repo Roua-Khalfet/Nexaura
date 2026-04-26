@@ -1,0 +1,59 @@
+name: tech-agent
+
+services:
+  tech-agent-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tech-agent-api
+    env_file:
+      - path: ./.env
+        required: false
+    command: uvicorn technical_advisor_agent.main:app --host 0.0.0.0 --port 8000
+    environment:
+      REDIS_URL: redis://tech-agent-redis:6379
+      QDRANT_URL: http://tech-agent-qdrant:6333
+      KB_RETRIEVER: vector
+      AUTO_BUILD_INDEX_ON_STARTUP: "true"
+    depends_on:
+      tech-agent-redis:
+        condition: service_started
+      tech-agent-qdrant:
+        condition: service_started
+    ports:
+      - "8005:8000"
+    volumes:
+      - ./:/app
+    restart: unless-stopped
+    networks:
+      - tech-agent-network
+
+  tech-agent-redis:
+    image: redis:7-alpine
+    container_name: tech-agent-redis
+    ports:
+      - "6381:6379"
+    restart: unless-stopped
+    networks:
+      - tech-agent-network
+
+  tech-agent-qdrant:
+    image: qdrant/qdrant:latest
+    container_name: tech-agent-qdrant
+    environment:
+      QDRANT__SERVICE__GRPC_PORT: "6334"
+    ports:
+      - "6335:6333"
+      - "6336:6334"
+    volumes:
+      - qdrant_storage:/qdrant/storage
+    restart: unless-stopped
+    networks:
+      - tech-agent-network
+
+volumes:
+  qdrant_storage:
+
+networks:
+  tech-agent-network:
+    driver: bridge

@@ -1,0 +1,1 @@
+HIPAA essentials: designate covered entity/BA roles, sign BAAs with vendors, implement access controls and audit logs, encrypt ePHI in transit/at rest, maintain minimum necessary access, conduct annual risk analysis, workforce training, incident response and breach notification, and maintain data retention/disposal policies.

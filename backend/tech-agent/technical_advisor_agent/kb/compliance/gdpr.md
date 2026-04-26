@@ -1,0 +1,1 @@
+GDPR highlights: obtain explicit consent, allow data subject rights (access, erasure, portability), maintain records of processing, perform DPIAs for high-risk processing, and ensure cross-border transfers use approved safeguards (SCCs/adequacy). Implement breach notification within 72 hours and data minimization by default.
