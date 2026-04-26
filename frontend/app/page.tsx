@@ -72,6 +72,13 @@ export default function Page() {
   // Check authentication on mount
   useEffect(() => {
     const checkAuth = async () => {
+      const isGuest = typeof window !== 'undefined' && localStorage.getItem('startify_guest_mode') === 'true'
+      if (isGuest) {
+        setIsAuthenticated(true)
+        setIsCheckingAuth(false)
+        return
+      }
+
       try {
         const response = await fetch('http://localhost:8001/api/v1/auth/user', {
           credentials: 'include',
@@ -83,6 +90,7 @@ export default function Page() {
         if (response.ok) {
           const data = await response.json()
           if (data.email) {
+            localStorage.removeItem('startify_guest_mode')
             setIsAuthenticated(true)
           } else {
             // Not logged in - redirect to login

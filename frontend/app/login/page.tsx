@@ -7,6 +7,11 @@ import Image from 'next/image';
 export default function LoginPage() {
   const router = useRouter();
 
+  const handleContinueAsGuest = () => {
+    localStorage.setItem('startify_guest_mode', 'true');
+    router.push('/');
+  };
+
   const handleGoogleLogin = async () => {
     try {
       // Get the OAuth URL from backend
@@ -33,6 +38,12 @@ export default function LoginPage() {
   };
 
   useEffect(() => {
+    const isGuest = localStorage.getItem('startify_guest_mode') === 'true';
+    if (isGuest) {
+      router.push('/');
+      return;
+    }
+
     // Check if already logged in
     fetch('http://localhost:8001/api/v1/auth/user', {
       credentials: 'include',
@@ -137,6 +148,31 @@ export default function LoginPage() {
             <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
           </svg>
           Continuer avec Google
+        </button>
+
+        <button
+          onClick={handleContinueAsGuest}
+          style={{
+            width: '100%',
+            marginTop: '12px',
+            padding: '12px 24px',
+            background: 'transparent',
+            color: 'var(--text-primary)',
+            border: '1px solid var(--border-color)',
+            borderRadius: '8px',
+            fontSize: '15px',
+            fontWeight: 500,
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'var(--bg-secondary)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'transparent';
+          }}
+        >
+          Continuer en tant qu'invite
         </button>
 
         {/* Info */}
