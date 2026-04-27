@@ -1789,11 +1789,16 @@ Return JSON only: {{"search": "...", "skills": "...", "seniority": "..."}}"""
             seniority = 'lead'
         
         # Extract common skills
-        common_skills = ['python', 'javascript', 'react', 'django', 'node', 'java', 'typescript', 'sql', 'aws', 'docker']
+        common_skills = ['python', 'javascript', 'react', 'django', 'node', 'java', 'typescript', 'sql', 'aws', 'docker', 'figma', 'designer']
         found_skills = [skill for skill in common_skills if skill in query_lower]
         
+        # Extract search keywords (remove common filler words)
+        filler_words = ['trouver', 'des', 'avec', 'et', 'montrez-moi', 'chercher', 'niveau', 'experience', 'find', 'show', 'me', 'with', 'senior', 'junior', 'mid', 'lead']
+        search_keywords = [word for word in query_lower.split() if word not in filler_words and len(word) > 2]
+        
         return JsonResponse({
-            "search": query,
+            "search": ' '.join(search_keywords) if search_keywords else query,
             "skills": ','.join(found_skills) if found_skills else '',
             "seniority": seniority
         })
+
