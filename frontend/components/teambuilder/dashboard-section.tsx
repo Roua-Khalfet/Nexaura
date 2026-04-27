@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Users, Clock, ChevronRight, Plus, Mail, UserCheck, TrendingUp, Briefcase, Target, RefreshCw } from 'lucide-react';
+import { Search, Users, Clock, ChevronRight, Plus, Mail, UserCheck, TrendingUp, Briefcase, Target, RefreshCw, BarChart3 } from 'lucide-react';
 import Link from 'next/link';
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -131,92 +131,72 @@ export default function DashboardSection() {
   ];
 
   return (
-    <div style={{ maxWidth: '100%', paddingBottom: '40px' }}>
+    <div className="flex flex-col h-full overflow-hidden">
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
-        <div>
-          <h1 style={{ fontSize: '28px', fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--text-primary)', margin: '0 0 8px 0' }}>Tableau de bord</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', margin: 0 }}>Surveillez votre agent de recrutement IA et l'activité de constitution d'équipe.</p>
+      <div className="px-6 py-5 border-b border-border bg-gradient-to-r from-blue-50/40 via-purple-50/20 to-transparent">
+        <div className="flex items-center gap-4">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="w-14 h-14 rounded-[20px] bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/25"
+          >
+            <BarChart3 className="w-7 h-7 text-white" />
+          </motion.div>
+          <div>
+            <h2 className="text-xl font-black uppercase tracking-wider text-slate-800">Tableau de bord</h2>
+            <p className="text-xs font-bold text-slate-500 tracking-wider">VUE D'ENSEMBLE DE VOTRE VIVIER DE TALENTS</p>
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+      </div>
+
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto p-8">
+        <div className="max-w-7xl mx-auto space-y-6">
+        {/* Action Buttons */}
+        <div className="flex gap-3 flex-wrap justify-end mb-6">
           {/* Time Range Filter */}
-          <div style={{ position: 'relative' }}>
+          <div className="relative">
             <select
               value={timeRange}
               onChange={(e) => setTimeRange(e.target.value)}
-              style={{
-                padding: '10px 36px 10px 14px',
-                fontSize: '14px',
-                fontWeight: 500,
-                border: '1px solid var(--border-color)',
-                borderRadius: '8px',
-                background: 'var(--bg-card)',
-                color: 'var(--text-primary)',
-                appearance: 'none',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-                minWidth: '140px'
-              }}
-              onMouseEnter={(e) => (e.target as HTMLSelectElement).style.borderColor = 'var(--text-secondary)'}
-              onMouseLeave={(e) => (e.target as HTMLSelectElement).style.borderColor = 'var(--border-color)'}
+              className="px-4 py-2.5 text-sm font-medium border border-border rounded-xl bg-white/60 backdrop-blur-xl text-foreground appearance-none cursor-pointer transition-all hover:border-muted-foreground min-w-[140px] shadow-sm"
             >
               {timeRangeOptions.map(option => (
                 <option key={option.value} value={option.value}>{option.label}</option>
               ))}
             </select>
-            <div style={{
-              position: 'absolute',
-              right: '12px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              pointerEvents: 'none',
-              color: 'var(--text-secondary)'
-            }}>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path d="M2 4L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
           </div>
-          
+        
           <button 
             onClick={handleSyncGmail}
             disabled={syncing}
-            className="btn btn-secondary"
-            style={{ 
-              display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 18px', 
-              borderRadius: '8px', fontSize: '14px', fontWeight: 500
-            }}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-white/60 backdrop-blur-xl border border-border hover:bg-white/80 hover:shadow-md transition-all shadow-sm"
           >
             <RefreshCw size={16} className={syncing ? 'spinning' : ''} />
             {syncing ? 'Synchronisation...' : 'Synchroniser Gmail'}
           </button>
-          <Link href="/" className="btn" style={{ 
-            background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', color: 'white', 
-            display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 18px', 
-            borderRadius: '8px', fontSize: '14px', fontWeight: 500, border: 'none',
-            boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)'
-          }}>
+          <Link href="/" className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-gradient-to-r from-primary to-accent text-white border-0 shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all">
             <Plus size={16} /> Nouvelle équipe
           </Link>
         </div>
-      </div>
 
       {syncMessage && (
-        <div style={{ 
-          padding: '14px 16px', 
-          background: syncMessage.startsWith('✅') ? 'rgba(16,185,129,0.1)' : 'rgba(244,63,94,0.1)', 
-          border: `1px solid ${syncMessage.startsWith('✅') ? 'rgba(16,185,129,0.2)' : 'rgba(244,63,94,0.2)'}`, 
-          borderRadius: '8px', 
-          color: syncMessage.startsWith('✅') ? '#10b981' : '#f43f5e', 
-          fontSize: '14px', 
-          marginBottom: '24px' 
-        }}>
+        <div className={`p-4 rounded-2xl border text-sm mb-6 ${
+          syncMessage.startsWith('✅') 
+            ? 'bg-emerald-50/80 backdrop-blur-xl border-emerald-200 text-emerald-700' 
+            : 'bg-red-50/80 backdrop-blur-xl border-red-200 text-red-700'
+        }`}>
           {syncMessage}
         </div>
       )}
 
       {error && (
-        <div style={{ padding: '14px 16px', background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.2)', borderRadius: '8px', color: '#f43f5e', fontSize: '14px', marginBottom: '24px' }}>
+        <div className="p-4 rounded-2xl border bg-red-50/80 backdrop-blur-xl border-red-200 text-red-700 text-sm mb-6">
           ⚠ {error}
         </div>
       )}
@@ -224,7 +204,7 @@ export default function DashboardSection() {
       {/* Key Metrics Cards */}
       {stats && (
         <motion.div variants={container} initial="hidden" animate="show" 
-          style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginBottom: '32px' }}>
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
           
           {[
             { label: 'Total Candidats', value: stats.total_candidates || 0, icon: Users, gradient: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)', change: stats.recent_candidates_30d > 0 ? `+${stats.recent_candidates_30d} ce mois` : null },
@@ -232,20 +212,12 @@ export default function DashboardSection() {
             { label: 'Invitations envoyées', value: stats.total_invitations || 0, icon: Mail, gradient: 'linear-gradient(135deg, #ec4899 0%, #f59e0b 100%)', change: stats.pending_invitations > 0 ? `${stats.pending_invitations} en attente` : null },
             { label: 'Intéressés', value: stats.interested_candidates || 0, icon: UserCheck, gradient: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)', change: stats.total_invitations > 0 ? `${((stats.interested_candidates / stats.total_invitations) * 100).toFixed(0)}% taux` : null }
           ].map((stat, i: number) => (
-            <motion.div key={i} variants={item} style={{ 
-              background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '16px', 
-              padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px',
-              boxShadow: 'var(--shadow-sm)', position: 'relative', overflow: 'hidden'
-            }}>
-              <div style={{ position: 'absolute', top: 0, right: 0, width: '120px', height: '120px', background: stat.gradient, opacity: 0.05, borderRadius: '50%', transform: 'translate(30%, -30%)' }} />
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative' }}>
-                <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)' }}>{stat.label}</span>
-                <div style={{ 
-                  width: '40px', height: '40px', borderRadius: '12px', 
-                  background: stat.gradient, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-                }}>
-                  <stat.icon size={20} style={{ color: 'white' }} />
+            <motion.div key={i} variants={item} className="bg-white/60 backdrop-blur-xl border border-white rounded-[20px] p-6 flex flex-col gap-4 shadow-[0_4px_20px_rgb(0,0,0,0.03)] relative overflow-hidden hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:scale-[1.02] transition-all duration-300">
+              <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-5 translate-x-1/3 -translate-y-1/3" style={{ background: stat.gradient }} />
+              <div className="flex justify-between items-start relative z-10">
+                <span className="text-sm font-medium text-muted-foreground">{stat.label}</span>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: stat.gradient }}>
+                  <stat.icon size={20} className="text-white" />
                 </div>
               </div>
               <div>
@@ -267,36 +239,19 @@ export default function DashboardSection() {
       {(stats && seniorityChartData.length > 0 && skillsChartData.length > 0) ? (
         /* Charts for users with data */
         <>
-          <div className="chart-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '32px' }}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             
             {/* Seniority Distribution - Donut Chart with Gradients */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              style={{ 
-                background: 'var(--bg-card)', 
-                border: '1px solid var(--border-color)', 
-                borderRadius: '16px', 
-                padding: '28px', 
-                boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-                position: 'relative',
-                overflow: 'hidden'
-              }}
+              className="bg-white/60 backdrop-blur-2xl p-8 rounded-[32px] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden"
             >
               {/* Decorative gradient background */}
-              <div style={{
-                position: 'absolute',
-                top: '-50%',
-                right: '-20%',
-                width: '200px',
-                height: '200px',
-                background: 'radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%)',
-                borderRadius: '50%',
-                pointerEvents: 'none'
-              }} />
+              <div className="absolute -top-1/2 -right-1/5 w-48 h-48 bg-blue-100/30 rounded-full blur-3xl pointer-events-none" />
               
-              <h3 style={{ fontSize: '17px', fontWeight: 600, margin: '0 0 24px 0', color: 'var(--text-primary)', position: 'relative' }}>
+              <h3 className="text-lg font-bold text-foreground mb-6 relative">
                 Candidats par niveau
               </h3>
               {seniorityChartData.length > 0 ? (
@@ -568,40 +523,13 @@ export default function DashboardSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            style={{ 
-              background: 'var(--bg-card)', 
-              border: '1px solid var(--border-color)', 
-              borderRadius: '16px', 
-              padding: '28px', 
-              boxShadow: '0 4px 20px rgba(0,0,0,0.08)', 
-              marginBottom: '32px',
-              position: 'relative',
-              overflow: 'hidden'
-            }}
+            className="bg-white/60 backdrop-blur-2xl p-8 rounded-[32px] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] mb-8 relative overflow-hidden"
           >
             {/* Decorative gradient backgrounds */}
-            <div style={{
-              position: 'absolute',
-              top: '20%',
-              right: '-10%',
-              width: '300px',
-              height: '300px',
-              background: 'radial-gradient(circle, rgba(236, 72, 153, 0.08) 0%, transparent 70%)',
-              borderRadius: '50%',
-              pointerEvents: 'none'
-            }} />
-            <div style={{
-              position: 'absolute',
-              bottom: '20%',
-              left: '-10%',
-              width: '250px',
-              height: '250px',
-              background: 'radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%)',
-              borderRadius: '50%',
-              pointerEvents: 'none'
-            }} />
+            <div className="absolute top-1/5 -right-1/10 w-72 h-72 bg-pink-100/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-1/5 -left-1/10 w-60 h-60 bg-emerald-100/20 rounded-full blur-3xl pointer-events-none" />
             
-            <h3 style={{ fontSize: '17px', fontWeight: 600, margin: '0 0 24px 0', color: 'var(--text-primary)', position: 'relative' }}>
+            <h3 className="text-lg font-bold text-foreground mb-6 relative">
               Compétences les plus fréquentes
             </h3>
             {skillsChartData.length > 0 ? (
@@ -718,6 +646,8 @@ export default function DashboardSection() {
           </div>
         )}
       </motion.div>
+        </div>
+      </div>
     </div>
   );
 }

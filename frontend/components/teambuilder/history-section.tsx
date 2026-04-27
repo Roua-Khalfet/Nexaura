@@ -200,46 +200,60 @@ export default function HistorySection() {
   }
 
   return (
-    <div>
-      <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--text-primary)', margin: '0 0 8px 0' }}>
-          Historique des recherches
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '15px', margin: 0 }}>
-          Consultez et gérez vos recherches passées de constitution d'équipe IA
-        </p>
+    <div className="flex flex-col h-full overflow-hidden">
+      {/* Header */}
+      <div className="px-6 py-5 border-b border-border bg-gradient-to-r from-amber-50/40 via-orange-50/20 to-transparent">
+        <div className="flex items-center gap-4">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="w-14 h-14 rounded-[20px] bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/25"
+          >
+            <HistoryIcon className="w-7 h-7 text-white" />
+          </motion.div>
+          <div>
+            <h2 className="text-xl font-black uppercase tracking-wider text-slate-800">Historique</h2>
+            <p className="text-xs font-bold text-slate-500 tracking-wider">RECHERCHES PASSÉES DE CONSTITUTION D'ÉQUIPE</p>
+          </div>
+        </div>
       </div>
 
-      {error && <p style={{ color: 'var(--accent-rose)' }}>{error}</p>}
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto p-8">
+        <div className="max-w-full mx-auto">
+
+      {error && <p className="text-red-600">{error}</p>}
 
       {/* Filters Bar */}
       {sessions.length > 0 && (
-        <motion.div className="card" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-          style={{ marginBottom: '24px', padding: '16px 20px', display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: '200px', background: 'var(--bg-secondary)', borderRadius: '10px', padding: '0 12px' }}>
-            <Search size={16} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }} 
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white/60 backdrop-blur-xl border border-white rounded-[20px] p-4 mb-6 flex gap-4 items-center flex-wrap shadow-[0_4px_20px_rgb(0,0,0,0.03)]"
+        >
+          <div className="flex items-center gap-2 flex-1 min-w-[200px] bg-secondary/50 rounded-xl px-3">
+            <Search size={16} className="text-muted-foreground flex-shrink-0" />
             <input
               type="text"
               placeholder="Rechercher les requêtes passées..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              style={{ border: 'none', background: 'transparent', outline: 'none', padding: '10px 0', fontSize: '14px', color: 'var(--text-primary)', width: '100%', fontFamily: 'Inter, sans-serif' }}
+              className="border-none bg-transparent outline-none py-2.5 text-sm text-foreground w-full"
             />
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Filter size={14} style={{ color: 'var(--text-muted)' }} />
+          <div className="flex items-center gap-2">
+            <Filter size={14} className="text-muted-foreground" />
             <select
               value={regionFilter}
               onChange={e => setRegionFilter(e.target.value)}
-              className="form-select"
-              style={{ padding: '8px 12px', fontSize: '13px', minWidth: '120px', background: 'var(--bg-secondary)', border: 'none', borderRadius: '8px' }}
+              className="px-3 py-2 text-sm min-w-[120px] bg-secondary/50 border-none rounded-xl text-foreground"
             >
               {regions.map((r: string) => (
                 <option key={r} value={r}>{r === 'all' ? 'Toutes les régions' : r}</option>
               ))}
             </select>
           </div>
-          <span style={{ fontSize: '13px', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+          <span className="text-sm text-muted-foreground whitespace-nowrap">
             {filteredSessions.length} sur {sessions.length} résultats
           </span>
         </motion.div>
@@ -247,7 +261,11 @@ export default function HistorySection() {
 
       {/* Empty State */}
       {sessions.length === 0 && !error && (
-        <motion.div className="card" initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ textAlign: 'center', padding: '64px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <motion.div 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          className="bg-white/60 backdrop-blur-xl border border-white rounded-[24px] text-center p-16 flex flex-col items-center shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+        >
           <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '72px', height: '72px', borderRadius: '50%', background: 'var(--bg-secondary)', marginBottom: '24px' }}>
             <HistoryIcon size={32} style={{ color: 'var(--accent-primary)' }} />
           </div>
@@ -700,6 +718,8 @@ export default function HistorySection() {
           </div>
         </div>
       )}
+        </div>
+      </div>
     </div>
   );
 }

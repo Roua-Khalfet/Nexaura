@@ -12,7 +12,22 @@ export interface User {
   last_login: string
 }
 
+export function isGuestMode(): boolean {
+  if (typeof window === 'undefined') return false
+  return localStorage.getItem('startify_guest_mode') === 'true'
+}
+
+export function clearGuestMode(): void {
+  if (typeof window === 'undefined') return
+  localStorage.removeItem('startify_guest_mode')
+}
+
 export async function getCurrentUser(): Promise<User | null> {
+  // If in guest mode, return null immediately
+  if (isGuestMode()) {
+    return null
+  }
+
   try {
     const response = await fetch(`${API_BASE}/api/v1/auth/user`, {
       credentials: 'include',
@@ -34,6 +49,10 @@ export async function getCurrentUser(): Promise<User | null> {
 
 export async function logout(): Promise<void> {
   try {
+    // Clear guest mode
+    clearGuestMode()
+    
+    // Call backend logout
     await fetch(`${API_BASE}/api/v1/auth/logout`, {
       method: 'POST',
       credentials: 'include',

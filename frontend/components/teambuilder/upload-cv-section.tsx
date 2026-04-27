@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Upload, CheckCircle, AlertCircle, FileText, X, Loader2 } from 'lucide-react';
 
 export default function UploadCVSection() {
@@ -120,63 +121,46 @@ export default function UploadCVSection() {
   };
 
   return (
-    <div style={{ maxWidth: '800px', paddingBottom: '40px' }}>
+    <div className="flex flex-col h-full overflow-hidden">
       {/* Header */}
-      <div style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--text-primary)', margin: '0 0 8px 0' }}>
-          Télécharger des CVs de candidats
-        </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '15px', margin: 0 }}>
-          Téléchargez un ou plusieurs CVs pour les ajouter à votre vivier de candidats
-        </p>
+      <div className="px-6 py-5 border-b border-border bg-gradient-to-r from-green-50/40 via-emerald-50/20 to-transparent">
+        <div className="flex items-center gap-4">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="w-14 h-14 rounded-[20px] bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/25"
+          >
+            <Upload className="w-7 h-7 text-white" />
+          </motion.div>
+          <div>
+            <h2 className="text-xl font-black uppercase tracking-wider text-slate-800">Télécharger CVs</h2>
+            <p className="text-xs font-bold text-slate-500 tracking-wider">AJOUTER DES CANDIDATS À VOTRE VIVIER</p>
+          </div>
+        </div>
       </div>
 
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto p-8">
+        <div className="max-w-4xl mx-auto">
+
       {/* Upload Card */}
-      <div className="card" style={{ padding: '32px' }}>
+      <div className="bg-white/60 backdrop-blur-xl border border-white rounded-[24px] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
         {/* Upload Zone */}
         <div 
-          style={{
-            border: `2px dashed ${dragActive ? 'var(--accent-primary)' : 'var(--border-color)'}`,
-            borderRadius: '12px',
-            padding: '48px 32px',
-            textAlign: 'center',
-            marginBottom: '24px',
-            position: 'relative',
-            cursor: 'pointer',
-            transition: 'all 0.3s',
-            background: dragActive ? 'var(--bg-secondary)' : (files.length > 0 ? 'var(--bg-secondary)' : 'transparent')
-          }}
+          className={`border-2 border-dashed rounded-2xl p-12 text-center mb-6 relative cursor-pointer transition-all ${
+            dragActive ? 'border-primary bg-primary/5' : files.length > 0 ? 'border-border bg-secondary/50' : 'border-border hover:border-primary hover:bg-secondary/50'
+          }`}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
           onDragOver={handleDrag}
           onDrop={handleDrop}
-          onMouseEnter={(e) => {
-            if (!dragActive) {
-              e.currentTarget.style.borderColor = 'var(--accent-primary)';
-              e.currentTarget.style.background = 'var(--bg-secondary)';
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (!dragActive) {
-              e.currentTarget.style.borderColor = 'var(--border-color)';
-              e.currentTarget.style.background = files.length > 0 ? 'var(--bg-secondary)' : 'transparent';
-            }
-          }}
         >
           <input
             type="file"
             accept=".pdf,.docx,image/*"
             onChange={handleFileChange}
             multiple
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              opacity: 0,
-              cursor: 'pointer'
-            }}
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           />
           <div style={{ pointerEvents: 'none' }}>
             {files.length > 0 ? (
@@ -329,6 +313,8 @@ export default function UploadCVSection() {
           <span style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>
             L'IA traitera et indexera ces candidats en arrière-plan. Vous pouvez retourner à l'Assistant IA pour commencer la recherche.
           </span>
+        </div>
+      </div>
         </div>
       </div>
     </div>

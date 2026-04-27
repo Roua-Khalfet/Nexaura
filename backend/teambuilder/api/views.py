@@ -229,10 +229,12 @@ def list_sessions(request):
             hr_user = HRUser.objects.get(id=hr_user_id)
             sessions = UserSession.objects.filter(hr_user=hr_user).order_by("-created_at")[:50]
         except HRUser.DoesNotExist:
-            sessions = UserSession.objects.all().order_by("-created_at")[:50]
+            # User ID in session but user doesn't exist - return empty
+            sessions = []
     else:
-        # If not logged in, show all (for backward compatibility)
-        sessions = UserSession.objects.all().order_by("-created_at")[:50]
+        # Guest users (not logged in) should not see any sessions
+        # Return empty list instead of showing all sessions (security fix)
+        sessions = []
     
     data = [
         {
@@ -1658,13 +1660,12 @@ def parse_salary_query(request):
         return JsonResponse({"error": "Query is required"}, status=400)
     
     try:
-        from langchain_ollama import ChatOllama
+        from langchain_groq import ChatGroq
         from langchain_core.messages import HumanMessage
         
-        llm = ChatOllama(
-            model=os.getenv("OLLAMA_MODEL", "llama3.2"),
-            base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
-            format="json",
+        llm = ChatGroq(
+            model=os.getenv("GROQ_MODEL", "llama-3.1-70b-versatile"),
+            api_key=os.getenv("GROQ_API_KEY"),
             temperature=0.1,
         )
         
@@ -1734,13 +1735,12 @@ def parse_candidate_query(request):
         return JsonResponse({"error": "Query is required"}, status=400)
     
     try:
-        from langchain_ollama import ChatOllama
+        from langchain_groq import ChatGroq
         from langchain_core.messages import HumanMessage
         
-        llm = ChatOllama(
-            model=os.getenv("OLLAMA_MODEL", "llama3.2"),
-            base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
-            format="json",
+        llm = ChatGroq(
+            model=os.getenv("GROQ_MODEL", "llama-3.1-70b-versatile"),
+            api_key=os.getenv("GROQ_API_KEY"),
             temperature=0.1,
         )
         

@@ -3,14 +3,14 @@
 import { 
   MessageSquare, FileText, ShieldCheck, Radio, ChevronLeft, LayoutDashboard, 
   TrendingUp, Leaf, LogOut, User, Bot, Sparkles, Upload, Users,
-  History, ChevronDown 
+  History, ChevronDown, LogIn 
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { type PipelineState } from './pipeline-section'
-import { getCurrentUser, logout, type User as AuthUser } from '@/lib/auth'
+import { getCurrentUser, logout, isGuestMode, type User as AuthUser } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
 
 export type SectionId = 'studio' | 'audit' | 'marketing' | 'green' | 'documents' | 'chat' | 'veille' | 'tech-agent' |
@@ -48,6 +48,7 @@ export default function AppSidebar({ activeSection, onSectionChange, collapsed, 
   const [user, setUser] = useState<AuthUser | null>(null)
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [teamBuilderExpanded, setTeamBuilderExpanded] = useState(false)
+  const [isGuest, setIsGuest] = useState(false)
   
   const legalScore = pipelineState?.juridique?.combinedScore ?? pipelineState?.juridique?.score_global ?? null
   const greenScore = pipelineState?.green?.result?.esg_score?.composite_score ?? null
@@ -57,12 +58,18 @@ export default function AppSidebar({ activeSection, onSectionChange, collapsed, 
     : legalScore ?? greenScore
 
   useEffect(() => {
+    setIsGuest(isGuestMode())
     getCurrentUser().then(setUser)
   }, [])
 
   const handleLogout = async () => {
     await logout()
     setUser(null)
+    setIsGuest(false)
+    router.push('/login')
+  }
+
+  const handleLogin = () => {
     router.push('/login')
   }
 
@@ -253,9 +260,9 @@ export default function AppSidebar({ activeSection, onSectionChange, collapsed, 
         </div>
       </nav>
 
-      {/* User Profile */}
-      {user && (
-        <div className="p-3 border-t border-sidebar-border">
+      {/* User Profile or Login Button */}
+      <div className="p-3 border-t border-sidebar-border">
+        {user ? (
           <div className="relative">
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -298,8 +305,25 @@ export default function AppSidebar({ activeSection, onSectionChange, collapsed, 
               )}
             </AnimatePresence>
           </div>
-        </div>
-      )}
+        ) : isGuest ? (
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleLogin}
+            className="w-full flex items-center gap-3 rounded-lg p-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 transition-all"
+          >
+            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+              <LogIn size={16} className="text-white" />
+            </div>
+            {!collapsed && (
+              <div className="flex-1 text-left">
+                <div className="text-sm font-medium text-white">Mode Invité</div>
+                <div className="text-xs text-white/80">Cliquez pour vous connecter</div>
+              </div>
+            )}
+          </motion.button>
+        ) : null}
+      </div>
 
       {/* Collapse Toggle */}
       <div className="p-3 border-t border-sidebar-border">

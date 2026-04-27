@@ -4,7 +4,7 @@ import json, asyncio, os
 from datetime import datetime, timezone
 from typing import Any, Dict
 
-from langchain_ollama import ChatOllama
+from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage
 
 from agent.state import Role, Candidate
@@ -13,20 +13,38 @@ from db.salary_lookup import lookup_salary_sync
 from asgiref.sync import sync_to_async
 from cache.redis_client import cache_get, cache_set
 
-_llm = ChatOllama(
-    model=os.getenv("OLLAMA_MODEL", "llama3.1"),
-    base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
-    format="json", temperature=0.1,
+_llm = ChatGroq(
+    model=os.getenv("GROQ_MODEL", "llama-3.1-70b-versatile"),
+    api_key=os.getenv("GROQ_API_KEY"),
+    temperature=0.1,
 )
 
 
 def _llm_json(prompt: str) -> dict:
     resp = _llm.invoke([HumanMessage(content=prompt)])
+    content = resp.content.strip()
+    
     try:
-        return json.loads(resp.content)
+        # Try to extract JSON from markdown code blocks if present
+        if "```json" in content:
+            start = content.find("```json") + 7
+            end = content.find("```", start)
+            content = content[start:end].strip()
+        elif "```" in content:
+            start = content.find("```") + 3
+            end = content.find("```", start)
+            content = content[start:end].strip()
+        
+        return json.loads(content)
     except json.JSONDecodeError:
-        s, e = resp.content.find("{"), resp.content.rfind("}") + 1
-        return json.loads(resp.content[s:e]) if s != -1 and e > s else {}
+        # Fallback: try to find JSON object in the content
+        s, e = content.find("{"), content.rfind("}") + 1
+        if s != -1 and e > s:
+            try:
+                return json.loads(content[s:e])
+            except:
+                pass
+        return {}
 
 
 # ── Node 1: Extract Requirements (LLM call #1) ──────────────
@@ -106,13 +124,15 @@ async def search_candidates(state: Dict[str, Any]) -> Dict[str, Any]:
         
         # Optional: Add GitHub public profiles as supplementary source
         # (only if local DB has < 3 candidates)
-        if len(local_candidates) < 3:
-            try:
-                gh = await search_github(role.title, role.required_skills, limit=3)
-                if isinstance(gh, list):
-                    local_candidates.extend(gh)
-            except Exception as e:
-                print(f"GitHub search error: {e}")
+        # Note: search_github is disabled for now - can be implemented later
+        # if len(local_candidates) < 3:
+        #     try:
+        #         from tools.github_search import search_github
+        #         gh = await search_github(role.title, role.required_skills, limit=3)
+        #         if isinstance(gh, list):
+        #             local_candidates.extend(gh)
+        #     except Exception as e:
+        #         print(f"GitHub search error: {e}")
         
         all_candidates.extend(local_candidates)
         cache_set(key, [c.model_dump() for c in local_candidates], ttl=86400)  # Use sync version

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Mail, Phone, Send, Trash2, Filter, Users, Loader2 } from 'lucide-react';
 import SearchBar from './search-bar';
 
@@ -139,42 +140,37 @@ export default function CandidatesSection() {
   });
 
   return (
-    <div style={{ maxWidth: '100%', paddingBottom: '40px' }}>
+    <div className="flex flex-col h-full overflow-hidden">
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '32px' }}>
-        <div>
-          <h1 style={{ fontSize: '28px', fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--text-primary)', margin: '0 0 8px 0' }}>
-            Vivier de candidats
-          </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', margin: 0 }}>
-            {candidates.length} candidats disponibles dans votre vivier
-          </p>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
-          <Users size={18} style={{ color: 'var(--text-secondary)' }} />
-          <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>{candidates.length}</span>
+      <div className="px-6 py-5 border-b border-border bg-gradient-to-r from-blue-50/40 via-indigo-50/20 to-transparent">
+        <div className="flex items-center gap-4">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="w-14 h-14 rounded-[20px] bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/25"
+          >
+            <Users className="w-7 h-7 text-white" />
+          </motion.div>
+          <div className="flex-1">
+            <h2 className="text-xl font-black uppercase tracking-wider text-slate-800">Vivier de Candidats</h2>
+            <p className="text-xs font-bold text-slate-500 tracking-wider">{candidates.length} CANDIDATS DISPONIBLES</p>
+          </div>
         </div>
       </div>
 
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto p-8">
+        <div className="max-w-full mx-auto">
+
       {/* Tech Agent Filter Banner */}
       {techAgentSkills && (
-        <div style={{
-          marginBottom: '20px',
-          padding: '12px 16px',
-          borderRadius: '10px',
-          border: '1px solid rgba(99,102,241,0.3)',
-          background: 'rgba(99,102,241,0.06)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '12px',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', minWidth: 0 }}>
-            <span style={{ fontSize: '12px', fontWeight: 700, color: '#6366f1', whiteSpace: 'nowrap' }}>
+        <div className="mb-5 p-3 rounded-2xl border border-blue-200 bg-blue-50/80 backdrop-blur-xl flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 flex-wrap min-w-0">
+            <span className="text-xs font-bold text-blue-600 whitespace-nowrap">
               ✦ Tech Agent filter active
             </span>
-            <span style={{ fontSize: '12px', color: 'var(--text-secondary)', wordBreak: 'break-word' }}>
-              Searching for: <strong style={{ color: 'var(--text-primary)' }}>{techAgentSkills}</strong>
+            <span className="text-xs text-muted-foreground break-words">
+              Searching for: <strong className="text-foreground">{techAgentSkills}</strong>
             </span>
           </div>
           <button
@@ -182,11 +178,7 @@ export default function CandidatesSection() {
               setTechAgentSkills('');
               setFilters((prev: any) => ({ ...prev, skills: '' }));
             }}
-            style={{
-              background: 'none', border: 'none', cursor: 'pointer',
-              fontSize: '12px', color: '#6366f1', fontWeight: 600,
-              whiteSpace: 'nowrap', padding: '2px 4px',
-            }}
+            className="text-xs text-blue-600 font-semibold whitespace-nowrap px-1 py-0.5 hover:underline"
           >
             Clear
           </button>
@@ -593,6 +585,8 @@ export default function CandidatesSection() {
           </div>
         </div>
       )}
+        </div>
+      </div>
     </div>
   );
 }

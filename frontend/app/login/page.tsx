@@ -40,7 +40,7 @@ export default function LoginPage() {
   useEffect(() => {
     const isGuest = localStorage.getItem('startify_guest_mode') === 'true';
     if (isGuest) {
-      router.push('/');
+      // Don't auto-redirect if in guest mode - let them choose to login
       return;
     }
 
@@ -54,7 +54,8 @@ export default function LoginPage() {
       .then(res => res.json())
       .then(data => {
         if (data.email) {
-          // Already logged in, redirect to home
+          // Already logged in, clear guest mode and redirect to home
+          localStorage.removeItem('startify_guest_mode');
           router.push('/');
         }
       })

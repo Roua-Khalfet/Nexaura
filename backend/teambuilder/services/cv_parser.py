@@ -3,13 +3,12 @@
 import os
 import json
 import re
-from langchain_ollama import ChatOllama
+from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage
 
-_llm = ChatOllama(
-    model=os.getenv("OLLAMA_MODEL", "llama3.2"),
-    base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
-    format="json",
+_llm = ChatGroq(
+    model=os.getenv("GROQ_MODEL", "llama-3.1-70b-versatile"),
+    api_key=os.getenv("GROQ_API_KEY"),
     temperature=0.1,
 )
 
@@ -55,7 +54,19 @@ Double-check that email contains @ and phone contains digits before returning.
     
     try:
         resp = _llm.invoke([HumanMessage(content=prompt)])
-        data = json.loads(resp.content)
+        content = resp.content.strip()
+        
+        # Try to extract JSON from markdown code blocks if present
+        if "```json" in content:
+            start = content.find("```json") + 7
+            end = content.find("```", start)
+            content = content[start:end].strip()
+        elif "```" in content:
+            start = content.find("```") + 3
+            end = content.find("```", start)
+            content = content[start:end].strip()
+        
+        data = json.loads(content)
         
         # Validate and clean data with regex checks
         import re

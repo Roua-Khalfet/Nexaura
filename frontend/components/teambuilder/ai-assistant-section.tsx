@@ -283,22 +283,26 @@ export default function AIAssistantSection() {
 
   return (
     <>
-    <div style={{
-      height: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      background: 'var(--bg-primary)'
-    }}>
+    <div className="flex flex-col h-full overflow-hidden">
+      {/* Header */}
+      <div className="px-6 py-5 border-b border-border bg-gradient-to-r from-purple-50/40 via-pink-50/20 to-transparent">
+        <div className="flex items-center gap-4">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="w-14 h-14 rounded-[20px] bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg shadow-purple-500/25"
+          >
+            <Sparkles className="w-7 h-7 text-white" />
+          </motion.div>
+          <div>
+            <h2 className="text-xl font-black uppercase tracking-wider text-slate-800">Assistant IA</h2>
+            <p className="text-xs font-bold text-slate-500 tracking-wider">WORKFLOWS INTELLIGENTS DE RECRUTEMENT</p>
+          </div>
+        </div>
+      </div>
 
-      {/* AI Assistant Bar - Fixed at Top */}
-      <div style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 20,
-        padding: '16px 48px',
-        background: 'var(--bg-primary)',
-        borderBottom: '1px solid var(--border-color)'
-      }}>
+      {/* AI Assistant Bar - Below Header */}
+      <div className="px-6 py-4 bg-gradient-to-r from-primary/5 via-accent/5 to-transparent border-b border-border backdrop-blur-xl">
         <AIAssistantBar 
           isLoading={loading} 
           currentMode={mode} 
@@ -306,102 +310,49 @@ export default function AIAssistantSection() {
       </div>
 
       {/* Main Content Area - Scrollable */}
-      <div style={{
-        flex: 1,
-        overflowY: 'auto',
-        padding: '32px 48px',
-        paddingBottom: '140px', // Space for fixed input
-        maxWidth: '1400px',
-        margin: '0 auto',
-        width: '100%'
-      }}>
+      <div className="flex-1 overflow-y-auto px-12 py-8 pb-36 max-w-7xl mx-auto w-full">
         
         {/* Welcome Message - Premium Design */}
         {!mode && !result && !loading && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            style={{
-              maxWidth: '1200px',
-              margin: '40px auto',
-            }}
+            className="max-w-6xl mx-auto my-10"
           >
             {/* Minimal Header */}
-            <div style={{ marginBottom: '64px', textAlign: 'center' }}>
-              <h2 style={{
-                fontSize: '42px',
-                fontWeight: 600,
-                marginBottom: '16px',
-                color: 'var(--text-primary)',
-                letterSpacing: '-0.03em'
-              }}>
+            <div className="mb-16 text-center">
+              <h2 className="text-5xl font-bold mb-4 text-foreground tracking-tight">
                 Assistant de recrutement IA
               </h2>
-              <p style={{
-                fontSize: '16px',
-                color: 'var(--text-secondary)',
-                fontWeight: 400,
-                maxWidth: '500px',
-                margin: '0 auto'
-              }}>
+              <p className="text-base text-muted-foreground font-normal max-w-lg mx-auto">
                 Sélectionnez un workflow dans la barre de navigation pour commencer
               </p>
             </div>
 
             {/* Premium Mode Cards - 2x2 Grid */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '24px',
-              marginBottom: '48px'
-            }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
               {/* Build Team */}
               <motion.div
-                whileHover={{ y: -2 }}
+                whileHover={{ y: -4, scale: 1.02 }}
                 onClick={() => setMode('build_team')}
-                style={{
-                  padding: '32px',
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: '12px',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  position: 'relative',
-                  overflow: 'hidden'
-                }}
+                className="p-8 bg-white/60 backdrop-blur-xl border border-white rounded-[20px] cursor-pointer transition-all shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_12px_40px_rgba(99,102,241,0.15)] hover:border-blue-200 relative overflow-hidden"
               >
                 {/* Subtle gradient overlay */}
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  width: '200px',
-                  height: '200px',
-                  background: 'radial-gradient(circle, rgba(99, 102, 241, 0.03) 0%, transparent 70%)',
-                  pointerEvents: 'none'
-                }} />
+                <div className="absolute top-0 right-0 w-48 h-48 bg-blue-100/20 rounded-full blur-3xl pointer-events-none" />
                 
-                <div style={{ position: 'relative' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                    <div style={{
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '8px',
-                      background: 'rgba(99, 102, 241, 0.08)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                      <Users size={20} style={{ color: '#6366f1' }} />
+                <div className="relative">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                      <Users size={20} className="text-blue-600" />
                     </div>
-                    <h3 style={{ fontSize: '17px', fontWeight: 600, margin: 0, color: 'var(--text-primary)' }}>
+                    <h3 className="text-lg font-bold text-foreground">
                       Créer une équipe
                     </h3>
                   </div>
-                  <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.6 }}>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Composition d'équipe par IA avec recommandations de rôles et estimations salariales
                   </p>
-                  <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 500, color: '#6366f1' }}>
+                  <div className="mt-5 flex items-center gap-2 text-sm font-medium text-blue-600">
                     Démarrer le workflow <ArrowRight size={14} />
                   </div>
                 </div>
@@ -409,50 +360,25 @@ export default function AIAssistantSection() {
 
               {/* Salary Inquiry */}
               <motion.div
-                whileHover={{ y: -2 }}
+                whileHover={{ y: -4, scale: 1.02 }}
                 onClick={() => setMode('salary')}
-                style={{
-                  padding: '32px',
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: '12px',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  position: 'relative',
-                  overflow: 'hidden'
-                }}
+                className="p-8 bg-white/60 backdrop-blur-xl border border-white rounded-[20px] cursor-pointer transition-all shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_12px_40px_rgba(139,92,246,0.15)] hover:border-purple-200 relative overflow-hidden"
               >
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  width: '200px',
-                  height: '200px',
-                  background: 'radial-gradient(circle, rgba(139, 92, 246, 0.03) 0%, transparent 70%)',
-                  pointerEvents: 'none'
-                }} />
+                <div className="absolute top-0 right-0 w-48 h-48 bg-purple-100/20 rounded-full blur-3xl pointer-events-none" />
                 
-                <div style={{ position: 'relative' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                    <div style={{
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '8px',
-                      background: 'rgba(139, 92, 246, 0.08)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                      <DollarSign size={20} style={{ color: '#06b6d4' }} />
+                <div className="relative">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center">
+                      <DollarSign size={20} className="text-cyan-600" />
                     </div>
-                    <h3 style={{ fontSize: '17px', fontWeight: 600, margin: 0, color: 'var(--text-primary)' }}>
+                    <h3 className="text-lg font-bold text-foreground">
                       Intelligence salariale
                     </h3>
                   </div>
-                  <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.6 }}>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Données de rémunération du marché et benchmarking par rôles et régions
                   </p>
-                  <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 500, color: '#06b6d4' }}>
+                  <div className="mt-5 flex items-center gap-2 text-sm font-medium text-cyan-600">
                     Voir les insights <ArrowRight size={14} />
                   </div>
                 </div>
@@ -460,50 +386,25 @@ export default function AIAssistantSection() {
 
               {/* Find Candidates */}
               <motion.div
-                whileHover={{ y: -2 }}
+                whileHover={{ y: -4, scale: 1.02 }}
                 onClick={() => setMode('find_candidates')}
-                style={{
-                  padding: '32px',
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: '12px',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  position: 'relative',
-                  overflow: 'hidden'
-                }}
+                className="p-8 bg-white/60 backdrop-blur-xl border border-white rounded-[20px] cursor-pointer transition-all shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_12px_40px_rgba(236,72,153,0.15)] hover:border-pink-200 relative overflow-hidden"
               >
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  width: '200px',
-                  height: '200px',
-                  background: 'radial-gradient(circle, rgba(236, 72, 153, 0.03) 0%, transparent 70%)',
-                  pointerEvents: 'none'
-                }} />
+                <div className="absolute top-0 right-0 w-48 h-48 bg-pink-100/20 rounded-full blur-3xl pointer-events-none" />
                 
-                <div style={{ position: 'relative' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                    <div style={{
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '8px',
-                      background: 'rgba(236, 72, 153, 0.08)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                      <Target size={20} style={{ color: '#ec4899' }} />
+                <div className="relative">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-pink-50 flex items-center justify-center">
+                      <Target size={20} className="text-pink-600" />
                     </div>
-                    <h3 style={{ fontSize: '17px', fontWeight: 600, margin: 0, color: 'var(--text-primary)' }}>
+                    <h3 className="text-lg font-bold text-foreground">
                       Matching de candidats
                     </h3>
                   </div>
-                  <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.6 }}>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Recherche sémantique et matching intelligent pour trouver des candidats qualifiés
                   </p>
-                  <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 500, color: '#ec4899' }}>
+                  <div className="mt-5 flex items-center gap-2 text-sm font-medium text-pink-600">
                     Rechercher dans le vivier <ArrowRight size={14} />
                   </div>
                 </div>
@@ -511,50 +412,25 @@ export default function AIAssistantSection() {
 
               {/* Manage Jobs */}
               <motion.div
-                whileHover={{ y: -2 }}
+                whileHover={{ y: -4, scale: 1.02 }}
                 onClick={() => setMode('manage_jobs')}
-                style={{
-                  padding: '32px',
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: '12px',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  position: 'relative',
-                  overflow: 'hidden'
-                }}
+                className="p-8 bg-white/60 backdrop-blur-xl border border-white rounded-[20px] cursor-pointer transition-all shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_12px_40px_rgba(245,158,11,0.15)] hover:border-amber-200 relative overflow-hidden"
               >
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  width: '200px',
-                  height: '200px',
-                  background: 'radial-gradient(circle, rgba(245, 158, 11, 0.03) 0%, transparent 70%)',
-                  pointerEvents: 'none'
-                }} />
+                <div className="absolute top-0 right-0 w-48 h-48 bg-amber-100/20 rounded-full blur-3xl pointer-events-none" />
                 
-                <div style={{ position: 'relative' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                    <div style={{
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '8px',
-                      background: 'rgba(245, 158, 11, 0.08)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                      <Briefcase size={20} style={{ color: '#f59e0b' }} />
+                <div className="relative">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
+                      <Briefcase size={20} className="text-amber-600" />
                     </div>
-                    <h3 style={{ fontSize: '17px', fontWeight: 600, margin: 0, color: 'var(--text-primary)' }}>
+                    <h3 className="text-lg font-bold text-foreground">
                       Gestion des emplois
                     </h3>
                   </div>
-                  <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.6 }}>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Créer, suivre et gérer les offres d'emploi avec analyses et insights
                   </p>
-                  <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 500, color: '#f59e0b' }}>
+                  <div className="mt-5 flex items-center gap-2 text-sm font-medium text-amber-600">
                     Gérer les offres <ArrowRight size={14} />
                   </div>
                 </div>
@@ -2498,8 +2374,6 @@ export default function AIAssistantSection() {
           </motion.div>
         )}
       </AnimatePresence>
-
-
     </div>
 
     {/* MODALS - Rendered via Portal to document.body for proper centering */}

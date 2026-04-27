@@ -121,8 +121,10 @@ async def search_candidates_semantic(role_title: str, skills: List[str], seniori
             @sync_to_async
             def get_candidate(name):
                 try:
-                    return CandidateModel.objects.get(name=name)
-                except CandidateModel.DoesNotExist:
+                    # Use filter().first() instead of get() to handle multiple results
+                    return CandidateModel.objects.filter(name=name).first()
+                except Exception as e:
+                    print(f"Error fetching candidate {name}: {e}")
                     return None
             
             db_cand = await get_candidate(match['name'])

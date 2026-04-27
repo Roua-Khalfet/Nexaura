@@ -5,16 +5,16 @@ from datetime import datetime, timezone
 from typing import Optional, List, Dict, Tuple
 import httpx
 from bs4 import BeautifulSoup
-from langchain_ollama import ChatOllama
+from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage
 from api.models import SalaryRate, SalaryHistory
 from asgiref.sync import sync_to_async
 from services.salary_scraper import scrape_salary_from_jobs
 
-_llm = ChatOllama(
-    model=os.getenv("OLLAMA_MODEL", "llama3.1"),
-    base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
-    format="json", temperature=0.1,
+_llm = ChatGroq(
+    model=os.getenv("GROQ_MODEL", "llama-3.1-70b-versatile"),
+    api_key=os.getenv("GROQ_API_KEY"),
+    temperature=0.1,
 )
 
 SOURCES = [

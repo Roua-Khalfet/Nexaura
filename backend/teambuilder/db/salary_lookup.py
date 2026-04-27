@@ -5,16 +5,15 @@ Refactored from SQLAlchemy to Django ORM with SerpAPI integration.
 import os
 import json
 from django.db import connection
-from langchain_ollama import ChatOllama
+from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage
 from services.salary_scraper import scrape_salary_from_jobs, search_salary_online
 
 SIMILARITY_THRESHOLD = 0.40
 
-_llm = ChatOllama(
-    model=os.getenv("OLLAMA_MODEL", "llama3.2"),
-    base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
-    format="json",
+_llm = ChatGroq(
+    model=os.getenv("GROQ_MODEL", "llama-3.1-70b-versatile"),
+    api_key=os.getenv("GROQ_API_KEY"),
     temperature=0.1,
 )
 
@@ -117,7 +116,19 @@ def lookup_salary_sync(role_title, seniority, region="TN", currency="TND", auto_
     )
     try:
         resp = _llm.invoke([HumanMessage(content=prompt)])
-        data = json.loads(resp.content)
+        content = resp.content.strip()
+        
+        # Try to extract JSON from markdown code blocks if present
+        if "```json" in content:
+            start = content.find("```json") + 7
+            end = content.find("```", start)
+            content = content[start:end].strip()
+        elif "```" in content:
+            start = content.find("```") + 3
+            end = content.find("```", start)
+            content = content[start:end].strip()
+        
+        data = json.loads(content)
         
         annual_min = data["annual_min"]
         annual_max = data["annual_max"]
