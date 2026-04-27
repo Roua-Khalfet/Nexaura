@@ -99,6 +99,11 @@ export default function AIAssistantSection() {
     description: ''
   });
   
+  // Tech Agent handoff queue
+  const [jobQueue, setJobQueue] = useState<any[]>([]);
+  const [creatingQueue, setCreatingQueue] = useState<boolean>(false);
+  const [queueCreated, setQueueCreated] = useState<number>(0);
+
   // Results state
   const [loading, setLoading] = useState<boolean>(false);
   const [result, setResult] = useState<any>(null);
@@ -167,6 +172,20 @@ export default function AIAssistantSection() {
   useEffect(() => {
     scrollToBottom();
   }, [result, showSalaryStats, showInterestedCandidates]);
+
+  // Read Tech Agent handoff on mount
+  useEffect(() => {
+    const raw = localStorage.getItem('teambuilder_job_queue');
+    if (!raw) return;
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        setJobQueue(parsed);
+        setMode('manage_jobs');
+      }
+    } catch { /* ignore malformed data */ }
+    localStorage.removeItem('teambuilder_job_queue');
+  }, []);
 
   // Load jobs when entering manage_jobs mode
   useEffect(() => {
@@ -1679,6 +1698,93 @@ export default function AIAssistantSection() {
             animate={{ opacity: 1, y: 0 }}
             style={{ maxWidth: '1100px', margin: '0 auto' }}
           >
+            {/* Tech Agent Job Queue Banner */}
+            {jobQueue.length > 0 && (
+              <div style={{
+                marginBottom: '24px',
+                padding: '16px 20px',
+                borderRadius: '12px',
+                border: '1px solid rgba(99,102,241,0.3)',
+                background: 'rgba(99,102,241,0.06)',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                  <div>
+                    <div style={{ fontSize: '13px', fontWeight: 700, color: '#6366f1', marginBottom: '2px' }}>
+                      ✦ {jobQueue.length} role{jobQueue.length !== 1 ? 's' : ''} from Tech Agent
+                    </div>
+                    <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+                      Review and post these job listings generated from your project blueprint.
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                      disabled={creatingQueue}
+                      onClick={async () => {
+                        setCreatingQueue(true);
+                        let created = 0;
+                        for (const job of jobQueue) {
+                          try {
+                            await createJob({ ...job, status: 'open' });
+                            created++;
+                          } catch { /* continue on error */ }
+                        }
+                        setQueueCreated(created);
+                        setJobQueue([]);
+                        const data = await getJobs();
+                        setJobs(data);
+                        setCreatingQueue(false);
+                      }}
+                      style={{
+                        padding: '8px 16px', borderRadius: '8px', border: 'none',
+                        background: '#6366f1', color: '#fff',
+                        fontSize: '12px', fontWeight: 600, cursor: creatingQueue ? 'wait' : 'pointer',
+                        opacity: creatingQueue ? 0.7 : 1,
+                      }}
+                    >
+                      {creatingQueue ? 'Posting…' : `Post All ${jobQueue.length}`}
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                      onClick={() => setJobQueue([])}
+                      style={{
+                        padding: '8px 12px', borderRadius: '8px', cursor: 'pointer',
+                        background: 'transparent', border: '1px solid rgba(99,102,241,0.3)',
+                        color: '#6366f1', fontSize: '12px', fontWeight: 600,
+                      }}
+                    >
+                      Dismiss
+                    </motion.button>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  {jobQueue.map((job: any, i: number) => (
+                    <div key={i} style={{
+                      display: 'flex', alignItems: 'center', gap: '6px',
+                      padding: '4px 10px', borderRadius: '999px',
+                      border: '1px solid rgba(99,102,241,0.25)',
+                      background: 'rgba(99,102,241,0.08)',
+                      fontSize: '11px', color: 'var(--text-primary)',
+                    }}>
+                      <span style={{
+                        fontSize: '9px', fontWeight: 700, padding: '1px 5px', borderRadius: '999px',
+                        background: job.seniority === 'senior' ? '#dc2626' : job.seniority === 'junior' ? '#16a34a' : '#ca8a04',
+                        color: '#fff', textTransform: 'uppercase',
+                      }}>
+                        {job.seniority || 'mid'}
+                      </span>
+                      {job.title}
+                    </div>
+                  ))}
+                </div>
+                {queueCreated > 0 && (
+                  <div style={{ marginTop: '10px', fontSize: '12px', color: '#16a34a', fontWeight: 600 }}>
+                    ✓ {queueCreated} job listing{queueCreated !== 1 ? 's' : ''} created successfully
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Header with Create Button */}
             <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>

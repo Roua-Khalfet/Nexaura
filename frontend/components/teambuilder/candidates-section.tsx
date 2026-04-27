@@ -21,6 +21,17 @@ export default function CandidatesSection() {
     salary_range: '',
     custom_message: ''
   });
+  const [techAgentSkills, setTechAgentSkills] = useState<string>('');
+
+  // Read Tech Agent skills filter on mount
+  useEffect(() => {
+    const skills = localStorage.getItem('teambuilder_skills_filter');
+    if (skills) {
+      setTechAgentSkills(skills);
+      setFilters((prev: any) => ({ ...prev, skills }));
+      localStorage.removeItem('teambuilder_skills_filter');
+    }
+  }, []);
 
   useEffect(() => {
     fetchCandidates();
@@ -144,6 +155,43 @@ export default function CandidatesSection() {
           <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-primary)' }}>{candidates.length}</span>
         </div>
       </div>
+
+      {/* Tech Agent Filter Banner */}
+      {techAgentSkills && (
+        <div style={{
+          marginBottom: '20px',
+          padding: '12px 16px',
+          borderRadius: '10px',
+          border: '1px solid rgba(99,102,241,0.3)',
+          background: 'rgba(99,102,241,0.06)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '12px',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', minWidth: 0 }}>
+            <span style={{ fontSize: '12px', fontWeight: 700, color: '#6366f1', whiteSpace: 'nowrap' }}>
+              ✦ Tech Agent filter active
+            </span>
+            <span style={{ fontSize: '12px', color: 'var(--text-secondary)', wordBreak: 'break-word' }}>
+              Searching for: <strong style={{ color: 'var(--text-primary)' }}>{techAgentSkills}</strong>
+            </span>
+          </div>
+          <button
+            onClick={() => {
+              setTechAgentSkills('');
+              setFilters((prev: any) => ({ ...prev, skills: '' }));
+            }}
+            style={{
+              background: 'none', border: 'none', cursor: 'pointer',
+              fontSize: '12px', color: '#6366f1', fontWeight: 600,
+              whiteSpace: 'nowrap', padding: '2px 4px',
+            }}
+          >
+            Clear
+          </button>
+        </div>
+      )}
 
       {/* Search Bar */}
       <SearchBar
