@@ -111,6 +111,15 @@ export default function AIAssistantBar({ isLoading = false, currentMode = null, 
         const isActive = currentMode === workflow.id;
         const isHovered = hoveredMode === workflow.id;
         const showLoading = isLoading && isActive;
+        const buttonBackground = isActive
+          ? workflow.gradient
+          : isHovered
+            ? 'var(--bg-secondary)'
+            : 'rgba(0, 0, 0, 0)';
+        const buttonColor = isActive ? '#ffffff' : 'var(--text-primary)';
+        const buttonBoxShadow = isActive
+          ? `0 4px 12px ${workflow.color}30`
+          : 'none';
 
         return (
           <motion.button
@@ -120,17 +129,6 @@ export default function AIAssistantBar({ isLoading = false, currentMode = null, 
             onMouseLeave={() => setHoveredMode(null)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            animate={{
-              background: isActive 
-                ? workflow.gradient
-                : isHovered
-                ? 'var(--bg-secondary)'
-                : 'transparent',
-              color: isActive ? 'white' : 'var(--text-primary)',
-              boxShadow: isActive 
-                ? `0 4px 12px ${workflow.color}30`
-                : 'none'
-            }}
             style={{
               position: 'relative',
               padding: '8px 14px',
@@ -142,7 +140,10 @@ export default function AIAssistantBar({ isLoading = false, currentMode = null, 
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+              transition: 'background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+              background: buttonBackground,
+              color: buttonColor,
+              boxShadow: buttonBoxShadow,
               overflow: 'hidden'
             }}
           >

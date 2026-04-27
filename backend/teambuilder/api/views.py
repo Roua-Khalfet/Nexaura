@@ -277,12 +277,21 @@ def team_builder(request):
     session_id = str(uuid.uuid4())
     logger.info("request session_id=%s region=%s", session_id, region)
 
-    # Run the LangGraph agent pipeline
-    from agent.graph import build_graph
-    result = asyncio.run(build_graph().ainvoke({
-        "raw_input": description, "region": region,
-        "currency": currency, "budget": budget,
-    }))
+    # Run the LangGraph agent pipeline.
+    # If it fails, return JSON so frontend never receives an HTML error page.
+    try:
+        from agent.graph import build_graph
+        result = asyncio.run(build_graph().ainvoke({
+            "raw_input": description, "region": region,
+            "currency": currency, "budget": budget,
+        }))
+    except Exception as e:
+        logger.exception("team_builder_pipeline_error session_id=%s", session_id)
+        return JsonResponse({
+            "error": str(e),
+            "session_id": session_id,
+            "status": "error",
+        }, status=500)
 
     candidates = result.get("candidates", [])
     team = []
@@ -412,6 +421,7 @@ def upload_cv(request):
         
         results = []
         errors = []
+        candidates_to_index = []
         
         for cv_file in cv_files:
             try:
@@ -456,17 +466,13 @@ def upload_cv(request):
                     expires_at=datetime.now() + timedelta(days=180)  # 6 months
                 )
                 
-                # Index in ChromaDB
-                try:
-                    index_candidates([{
-                        'name': candidate.name,
-                        'skills': candidate.skills,
-                        'source': 'internal_db',
-                        'matched_role': '',
-                        'profile_url': f'/hr/candidates/{candidate.id}'
-                    }])
-                except Exception as e:
-                    logger.error(f"ChromaDB indexing failed for {cv_file.name}: {e}")
+                candidates_to_index.append({
+                    'name': candidate.name,
+                    'skills': candidate.skills,
+                    'source': 'internal_db',
+                    'matched_role': '',
+                    'profile_url': f'/hr/candidates/{candidate.id}'
+                })
                 
                 results.append({
                     "id": str(candidate.id),
@@ -491,6 +497,13 @@ def upload_cv(request):
             except Exception as e:
                 logger.error(f"CV upload error for {cv_file.name}: {e}")
                 errors.append({"file": cv_file.name, "error": str(e)})
+
+        # Index all successfully parsed candidates in one shot to avoid repeated model init/download.
+        if candidates_to_index:
+            try:
+                index_candidates(candidates_to_index)
+            except Exception as e:
+                logger.error(f"ChromaDB batch indexing failed for upload request: {e}")
         
         return JsonResponse({
             "status": "success",

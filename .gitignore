@@ -20,7 +20,8 @@ node_modules/
 .env
 .env.*
 !.env.example
-!backend/teambuilder/.env.docker
+backend/teambuilder/.env.docker
+backend/tech-agent/.env
 
 # Tool caches and test outputs
 .pytest_cache/
@@ -51,3 +52,6 @@ complianceguard/.git/
 
 # Neo4j database data and logs
 .neo4j/
+
+# Chroma DB data
+backend/teambuilder/chroma_data/
