@@ -13,6 +13,7 @@ import MarketingSection from '@/components/marketing-section'
 import GreenAnalysisSection from '@/components/green-analysis-section'
 import DashboardSection from '@/components/teambuilder/dashboard-section'
 import AIAssistantSection from '@/components/teambuilder/ai-assistant-section'
+import TechAgentChat from '@/components/teambuilder/tech-agent-chat'
 import HistorySection from '@/components/teambuilder/history-section'
 import UploadCVSection from '@/components/teambuilder/upload-cv-section'
 import CandidatesSection from '@/components/teambuilder/candidates-section'
@@ -214,6 +215,12 @@ export default function Page() {
           {activeSection === 'tb-ai' && (
             <motion.div key="tb-ai" variants={sectionVariants} initial="initial" animate="animate" exit="exit" className="absolute inset-0">
               <AIAssistantSection />
+            </motion.div>
+          )}
+
+          {activeSection === 'tech-agent' && (
+            <motion.div key="tech-agent" variants={sectionVariants} initial="initial" animate="animate" exit="exit" className="absolute inset-0">
+              <TechAgentChat onNavigate={handleNavigate} />
             </motion.div>
           )}
 
