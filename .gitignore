@@ -20,6 +20,7 @@ node_modules/
 .env
 .env.*
 !.env.example
+!backend/teambuilder/.env.docker
 
 # Tool caches and test outputs
 .pytest_cache/

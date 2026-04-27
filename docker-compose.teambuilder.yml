@@ -1,0 +1,71 @@
+version: "3.9"
+
+services:
+  # PostgreSQL for TeamBuilder
+  teambuilder-postgres:
+    image: postgres:16-alpine
+    container_name: teambuilder-postgres
+    environment:
+      POSTGRES_DB: teambuilder
+      POSTGRES_USER: tb_user
+      POSTGRES_PASSWORD: tb_pass
+    volumes:
+      - teambuilder-pgdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tb_user -d teambuilder"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - teambuilder-network
+
+  # Redis for TeamBuilder
+  teambuilder-redis:
+    image: redis:7-alpine
+    container_name: teambuilder-redis
+    ports:
+      - "6380:6379"
+    restart: unless-stopped
+    networks:
+      - teambuilder-network
+
+  # TeamBuilder Django Backend
+  teambuilder-backend:
+    build:
+      context: ./backend/teambuilder
+      dockerfile: Dockerfile
+    container_name: teambuilder-backend
+    ports:
+      - "8001:8000"
+    env_file:
+      - ./backend/teambuilder/.env.docker
+    environment:
+      # Override specific values from .env.docker if needed
+      - DATABASE_URL=postgresql://tb_user:tb_pass@teambuilder-postgres:5432/teambuilder
+      - REDIS_URL=redis://teambuilder-redis:6379/0
+      - ALLOWED_HOSTS=*
+      - FRONTEND_URL=http://localhost:3000
+    volumes:
+      - ./backend/teambuilder:/app
+      - teambuilder-media:/app/media
+      - teambuilder-db:/app/db
+    depends_on:
+      teambuilder-postgres:
+        condition: service_healthy
+      teambuilder-redis:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - teambuilder-network
+
+volumes:
+  teambuilder-pgdata:
+  teambuilder-media:
+  teambuilder-db:
+
+networks:
+  teambuilder-network:
+    driver: bridge
