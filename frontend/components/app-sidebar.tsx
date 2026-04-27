@@ -58,8 +58,23 @@ export default function AppSidebar({ activeSection, onSectionChange, collapsed, 
     : legalScore ?? greenScore
 
   useEffect(() => {
-    setIsGuest(isGuestMode())
-    getCurrentUser().then(setUser)
+    const checkUser = async () => {
+      setIsGuest(isGuestMode())
+      const userData = await getCurrentUser()
+      setUser(userData)
+      
+      // If user is logged in, make sure guest mode is cleared
+      if (userData) {
+        clearGuestMode()
+        setIsGuest(false)
+      }
+    }
+    
+    checkUser()
+    
+    // Re-check every 2 seconds to catch OAuth callback
+    const interval = setInterval(checkUser, 2000)
+    return () => clearInterval(interval)
   }, [])
 
   const handleLogout = async () => {
