@@ -6,6 +6,7 @@ from typing import Any
 from fastapi import FastAPI, HTTPException
 from fastapi import Query
 from fastapi.responses import StreamingResponse
+from fastapi.middleware.cors import CORSMiddleware
 from uuid import uuid4
 
 from technical_advisor_agent.graph import agent
@@ -21,6 +22,21 @@ from technical_advisor_agent.models import FeedbackRequest, InvokeRequest, Invok
 
 
 app = FastAPI()
+
+# Add CORS middleware to allow requests from frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:3001",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 feedback_store = FeedbackStore(redis_url=os.getenv("REDIS_URL", "redis://redis:6379"))
 
 
