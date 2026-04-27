@@ -1,4 +1,4 @@
-# TeamBuilder Backend Dockerfile
+# Startify Backend Dockerfile
 FROM python:3.12-slim
 
 # Set environment variables
@@ -13,13 +13,9 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
-    postgresql-client \
     libpq-dev \
     curl \
-    tesseract-ocr \
-    libtesseract-dev \
     && rm -rf /var/lib/apt/lists/*
-
 
 # Copy requirements
 COPY requirements.txt /app/requirements.txt
@@ -28,13 +24,13 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt
 
-# Copy TeamBuilder application
+# Copy backend application
 COPY . /app/
 
 # Create necessary directories
-RUN mkdir -p /app/media /app/staticfiles /app/db /app/saved_contexts
+RUN mkdir -p /app/staticfiles /app/saved_contexts
 
-# Collect static files
+# Collect static files (optional, might fail if settings aren't fully configured)
 RUN python manage.py collectstatic --noinput || true
 
 # Expose port
@@ -42,8 +38,8 @@ EXPOSE 8000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD curl -f http://localhost:8000/api/v1/health || exit 1
+    CMD curl -f http://localhost:8000/api/health/ || exit 1
 
 # Run migrations and start server
-CMD python manage.py migrate && \
-    python manage.py runserver 0.0.0.0:8000
+# Using gunicorn for production-like or runserver for dev
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

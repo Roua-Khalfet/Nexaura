@@ -20,8 +20,16 @@ node_modules/
 .env
 .env.*
 !.env.example
-backend/teambuilder/.env.docker
-backend/tech-agent/.env
+!.env.docker.example
+
+# Databases
+*.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal
+db.sqlite3
+**/db.sqlite3
+**/checkpoints.sqlite3*
+
 
 # Tool caches and test outputs
 .pytest_cache/
