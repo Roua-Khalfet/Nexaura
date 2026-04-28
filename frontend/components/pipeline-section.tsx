@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef, type Dispatch, type SetStateAction } from 'react'
-import { ShieldCheck, Loader2, ChevronLeft, ChevronRight, Rocket, Sparkles, ArrowRight, AlertCircle, FileText, Scale, TrendingUp, ClipboardCheck, CheckCircle2, BarChart, Leaf } from 'lucide-react'
+import { ShieldCheck, Loader2, ChevronLeft, ChevronRight, Rocket, Sparkles, ArrowRight, AlertCircle, FileText, Scale, TrendingUp, ClipboardCheck, CheckCircle2, BarChart, Leaf, Code2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -145,10 +145,11 @@ interface PipelineSectionProps {
   pipelineState: PipelineState
   setPipelineState: Dispatch<SetStateAction<PipelineState>>
   onNavigate: (section: string) => void
+  onLaunchTechAgent?: (data: ProjectData) => void
 }
 
 export default function PipelineSection({
-  projectData, setProjectData, pipelineState, setPipelineState, onNavigate,
+  projectData, setProjectData, pipelineState, setPipelineState, onNavigate, onLaunchTechAgent,
 }: PipelineSectionProps) {
   const greenRunInProgressRef = useRef(false)
   const [questionIndex, setQuestionIndex] = useState(0)
@@ -783,7 +784,7 @@ export default function PipelineSection({
 
                 {/* ─── NEXT CTA FOR DESCRIPTION STEP ─── */}
                 {selectedPipelineView === 'description' && (
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mt-8">
                     <Button
                       onClick={() => {
                         setSelectedPipelineView('audit')
@@ -834,6 +835,15 @@ export default function PipelineSection({
                     >
                       <TrendingUp className="w-4 h-4" />
                       Aller au Marketing
+                    </Button>
+
+                    <Button
+                      onClick={() => onLaunchTechAgent?.(projectData)}
+                      disabled={!isDescriptionComplete || !onLaunchTechAgent}
+                      className="py-6 text-white rounded-2xl text-xs font-black uppercase tracking-widest bg-gradient-to-r from-violet-500 to-indigo-600 hover:from-violet-600 hover:to-indigo-700 shadow-xl gap-2"
+                    >
+                      <Code2 className="w-4 h-4" />
+                      Tech Agent
                     </Button>
                   </div>
                 )}

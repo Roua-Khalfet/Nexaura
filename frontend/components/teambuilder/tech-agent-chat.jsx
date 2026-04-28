@@ -1748,7 +1748,7 @@ function ArchitectureGraph({ messageId, diagramDsl, architectureModel }) {
   );
 }
 
-export default function TechAgentChat({ showHeader = false, onNavigate } = {}) {
+export default function TechAgentChat({ showHeader = false, onNavigate, initialInput = '', onInitialInputConsumed } = {}) {
   const router = useRouter();
   const persisted = useMemo(() => getInitialState(), []);
   const [sessions, setSessions] = useState(() => {
@@ -1770,6 +1770,7 @@ export default function TechAgentChat({ showHeader = false, onNavigate } = {}) {
   const inputRef = useRef(null);
   const prevCompletedPhasesRef = useRef([]);
   const prevActiveKeyRef = useRef('');
+  const lastInitialInputRef = useRef('');
 
   const activeKey = activeSessionKey || sessions[0]?.id;
   const activeSession = sessions.find((s) => s.id === activeKey) || sessions[0];
@@ -2309,6 +2310,18 @@ export default function TechAgentChat({ showHeader = false, onNavigate } = {}) {
       setIsSending(false);
     }
   };
+
+  useEffect(() => {
+    const seededInput = String(initialInput || '').trim();
+    if (!seededInput || isSending) return;
+    if (lastInitialInputRef.current === seededInput) return;
+
+    lastInitialInputRef.current = seededInput;
+    handleSend(seededInput, null, 'user_message');
+    if (typeof onInitialInputConsumed === 'function') {
+      onInitialInputConsumed();
+    }
+  }, [activeKey, initialInput, isSending]);
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {

@@ -2,7 +2,7 @@
 
 import { 
   MessageSquare, FileText, ShieldCheck, Radio, ChevronLeft, LayoutDashboard, 
-  TrendingUp, Leaf, LogOut, User, Bot, Sparkles, Upload, Users,
+  TrendingUp, Leaf, LogOut, User, Bot, Code2, Upload, Users,
   History, ChevronDown, LogIn 
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -21,7 +21,7 @@ const NAV_ITEMS: { id: SectionId; label: string; icon: React.ElementType; color:
   { id: 'audit', label: 'Audit Juridique', icon: ShieldCheck, color: 'text-emerald-600', gradient: 'from-emerald-500/15 to-teal-500/15', separator: true },
   { id: 'marketing', label: 'Analyse Marché', icon: TrendingUp, color: 'text-pink-600', gradient: 'from-pink-500/15 to-rose-500/15' },
   { id: 'green', label: 'Analyse Verte', icon: Leaf, color: 'text-emerald-600', gradient: 'from-emerald-500/15 to-teal-500/15' },
-  { id: 'tech-agent', label: 'Tech Agent', icon: Sparkles, color: 'text-cyan-600', gradient: 'from-cyan-500/15 to-blue-500/15', separator: true },
+  { id: 'tech-agent', label: 'Tech Agent', icon: Code2, color: 'text-cyan-600', gradient: 'from-cyan-500/15 to-blue-500/15', separator: true },
   { id: 'documents', label: 'Documents', icon: FileText, color: 'text-violet-600', gradient: 'from-violet-500/15 to-purple-500/15', separator: true },
   { id: 'chat', label: 'Chat Juridique', icon: MessageSquare, color: 'text-blue-600', gradient: 'from-blue-500/15 to-indigo-500/15', separator: true },
   { id: 'veille', label: 'Veille Légale', icon: Radio, color: 'text-rose-600', gradient: 'from-rose-500/15 to-pink-500/15', separator: true },

@@ -69,6 +69,7 @@ export default function Page() {
   // Shared project data (flows through the entire pipeline)
   const [projectData, setProjectData] = useState<ProjectData>(DEFAULT_PROJECT)
   const [pipelineState, setPipelineState] = useState<PipelineState>(DEFAULT_PIPELINE)
+  const [techAgentInitialInput, setTechAgentInitialInput] = useState<string>('')
 
   // Check authentication on mount
   useEffect(() => {
@@ -118,6 +119,16 @@ export default function Page() {
     setActiveSection(section as SectionId)
   }, [])
 
+  const handleLaunchTechAgent = useCallback((data: ProjectData) => {
+    const parts: string[] = []
+    if (data.nom) parts.push(`Project name: ${data.nom}.`)
+    if (data.sector) parts.push(`Field: ${data.sector}.`)
+    if (data.description) parts.push(`Description: ${data.description}`)
+    if (data.problemSolved) parts.push(`Idea/problem: ${data.problemSolved}`)
+    setTechAgentInitialInput(parts.join(' '))
+    setActiveSection('tech-agent')
+  }, [])
+
   return (
     <div className="flex h-screen bg-background overflow-hidden">
       <AppSidebar
@@ -137,6 +148,7 @@ export default function Page() {
                 pipelineState={pipelineState}
                 setPipelineState={setPipelineState}
                 onNavigate={handleNavigate}
+                onLaunchTechAgent={handleLaunchTechAgent}
               />
             </motion.div>
           )}
@@ -220,7 +232,11 @@ export default function Page() {
 
           {activeSection === 'tech-agent' && (
             <motion.div key="tech-agent" variants={sectionVariants} initial="initial" animate="animate" exit="exit" className="absolute inset-0">
-              <TechAgentChat onNavigate={handleNavigate} />
+              <TechAgentChat
+                onNavigate={handleNavigate}
+                initialInput={techAgentInitialInput}
+                onInitialInputConsumed={() => setTechAgentInitialInput('')}
+              />
             </motion.div>
           )}
 
