@@ -6,6 +6,7 @@
 export const TECH_AGENT_CONFIG = {
   BASE_URL: normalizeTechAgentBaseUrl(process.env.NEXT_PUBLIC_TECH_AGENT_BASE || 'http://localhost:8005'),
   API_KEY: process.env.NEXT_PUBLIC_API_KEY || 'your_api_key',
+  LANGUAGE: normalizeTechAgentLanguage(process.env.NEXT_PUBLIC_TECH_AGENT_LANG || 'FR'),
 };
 
 function normalizeTechAgentBaseUrl(baseUrl) {
@@ -14,6 +15,14 @@ function normalizeTechAgentBaseUrl(baseUrl) {
     return value.slice(0, -'/api/ta'.length);
   }
   return value;
+}
+
+function normalizeTechAgentLanguage(value) {
+  const normalized = String(value || '').trim().toUpperCase();
+  if (normalized === 'ENG' || normalized === 'EN') {
+    return 'en';
+  }
+  return 'fr';
 }
 
 export function validateTechAgentConfig() {

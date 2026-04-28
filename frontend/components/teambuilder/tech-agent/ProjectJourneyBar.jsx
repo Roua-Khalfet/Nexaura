@@ -1,14 +1,17 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Sprout, Layers, Network, Map, DollarSign, ShieldCheck, Users, CheckCircle2 } from 'lucide-react';
+import { TECH_AGENT_UI, formatTechAgentText } from './i18n';
+
+const copy = TECH_AGENT_UI;
 
 const PHASES = [
-  { key: 'discovery',       label: 'Discovery',        Icon: Sprout      },
-  { key: 'stack',           label: 'Tech Stack',        Icon: Layers      },
-  { key: 'architecture',    label: 'Architecture',      Icon: Network     },
-  { key: 'roadmap',         label: 'Roadmap',           Icon: Map         },
-  { key: 'cost_feasibility',label: 'Cost & Feasibility',Icon: DollarSign  },
-  { key: 'security',        label: 'Security',          Icon: ShieldCheck },
-  { key: 'handoff',         label: 'Team Building',     Icon: Users       },
+  { key: 'discovery',       label: copy.phases.discovery,        Icon: Sprout      },
+  { key: 'stack',           label: copy.phases.stack,           Icon: Layers      },
+  { key: 'architecture',    label: copy.phases.architecture,    Icon: Network     },
+  { key: 'roadmap',         label: copy.phases.roadmap,         Icon: Map         },
+  { key: 'cost_feasibility',label: copy.phases.cost_feasibility,Icon: DollarSign  },
+  { key: 'security',        label: copy.phases.security,        Icon: ShieldCheck },
+  { key: 'handoff',         label: copy.phases.handoff,         Icon: Users       },
 ];
 
 function toText(value, fallback = '') {
@@ -37,7 +40,12 @@ export default function ProjectJourneyBar({
     return () => window.clearTimeout(timer);
   }, [targetPercent]);
 
-  const title = toText(state.project_title, 'Untitled Project');
+  const title = toText(state.project_title, copy.untitledProject);
+  const progressLabel = formatTechAgentText(copy.journey.progress, {
+    progress,
+    total: totalPhases,
+    percent: displayPercent,
+  });
 
   return (
     <div className="journey-wrap">
@@ -45,7 +53,7 @@ export default function ProjectJourneyBar({
       {/* Title row */}
       <div className="journey-topline">
         <span className="journey-title">{title}</span>
-        <span className="journey-progress-fraction">{progress}/{totalPhases} phases · {displayPercent}%</span>
+        <span className="journey-progress-fraction">{progressLabel}</span>
       </div>
 
       {/* Stepper */}
@@ -56,7 +64,7 @@ export default function ProjectJourneyBar({
           const unlockBoundary = completedPhases.length;
           const isLocked       = !isCompleted && !isActive && index > unlockBoundary;
           const canOpenSummary = isCompleted;
-          const statusLabel    = isCompleted ? 'Done' : isActive ? 'Active' : 'Locked';
+          const statusLabel    = isCompleted ? copy.phaseStatus.done : isActive ? copy.phaseStatus.active : copy.phaseStatus.locked;
           const tooltipSummary = toText(state?.decisions?.[phase.key]?.phase_summary);
           const stateClass     = isCompleted ? 'completed' : isActive ? 'active' : isLocked ? 'locked' : '';
           const isLast         = index === PHASES.length - 1;

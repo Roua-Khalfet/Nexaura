@@ -1,3 +1,7 @@
+import { TECH_AGENT_UI, formatTechAgentText } from './i18n';
+
+const copy = TECH_AGENT_UI;
+
 function pickValue(value, fallback = '-') {
   const text = String(value ?? '').trim();
   return text || fallback;
@@ -23,12 +27,15 @@ export default function HandoffCard({ founderContext, projectState, teamRoles = 
     ? [...new Set(teamRoles.flatMap((r) => Array.isArray(r.key_skills) ? r.key_skills : []))]
     : [];
 
+  const rolePlural = roleCount !== 1 ? 's' : '';
+  const skillPlural = skillSet.length !== 1 ? 's' : '';
+
   return (
     <div className="handoff-card">
-      <div className="handoff-title">Project blueprint complete</div>
+      <div className="handoff-title">{copy.handoff.title}</div>
       <div className="handoff-summary">
-        Industry: {industry} &nbsp;·&nbsp; Stack: {pickValue(stackSummary)}<br />
-        Phase: {phase} &nbsp;·&nbsp; Team size needed: {teamSize}
+        {copy.handoff.industry}: {industry} &nbsp;·&nbsp; {copy.handoff.stack}: {pickValue(stackSummary)}<br />
+        {copy.handoff.phase}: {phase} &nbsp;·&nbsp; {copy.handoff.teamSize}: {teamSize}
       </div>
 
       {/* Role chips — visible once team_building data arrives */}
@@ -48,7 +55,7 @@ export default function HandoffCard({ founderContext, projectState, teamRoles = 
       {!hasRoles && (
         <div className="handoff-waiting">
           <span className="handoff-waiting-dot" />
-          Continue the conversation to generate your team blueprint…
+          {copy.handoff.waiting}
         </div>
       )}
 
@@ -56,19 +63,27 @@ export default function HandoffCard({ founderContext, projectState, teamRoles = 
         <button
           className="tech-btn tech-btn-primary"
           disabled={!hasRoles}
-          title={hasRoles ? `Post ${roleCount} role${roleCount !== 1 ? 's' : ''} as open job listings` : 'Finish the Team Building phase to unlock'}
+          title={hasRoles
+            ? formatTechAgentText(copy.tooltips.postJobs, { count: roleCount, plural: rolePlural })
+            : copy.tooltips.postJobsLocked}
           onClick={() => hasRoles && onPostJobs?.(teamRoles)}
         >
-          {hasRoles ? `Post ${roleCount} Job Listing${roleCount !== 1 ? 's' : ''} →` : 'Post Job Listings'}
+          {hasRoles
+            ? formatTechAgentText(copy.buttons.postJobs, { count: roleCount, plural: rolePlural })
+            : copy.buttons.postJobsDisabled}
         </button>
 
         <button
           className="tech-btn tech-btn-secondary"
           disabled={!hasRoles}
-          title={hasRoles ? `Search candidates matching ${skillSet.length} skills` : 'Finish the Team Building phase to unlock'}
+          title={hasRoles
+            ? formatTechAgentText(copy.tooltips.findCandidates, { count: skillSet.length, plural: skillPlural })
+            : copy.tooltips.findCandidatesLocked}
           onClick={() => hasRoles && onFindCandidates?.(teamRoles)}
         >
-          {hasRoles ? `Find Candidates (${skillSet.length} skills) →` : 'Find Matching Candidates'}
+          {hasRoles
+            ? formatTechAgentText(copy.buttons.findCandidates, { count: skillSet.length, plural: skillPlural })
+            : copy.buttons.findCandidatesDisabled}
         </button>
       </div>
 

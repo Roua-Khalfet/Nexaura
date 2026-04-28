@@ -2,6 +2,7 @@ import { TECH_AGENT_CONFIG } from './config.js';
 
 const API_KEY = TECH_AGENT_CONFIG.API_KEY;
 const TA_BASE = TECH_AGENT_CONFIG.BASE_URL;
+const TA_LANGUAGE = TECH_AGENT_CONFIG.LANGUAGE;
 
 function buildTaUrl(path) {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
@@ -46,7 +47,10 @@ async function taFetch(path, options = {}) {
 export async function invokeTechAgent(payload) {
   return taFetch('/invoke', {
     method: 'POST',
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      preferred_language: TA_LANGUAGE,
+      ...payload,
+    }),
   });
 }
 
@@ -91,6 +95,7 @@ function parseSseBuffer(buffer, onEvent) {
 
 export async function invokeTechAgentStream(payload, { onEvent, signal } = {}) {
   const body = {
+    preferred_language: TA_LANGUAGE,
     ...payload,
     message_type: payload?.message_type || 'user_message',
   };

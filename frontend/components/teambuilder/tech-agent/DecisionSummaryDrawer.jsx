@@ -1,4 +1,7 @@
 import { X } from 'lucide-react';
+import { TECH_AGENT_UI } from './i18n';
+
+const copy = TECH_AGENT_UI;
 
 function normalizeEntries(phaseData) {
   if (!phaseData || typeof phaseData !== 'object') return [];
@@ -24,13 +27,13 @@ export default function DecisionSummaryDrawer({
       <aside className="decision-drawer" onClick={(e) => e.stopPropagation()}>
         <div className="decision-drawer-head">
           <div className="decision-drawer-title">{phaseLabel || phaseKey}</div>
-          <button className="tech-btn tech-btn-icon" onClick={onClose} title="Close">
+          <button className="tech-btn tech-btn-icon" onClick={onClose} title={copy.buttons.close}>
             <X size={16} />
           </button>
         </div>
 
         <div className="decision-summary">
-          {summary || 'No summary captured yet for this phase.'}
+          {summary || copy.errors.noDecisions}
         </div>
 
         <div className="decision-grid">
@@ -39,15 +42,15 @@ export default function DecisionSummaryDrawer({
               <span className="decision-key">{entry.key.replace(/_/g, ' ')}</span>
               <span className="decision-value">{entry.value}</span>
             </div>
-          )) : <div className="tech-empty-note">No decisions captured yet.</div>}
+          )) : <div className="tech-empty-note">{copy.errors.noDecisions}</div>}
         </div>
 
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           <button className="tech-btn tech-btn-primary" onClick={() => onRevisit?.(phaseKey)}>
-            Revisit this phase
+            {copy.buttons.revisit}
           </button>
           <button className="tech-btn" onClick={() => onExport?.(phaseKey)}>
-            Export decisions
+            {copy.buttons.export}
           </button>
         </div>
       </aside>

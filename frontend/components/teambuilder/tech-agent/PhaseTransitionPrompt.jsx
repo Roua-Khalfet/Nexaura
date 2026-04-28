@@ -1,3 +1,7 @@
+import { TECH_AGENT_UI, formatTechAgentText } from './i18n';
+
+const copy = TECH_AGENT_UI;
+
 export default function PhaseTransitionPrompt({
   title,
   summary,
@@ -7,13 +11,13 @@ export default function PhaseTransitionPrompt({
 }) {
   return (
     <div className="phase-prompt-card">
-      <div className="phase-prompt-title">{title || 'Phase complete!'}</div>
-      <div className="phase-prompt-summary">{summary || 'The current phase is complete and the next phase is ready.'}</div>
+      <div className="phase-prompt-title">{title || copy.phasePrompt.title}</div>
+      <div className="phase-prompt-summary">{summary || copy.phasePrompt.summary}</div>
       <div className="phase-prompt-actions">
         <button className="tech-btn tech-btn-primary" onClick={onContinue}>
-          Continue to {nextPhaseLabel || 'next phase'} →
+          {formatTechAgentText(copy.buttons.continueTo, { phase: nextPhaseLabel || copy.header.phaseLabel })}
         </button>
-        <button className="tech-btn" onClick={onDismiss}>Not yet</button>
+        <button className="tech-btn" onClick={onDismiss}>{copy.buttons.notYet}</button>
       </div>
     </div>
   );

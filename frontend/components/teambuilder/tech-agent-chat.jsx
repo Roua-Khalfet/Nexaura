@@ -26,6 +26,7 @@ import {
   invokeTechAgentStream,
   submitTechAgentFeedback,
 } from '@/lib/tech-agent/client';
+import { TECH_AGENT_UI, TECH_AGENT_LANGUAGE, formatTechAgentText } from './tech-agent/i18n';
 import ProjectJourneyBar from './tech-agent/ProjectJourneyBar';
 import DecisionSummaryDrawer from './tech-agent/DecisionSummaryDrawer';
 import PhaseTransitionPrompt from './tech-agent/PhaseTransitionPrompt';
@@ -33,13 +34,9 @@ import HandoffCard from './tech-agent/HandoffCard';
 import ProjectBriefModal, { buildProjectBriefMarkdown } from './tech-agent/ProjectBriefModal';
 
 const LOCAL_STATE_KEY = 'tech_agent_chat_state_v2';
-
-const STARTER_PROMPTS = [
-  'I have an idea but I need help shaping it.',
-  'Can you help me validate this startup concept?',
-  'Ask me the right questions to structure the project.',
-  'I am not sure where to start technically. Guide me.',
-];
+const copy = TECH_AGENT_UI;
+const STARTER_PROMPTS = copy.starterPrompts;
+const PHASE_LABELS = copy.phases;
 
 const DEFAULT_CONTEXT = {
   id: '',
@@ -63,16 +60,6 @@ const JOURNEY_PHASES = [
   'handoff',
 ];
 
-const PHASE_LABELS = {
-  discovery: 'Discovery',
-  stack: 'Tech Stack',
-  architecture: 'Architecture',
-  roadmap: 'Roadmap',
-  cost_feasibility: 'Cost & Feasibility',
-  security: 'Security',
-  handoff: 'Team Building',
-};
-
 const INTENT_TO_PHASE = {
   stack: 'stack',
   stack_comparison: 'stack',
@@ -92,7 +79,7 @@ function nowIso() {
 
 function inferProjectTitle(founderContext) {
   const description = String(founderContext?.product_description || '').trim();
-  if (!description) return 'Untitled Project';
+  if (!description) return copy.untitledProject;
   const title = description.split('.')[0].trim() || description;
   return title.length > 80 ? `${title.slice(0, 77)}...` : title;
 }
@@ -199,7 +186,7 @@ function mergeProjectState(localState, remoteState, founderContext = DEFAULT_CON
 }
 
 function phaseLabel(phaseKey) {
-  return PHASE_LABELS[phaseKey] || String(phaseKey || 'Phase');
+  return PHASE_LABELS[phaseKey] || String(phaseKey || copy.header.phaseLabel);
 }
 
 function getNextPhase(phaseKey) {
@@ -222,8 +209,7 @@ function createDefaultMessage() {
   return {
     id: 'welcome',
     role: 'assistant',
-    content:
-      "Hello. I am the Tech Agent. Let's start with your idea: what problem are you solving, and for whom?",
+    content: copy.welcome,
     timestamp: Date.now(),
   };
 }
@@ -233,7 +219,7 @@ function createSession() {
   const founderContext = { ...DEFAULT_CONTEXT };
   return {
     id,
-    title: 'New Conversation',
+    title: copy.newConversation,
     updatedAt: Date.now(),
     sessionId: '',
     founderContext,
@@ -296,7 +282,7 @@ function normalizeSession(session, index) {
   return {
     ...source,
     id: typeof source.id === 'string' && source.id ? source.id : `local-${Date.now()}-${index}`,
-    title: typeof source.title === 'string' && source.title.trim() ? source.title : 'New Conversation',
+    title: typeof source.title === 'string' && source.title.trim() ? source.title : copy.newConversation,
     updatedAt: Number.isFinite(Number(source.updatedAt)) ? Number(source.updatedAt) : Date.now(),
     sessionId: typeof source.sessionId === 'string' ? source.sessionId : '',
     founderContext,
@@ -335,7 +321,7 @@ function getInitialState() {
 
 function deriveSessionTitle(text) {
   const clean = String(text || '').trim().replace(/\s+/g, ' ');
-  if (!clean) return 'New Conversation';
+  if (!clean) return copy.newConversation;
   return clean.length <= 42 ? clean : `${clean.slice(0, 39)}...`;
 }
 
@@ -450,7 +436,8 @@ function formatNumber(value, digits = 2) {
 function formatUsd(value) {
   const num = toNumber(value);
   if (num === null) return '-';
-  return new Intl.NumberFormat('en-US', {
+  const locale = TECH_AGENT_LANGUAGE === 'fr' ? 'fr-FR' : 'en-US';
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: 'USD',
     maximumFractionDigits: 0,
@@ -469,10 +456,10 @@ function normalizeStackModel(payload) {
   return {
     rationale: toText(payload?.rationale),
     categories: [
-      { label: 'Frontend', items: toList(stack.frontend) },
-      { label: 'Backend', items: toList(stack.backend) },
-      { label: 'Database', items: toList(stack.database) },
-      { label: 'Hosting', items: toList(stack.hosting) },
+      { label: copy.stackCategories.frontend, items: toList(stack.frontend) },
+      { label: copy.stackCategories.backend, items: toList(stack.backend) },
+      { label: copy.stackCategories.database, items: toList(stack.database) },
+      { label: copy.stackCategories.hosting, items: toList(stack.hosting) },
     ],
   };
 }
@@ -492,9 +479,9 @@ function normalizeRoadmapModel(payload) {
   const phases = payload?.phases && typeof payload.phases === 'object' ? payload.phases : {};
   return {
     phaseCards: [
-      { key: 'mvp', title: 'MVP', items: toList(phases.mvp) },
-      { key: 'v1', title: 'V1', items: toList(phases.v1) },
-      { key: 'scale', title: 'Scale', items: toList(phases.scale) },
+      { key: 'mvp', title: copy.roadmapPhases.mvp, items: toList(phases.mvp) },
+      { key: 'v1', title: copy.roadmapPhases.v1, items: toList(phases.v1) },
+      { key: 'scale', title: copy.roadmapPhases.scale, items: toList(phases.scale) },
     ],
     milestones: toList(payload?.milestones),
   };
@@ -849,7 +836,7 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
 
     const renderReferences = references.length > 0 ? (
       <div className="tech-dashboard-section">
-        <div className="tech-dashboard-section-title">References</div>
+        <div className="tech-dashboard-section-title">{copy.dashboard.references}</div>
         <div className="tech-chip-list">
           {references.map((ref) => (
             <a
@@ -874,11 +861,11 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
       return (
         <div className="tech-dashboard tech-card-pop" data-intent="discovery" key={`${messageId}-discovery`}>
           <div className="tech-dashboard-head">
-            <strong>Your Product Vision</strong>
-            <span className="tech-intent-pill">Discovery</span>
+            <strong>{copy.dashboard.productVision}</strong>
+            <span className="tech-intent-pill">{copy.dashboard.discovery}</span>
           </div>
           <div className="tech-elaboration-body">
-            {elaboration || 'Your idea has been captured. Ready to move forward.'}
+            {elaboration || copy.dashboard.ideaCaptured}
           </div>
         </div>
       );
@@ -888,8 +875,8 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
     return (
       <div className="tech-dashboard tech-card-pop" data-intent="comparison" key={`${messageId}-comparison`}>
         <div className="tech-dashboard-head">
-          <strong>Decision Dashboard</strong>
-          <span className="tech-intent-pill">Comparison</span>
+          <strong>{copy.dashboard.decision}</strong>
+          <span className="tech-intent-pill">{copy.dashboard.comparison}</span>
         </div>
 
         <div className="tech-kpi-grid">
@@ -902,7 +889,7 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
             <div className="tech-kpi-value">{formatNumber(comparisonModel.totalScoreB)}</div>
           </div>
           <div className="tech-kpi-card">
-            <div className="tech-kpi-label">Winner</div>
+            <div className="tech-kpi-label">{copy.dashboard.winner}</div>
             <div className="tech-kpi-value">{comparisonModel.winner}</div>
           </div>
         </div>
@@ -911,10 +898,10 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
           <table>
             <thead>
               <tr>
-                <th>Criterion</th>
+                <th>{copy.dashboard.criterion}</th>
                 <th>{comparisonModel.optionAName}</th>
                 <th>{comparisonModel.optionBName}</th>
-                <th>Weight</th>
+                <th>{copy.dashboard.weight}</th>
               </tr>
             </thead>
             <tbody>
@@ -932,7 +919,7 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
 
         {comparisonModel.recommendation && (
           <div className="tech-soft-note" style={{ marginTop: '10px' }}>
-            <strong>Recommendation:</strong> {comparisonModel.recommendation}
+            <strong>{copy.dashboard.recommendation}:</strong> {comparisonModel.recommendation}
           </div>
         )}
         {renderReferences}
@@ -944,8 +931,8 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
     return (
       <div className="tech-dashboard tech-card-pop" data-intent="stack" key={`${messageId}-stack`}>
         <div className="tech-dashboard-head">
-          <strong>Stack Blueprint</strong>
-          <span className="tech-intent-pill">Stack</span>
+          <strong>{copy.dashboard.stackBlueprint}</strong>
+          <span className="tech-intent-pill">{copy.dashboard.stack}</span>
         </div>
         <div className="tech-column-grid">
           {stackModel.categories.map((category) => (
@@ -956,12 +943,12 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
                   ? category.items.map((item) => (
                       <span className="tech-chip" key={`${messageId}-${category.label}-${item}`}>{item}</span>
                     ))
-                  : <span className="tech-empty-note">No recommendation extracted</span>}
+                  : <span className="tech-empty-note">{copy.dashboard.noRecommendation}</span>}
               </div>
             </div>
           ))}
         </div>
-        {stackModel.rationale && <div className="tech-soft-note"><strong>Why:</strong> {stackModel.rationale}</div>}
+        {stackModel.rationale && <div className="tech-soft-note"><strong>{copy.dashboard.why}:</strong> {stackModel.rationale}</div>}
         {renderReferences}
       </div>
     );
@@ -972,8 +959,8 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
     return (
       <div className="tech-dashboard tech-card-pop" data-intent="cost" key={`${messageId}-cost`}>
         <div className="tech-dashboard-head">
-          <strong>Cost Dashboard</strong>
-          <span className="tech-intent-pill">Cost</span>
+          <strong>{copy.dashboard.costDashboard}</strong>
+          <span className="tech-intent-pill">{copy.dashboard.cost}</span>
         </div>
         <div className="tech-kpi-grid">
           {costModel.cards.map((card) => {
@@ -989,7 +976,7 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
         </div>
         {costModel.assumptions.length > 0 && (
           <div className="tech-dashboard-section">
-            <div className="tech-dashboard-section-title">Assumptions</div>
+            <div className="tech-dashboard-section-title">{copy.dashboard.assumptions}</div>
             <ul className="tech-list">
               {costModel.assumptions.map((item) => <li key={`${messageId}-assumption-${item}`}>{item}</li>)}
             </ul>
@@ -1004,8 +991,8 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
     return (
       <div className="tech-dashboard tech-card-pop" data-intent="roadmap" key={`${messageId}-roadmap`}>
         <div className="tech-dashboard-head">
-          <strong>Roadmap Dashboard</strong>
-          <span className="tech-intent-pill">Roadmap</span>
+          <strong>{copy.dashboard.roadmapDashboard}</strong>
+          <span className="tech-intent-pill">{copy.dashboard.roadmap}</span>
         </div>
         <div className="tech-column-grid">
           {roadmapModel.phaseCards.map((phase) => (
@@ -1016,14 +1003,14 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
                   {phase.items.map((item) => <li key={`${messageId}-${phase.key}-${item}`}>{item}</li>)}
                 </ul>
               ) : (
-                <div className="tech-empty-note">No milestones extracted</div>
+                <div className="tech-empty-note">{copy.dashboard.noMilestones}</div>
               )}
             </div>
           ))}
         </div>
         {roadmapModel.milestones.length > 0 && (
           <div className="tech-dashboard-section">
-            <div className="tech-dashboard-section-title">Cross-Phase Milestones</div>
+            <div className="tech-dashboard-section-title">{copy.dashboard.crossPhaseMilestones}</div>
             <div className="tech-chip-list">
               {roadmapModel.milestones.map((item) => <span className="tech-chip" key={`${messageId}-ms-${item}`}>{item}</span>)}
             </div>
@@ -1035,28 +1022,28 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
   }
 
   if (feasibilityModel) {
-    const feasibleLabel = feasibilityModel.feasible === false ? 'Not Feasible' : 'Feasible';
+    const feasibleLabel = feasibilityModel.feasible === false ? copy.dashboard.notFeasible : copy.dashboard.feasible;
     const feasibleClass = feasibilityModel.feasible === false ? 'tech-pill-danger' : 'tech-pill-success';
     return (
       <div className="tech-dashboard tech-card-pop" data-intent="feasibility" key={`${messageId}-feasibility`}>
         <div className="tech-dashboard-head">
-          <strong>Feasibility Dashboard</strong>
-          <span className="tech-intent-pill">Feasibility</span>
+          <strong>{copy.dashboard.feasibilityDashboard}</strong>
+          <span className="tech-intent-pill">{copy.dashboard.feasibility}</span>
         </div>
         <div className="tech-kpi-grid">
           <div className="tech-kpi-card">
-            <div className="tech-kpi-label">Status</div>
+            <div className="tech-kpi-label">{copy.dashboard.status}</div>
             <div className={`tech-state-pill ${feasibleClass}`}>{feasibleLabel}</div>
           </div>
           <div className="tech-kpi-card">
-            <div className="tech-kpi-label">Effort</div>
+            <div className="tech-kpi-label">{copy.dashboard.effort}</div>
             <div className="tech-kpi-value" style={{ textTransform: 'capitalize' }}>{feasibilityModel.effort || '-'}</div>
           </div>
         </div>
-        {feasibilityModel.approach && <div className="tech-soft-note"><strong>Approach:</strong> {feasibilityModel.approach}</div>}
+        {feasibilityModel.approach && <div className="tech-soft-note"><strong>{copy.dashboard.approach}:</strong> {feasibilityModel.approach}</div>}
         {feasibilityModel.risks.length > 0 && (
           <div className="tech-dashboard-section">
-            <div className="tech-dashboard-section-title">Key Risks</div>
+            <div className="tech-dashboard-section-title">{copy.dashboard.keyRisks}</div>
             <ul className="tech-list">
               {feasibilityModel.risks.map((risk) => <li key={`${messageId}-risk-${risk}`}>{risk}</li>)}
             </ul>
@@ -1071,32 +1058,32 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
     return (
       <div className="tech-dashboard tech-card-pop" data-intent="security" key={`${messageId}-security`}>
         <div className="tech-dashboard-head">
-          <strong>Security Dashboard</strong>
-          <span className="tech-intent-pill">Security</span>
+          <strong>{copy.dashboard.securityDashboard}</strong>
+          <span className="tech-intent-pill">{copy.dashboard.security}</span>
         </div>
         <div className="tech-column-grid">
           <div className="tech-panel-card">
-            <div className="tech-panel-title">Standards</div>
+            <div className="tech-panel-title">{copy.dashboard.standards}</div>
             <div className="tech-chip-list">
               {securityModel.standards.length
                 ? securityModel.standards.map((item) => <span className="tech-chip" key={`${messageId}-std-${item}`}>{item}</span>)
-                : <span className="tech-empty-note">No standards extracted</span>}
+                : <span className="tech-empty-note">{copy.dashboard.noStandards}</span>}
             </div>
           </div>
           <div className="tech-panel-card">
-            <div className="tech-panel-title">Priority Controls</div>
+            <div className="tech-panel-title">{copy.dashboard.priorityControls}</div>
             <ul className="tech-list">
               {securityModel.controls.length
                 ? securityModel.controls.map((item) => <li key={`${messageId}-ctrl-${item}`}>{item}</li>)
-                : <li className="tech-empty-note">No controls extracted</li>}
+                : <li className="tech-empty-note">{copy.dashboard.noControls}</li>}
             </ul>
           </div>
           <div className="tech-panel-card">
-            <div className="tech-panel-title">Gaps</div>
+            <div className="tech-panel-title">{copy.dashboard.gaps}</div>
             <ul className="tech-list">
               {securityModel.gaps.length
                 ? securityModel.gaps.map((item) => <li key={`${messageId}-gap-${item}`}>{item}</li>)
-                : <li className="tech-empty-note">No gaps extracted</li>}
+                : <li className="tech-empty-note">{copy.dashboard.noGaps}</li>}
             </ul>
           </div>
         </div>
@@ -1109,8 +1096,8 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
     return (
       <div className="tech-dashboard tech-card-pop" data-intent="libraries" key={`${messageId}-libraries`}>
         <div className="tech-dashboard-head">
-          <strong>Open-Source Discovery</strong>
-          <span className="tech-intent-pill">Libraries</span>
+          <strong>{copy.dashboard.openSource}</strong>
+          <span className="tech-intent-pill">{copy.dashboard.libraries}</span>
         </div>
         <div className="tech-repo-grid">
           {librariesModel.repos.length ? librariesModel.repos.map((repo) => (
@@ -1125,10 +1112,10 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
               }}
             >
               <div className="tech-repo-title">{repo.name}</div>
-              <div className="tech-mini-muted">{repo.stars !== null ? `⭐ ${repo.stars}` : 'No stars info'}</div>
+              <div className="tech-mini-muted">{repo.stars !== null ? `⭐ ${repo.stars}` : copy.dashboard.noStars}</div>
               {repo.description && <p>{repo.description}</p>}
             </a>
-          )) : <div className="tech-empty-note">No repositories extracted</div>}
+          )) : <div className="tech-empty-note">{copy.dashboard.noRepos}</div>}
         </div>
         {renderReferences}
       </div>
@@ -1139,37 +1126,37 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
     return (
       <div className="tech-dashboard tech-card-pop" data-intent="architecture" key={`${messageId}-architecture`}>
         <div className="tech-dashboard-head">
-          <strong>Architecture Dashboard</strong>
-          <span className="tech-intent-pill">Architecture</span>
+          <strong>{copy.dashboard.architectureDashboard}</strong>
+          <span className="tech-intent-pill">{copy.dashboard.architecture}</span>
         </div>
         <div className="tech-column-grid">
           <div className="tech-panel-card">
-            <div className="tech-panel-title">Components</div>
+            <div className="tech-panel-title">{copy.dashboard.components}</div>
             <ul className="tech-list">
               {architectureModel.components.length
                 ? architectureModel.components.map((item) => <li key={`${messageId}-comp-${item}`}>{item}</li>)
-                : <li className="tech-empty-note">No components extracted</li>}
+                : <li className="tech-empty-note">{copy.dashboard.noComponents}</li>}
             </ul>
           </div>
           <div className="tech-panel-card">
-            <div className="tech-panel-title">Infrastructure</div>
+            <div className="tech-panel-title">{copy.dashboard.infrastructure}</div>
             <ul className="tech-list">
               {architectureModel.infrastructure.length
                 ? architectureModel.infrastructure.map((item) => <li key={`${messageId}-infra-${item}`}>{item}</li>)
-                : <li className="tech-empty-note">No infrastructure extracted</li>}
+                : <li className="tech-empty-note">{copy.dashboard.noInfrastructure}</li>}
             </ul>
           </div>
           <div className="tech-panel-card">
-            <div className="tech-panel-title">Risks</div>
+            <div className="tech-panel-title">{copy.dashboard.risks}</div>
             <ul className="tech-list">
               {architectureModel.risks.length
                 ? architectureModel.risks.map((item) => <li key={`${messageId}-arisk-${item}`}>{item}</li>)
-                : <li className="tech-empty-note">No risks extracted</li>}
+                : <li className="tech-empty-note">{copy.dashboard.noRisks}</li>}
             </ul>
           </div>
         </div>
         <div className="tech-dashboard-section">
-          <div className="tech-dashboard-section-title">Architecture Graph</div>
+          <div className="tech-dashboard-section-title">{copy.dashboard.architectureGraph}</div>
           <ArchitectureGraph
             messageId={messageId}
             diagramDsl={architectureModel.diagrams[0] || ''}
@@ -1177,7 +1164,7 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
           />
           {architectureModel.diagrams.length > 0 && (
             <details className="tech-diagram-details">
-              <summary>Raw diagram DSL</summary>
+              <summary>{copy.dashboard.rawDiagram}</summary>
               <pre className="tech-diagram-pre">{architectureModel.diagrams[0]}</pre>
             </details>
           )}
@@ -1198,15 +1185,15 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
       return (
         <div className="tech-dashboard tech-card-pop" data-intent="project_brief" key={`${messageId}-brief`}>
           <div className="tech-dashboard-head">
-            <strong>Project Brief Ready</strong>
-            <span className="tech-intent-pill">Handoff</span>
+            <strong>{copy.dashboard.briefReady}</strong>
+            <span className="tech-intent-pill">{copy.dashboard.handoff}</span>
           </div>
           <div className="tech-brief-summary">
-            <p>Your complete project brief has been generated and is ready for handoff.</p>
+            <p>{copy.dashboard.briefSummary}</p>
             <ul>
-              <li>Stack: {brief.stack?.frontend} + {brief.stack?.backend}</li>
-              <li>Roles: {brief.team?.recommended_roles?.length ?? 0} recommended</li>
-              <li>MVP cost: {brief.cost_estimate?.mvp_monthly_usd != null ? `$${brief.cost_estimate.mvp_monthly_usd}/mo` : '-'}</li>
+              <li>{copy.dashboard.briefStack}: {brief.stack?.frontend} + {brief.stack?.backend}</li>
+              <li>{copy.dashboard.briefRoles}: {brief.team?.recommended_roles?.length ?? 0}</li>
+              <li>{copy.dashboard.briefMvpCost}: {brief.cost_estimate?.mvp_monthly_usd != null ? `$${brief.cost_estimate.mvp_monthly_usd}/mo` : '-'}</li>
             </ul>
           </div>
           {(actions.onPostJobs || actions.onFindCandidates) && (
@@ -1217,7 +1204,7 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
                   onClick={() => actions.onPostJobs(brief.team?.recommended_roles || [])}
                   style={{ flex: 1 }}
                 >
-                  Post Job Listings →
+                  {copy.dashboard.postJobs}
                 </button>
               )}
               {actions.onFindCandidates && (
@@ -1226,7 +1213,7 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
                   onClick={() => actions.onFindCandidates(brief.team?.recommended_roles || [])}
                   style={{ flex: 1 }}
                 >
-                  Find Candidates →
+                  {copy.dashboard.findCandidates}
                 </button>
               )}
             </div>
@@ -1243,10 +1230,10 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
     return (
       <div className="tech-dashboard tech-card-pop" data-intent="generic" key={`${messageId}-generic`}>
         <div className="tech-dashboard-head">
-          <strong>Structured Summary</strong>
+          <strong>{copy.dashboard.structuredSummary}</strong>
           <span className="tech-intent-pill">{intent}</span>
         </div>
-        <div className="tech-soft-note">I understood this request. Choose one of the suggested actions below, or reply with more detail.</div>
+        <div className="tech-soft-note">{copy.dashboard.structuredNote}</div>
         {renderReferences}
       </div>
     );
@@ -1258,10 +1245,10 @@ function renderIntentDashboard(payload, messageId, actions = {}) {
     return (
       <div className="tech-dashboard tech-card-pop" data-intent="degraded" key={`${messageId}-degraded`}>
         <div className="tech-dashboard-head">
-          <strong>Response</strong>
-          <span className="tech-intent-pill">Degraded</span>
+          <strong>{copy.dashboard.response}</strong>
+          <span className="tech-intent-pill">{copy.dashboard.degraded}</span>
         </div>
-        <div className="tech-soft-note">I could not render all visual sections for this response, but the text response below remains available.</div>
+        <div className="tech-soft-note">{copy.dashboard.degradedNote}</div>
       </div>
     );
   }
@@ -1276,10 +1263,10 @@ function safeRenderIntentDashboard(payload, messageId, actions = {}) {
     return (
       <div className="tech-dashboard tech-card-pop" data-intent="fallback" key={`${messageId}-fallback`}>
         <div className="tech-dashboard-head">
-          <strong>Response Summary</strong>
+          <strong>{copy.dashboard.responseSummary}</strong>
           <span className="tech-intent-pill">{intent}</span>
         </div>
-        <div className="tech-soft-note">Rendering degraded. Continuing with text response below.</div>
+        <div className="tech-soft-note">{copy.dashboard.renderDegraded}</div>
       </div>
     );
   }
@@ -1406,7 +1393,7 @@ function renderMarkdownToHtml(markdown) {
 
 function formatNodeName(node) {
   const raw = String(node || 'step').replace(/_/g, ' ').trim();
-  if (!raw) return 'Step';
+  if (!raw) return copy.placeholdersFallback.step;
   return raw.charAt(0).toUpperCase() + raw.slice(1);
 }
 
@@ -1424,7 +1411,7 @@ function looksLikeMermaidDiagram(text) {
   return /^(graph|flowchart|sequenceDiagram|classDiagram|stateDiagram|erDiagram|journey|gantt|mindmap|timeline|quadrantChart|pie)\b/.test(source);
 }
 
-function compactLabel(text, fallback = 'Item') {
+function compactLabel(text, fallback = copy.placeholdersFallback.item) {
   const clean = String(text || '')
     .replace(/[<>]/g, '')
     .replace(/"/g, "'")
@@ -1506,6 +1493,7 @@ function isLikelyLinearFlowchart(diagramDsl) {
 }
 
 function buildFallbackArchitectureGraph(model) {
+  const diagram = copy.diagram;
   const components = normalizeUniqueItems(Array.isArray(model?.components) ? model.components.slice(0, 12) : []);
   const infrastructure = normalizeUniqueItems(Array.isArray(model?.infrastructure) ? model.infrastructure.slice(0, 10) : []);
   const risks = normalizeUniqueItems(Array.isArray(model?.risks) ? model.risks.slice(0, 5) : []);
@@ -1532,11 +1520,11 @@ function buildFallbackArchitectureGraph(model) {
     else platform.push(item);
   });
 
-  if (!clients.length) clients.push('Web / Mobile Client');
-  if (!services.length) services.push('Core Application Service');
-  if (!dataSystems.length) dataSystems.push('Primary Database');
-  if (!platform.length) platform.push('Cloud Runtime');
-  if (!observability.length) observability.push('Monitoring and Logs');
+  if (!clients.length) clients.push(diagram.webClient);
+  if (!services.length) services.push(diagram.coreService);
+  if (!dataSystems.length) dataSystems.push(diagram.primaryDb);
+  if (!platform.length) platform.push(diagram.cloudRuntime);
+  if (!observability.length) observability.push(diagram.monitoring);
 
   const limitedClients = clients.slice(0, 3);
   const limitedServices = services.slice(0, 6);
@@ -1554,52 +1542,52 @@ function buildFallbackArchitectureGraph(model) {
     '  classDef platform fill:#fff7ed,stroke:#ea580c,stroke-width:1.2px,color:#7c2d12;',
     '  classDef ops fill:#f8fafc,stroke:#475569,stroke-width:1.2px,color:#0f172a;',
     '  classDef risk fill:#fff1f2,stroke:#e11d48,stroke-width:1.2px,color:#4c0519;',
-    '  subgraph client_layer["Client Layer"]',
+    `  subgraph client_layer["${diagram.clientLayer}"]`,
   ];
 
   const clientIds = limitedClients.map((item, idx) => {
     const id = `cl${idx}`;
-    lines.push(`    ${id}["${pickArchitectureIcon(item, 'component')} ${compactLabel(item, `Client ${idx + 1}`)}"]:::client`);
+    lines.push(`    ${id}["${pickArchitectureIcon(item, 'component')} ${compactLabel(item, `${diagram.client} ${idx + 1}`)}"]:::client`);
     return id;
   });
   lines.push('  end');
 
-  lines.push('  subgraph edge_layer["Edge and Security"]');
-  lines.push('    edgeGateway["🌐 API Gateway"]:::edge');
-  lines.push('    edgeAuth["🔐 Auth and Access"]:::edge');
+  lines.push(`  subgraph edge_layer["${diagram.edgeLayer}"]`);
+  lines.push(`    edgeGateway["🌐 ${diagram.apiGateway}"]:::edge`);
+  lines.push(`    edgeAuth["🔐 ${diagram.authAccess}"]:::edge`);
   lines.push('  end');
 
-  lines.push('  subgraph service_layer["Application Services"]');
+  lines.push(`  subgraph service_layer["${diagram.serviceLayer}"]`);
   const serviceIds = limitedServices.map((item, idx) => {
     const id = `sv${idx}`;
-    lines.push(`    ${id}["${pickArchitectureIcon(item, 'component')} ${compactLabel(item, `Service ${idx + 1}`)}"]:::service`);
+    lines.push(`    ${id}["${pickArchitectureIcon(item, 'component')} ${compactLabel(item, `${diagram.service} ${idx + 1}`)}"]:::service`);
     return id;
   });
   lines.push('  end');
 
-  lines.push('  subgraph data_layer["Data and Async"]');
+  lines.push(`  subgraph data_layer["${diagram.dataLayer}"]`);
   const dataIds = limitedDataSystems.map((item, idx) => {
     const id = `dt${idx}`;
-    lines.push(`    ${id}["${pickArchitectureIcon(item, 'infrastructure')} ${compactLabel(item, `Data ${idx + 1}`)}"]:::data`);
+    lines.push(`    ${id}["${pickArchitectureIcon(item, 'infrastructure')} ${compactLabel(item, `${diagram.data} ${idx + 1}`)}"]:::data`);
     return id;
   });
   if (includeEventBus) {
-    lines.push('    eventBus["📬 Event Bus"]:::data');
+    lines.push(`    eventBus["📬 ${diagram.eventBus}"]:::data`);
   }
   lines.push('  end');
 
-  lines.push('  subgraph platform_layer["Platform and Delivery"]');
+  lines.push(`  subgraph platform_layer["${diagram.platformLayer}"]`);
   const platformIds = limitedPlatform.map((item, idx) => {
     const id = `pf${idx}`;
-    lines.push(`    ${id}["${pickArchitectureIcon(item, 'infrastructure')} ${compactLabel(item, `Platform ${idx + 1}`)}"]:::platform`);
+    lines.push(`    ${id}["${pickArchitectureIcon(item, 'infrastructure')} ${compactLabel(item, `${diagram.platform} ${idx + 1}`)}"]:::platform`);
     return id;
   });
   lines.push('  end');
 
-  lines.push('  subgraph ops_layer["Observability"]');
+  lines.push(`  subgraph ops_layer["${diagram.opsLayer}"]`);
   const opsIds = limitedObservability.map((item, idx) => {
     const id = `op${idx}`;
-    lines.push(`    ${id}["${pickArchitectureIcon(item, 'infrastructure')} ${compactLabel(item, `Ops ${idx + 1}`)}"]:::ops`);
+    lines.push(`    ${id}["${pickArchitectureIcon(item, 'infrastructure')} ${compactLabel(item, `${diagram.ops} ${idx + 1}`)}"]:::ops`);
     return id;
   });
   lines.push('  end');
@@ -1630,10 +1618,10 @@ function buildFallbackArchitectureGraph(model) {
   });
 
   if (risks.length) {
-    lines.push('  subgraph risk_layer["Top Risks"]');
+    lines.push(`  subgraph risk_layer["${diagram.riskLayer}"]`);
     const riskIds = risks.map((item, idx) => {
       const id = `rk${idx}`;
-      lines.push(`    ${id}{"${pickArchitectureIcon(item, 'risk')} ${compactLabel(item, `Risk ${idx + 1}`)}"}:::risk`);
+      lines.push(`    ${id}{"${pickArchitectureIcon(item, 'risk')} ${compactLabel(item, `${diagram.risk} ${idx + 1}`)}"}:::risk`);
       return id;
     });
     lines.push('  end');
@@ -1728,7 +1716,7 @@ function ArchitectureGraph({ messageId, diagramDsl, architectureModel }) {
         if (!isCancelled) {
           const errorMessage = error instanceof Error
             ? error.message
-            : 'Failed to render architecture graph.';
+            : copy.errors.unknown;
           setGraphError(errorMessage);
         }
       }
@@ -1743,7 +1731,11 @@ function ArchitectureGraph({ messageId, diagramDsl, architectureModel }) {
   return (
     <div className="tech-architecture-graph-wrap">
       <div className="tech-architecture-graph" ref={containerRef} />
-      {graphError && <div className="tech-graph-error">Could not render graph: {graphError}</div>}
+      {graphError && (
+        <div className="tech-graph-error">
+          {formatTechAgentText(copy.errors.graphRender, { error: graphError })}
+        </div>
+      )}
     </div>
   );
 }
@@ -1988,7 +1980,7 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
       index: payload?.index ?? null,
       node: payload?.node || payload?.agent_step?.step || 'step',
       status: payload?.status || payload?.agent_step?.status || 'completed',
-      summary: payload?.summary || payload?.agent_step?.details || 'Step completed.',
+      summary: payload?.summary || payload?.agent_step?.details || copy.activity.stepCompleted,
       timestamp: payload?.agent_step?.timestamp || Date.now(),
     };
 
@@ -2039,13 +2031,13 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
   const exportPhaseDecisions = async (phaseKey) => {
     const phaseData = projectState?.decisions?.[phaseKey];
     if (!phaseData || typeof phaseData !== 'object') {
-      setError('No decisions available for this phase yet.');
+      setError(copy.errors.noDecisions);
       return;
     }
 
     const lines = [`## ${phaseLabel(phaseKey)}`];
     if (phaseData.phase_summary) {
-      lines.push(`- Summary: ${phaseData.phase_summary}`);
+      lines.push(`- ${copy.brief.summary}: ${phaseData.phase_summary}`);
     }
 
     Object.entries(phaseData)
@@ -2057,7 +2049,7 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
     try {
       await navigator.clipboard.writeText(lines.join('\n'));
     } catch {
-      setError('Could not copy decision summary to clipboard.');
+      setError(copy.errors.copyDecision);
     }
   };
 
@@ -2066,7 +2058,7 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
     try {
       await navigator.clipboard.writeText(markdown);
     } catch {
-      setError('Could not copy Project Brief markdown.');
+      setError(copy.errors.copyBrief);
     }
   };
 
@@ -2137,12 +2129,20 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
     }));
 
     setJourneyDrawerPhase(null);
-    handleSend(`I want to revisit the ${phaseLabel(phaseKey)} phase.`, nextState, 'command');
+    handleSend(
+      formatTechAgentText(copy.format.revisitPhase, { phase: phaseLabel(phaseKey) }),
+      nextState,
+      'command',
+    );
   };
 
   const continueToPhase = (phaseKey, messageId) => {
     dismissTransitionPrompt(messageId);
-    handleSend(`Let's move to ${phaseLabel(phaseKey)}.`, null, 'command');
+    handleSend(
+      formatTechAgentText(copy.format.moveToPhase, { phase: phaseLabel(phaseKey) }),
+      null,
+      'command',
+    );
   };
 
   const handleSend = async (forcedText = null, forcedProjectState = null, messageType = 'user_message') => {
@@ -2171,7 +2171,9 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
 
     updateActiveSession((session) => ({
       ...session,
-      title: session.title === 'New Conversation' ? deriveSessionTitle(text) : session.title,
+      title: (session.title === copy.newConversation || session.title === 'New Conversation')
+        ? deriveSessionTitle(text)
+        : session.title,
       projectState: normalizeProjectState(
         forcedProjectState || session.projectState,
         session.founderContext,
@@ -2222,11 +2224,13 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
 
           if (event === 'run_failed') {
             streamFailed = true;
-            const streamError = (typeof data?.error === 'string' && data.error) ? data.error : 'Tech-agent stream failed.';
+            const streamError = (typeof data?.error === 'string' && data.error)
+              ? data.error
+              : copy.errors.streamFailed;
             updateAssistantMessage(assistantId, {
               runStatus: 'failed',
               currentNode: null,
-              content: 'I could not complete this run. Please try again.',
+              content: copy.errors.runFailed,
             });
             setError(streamError);
             return;
@@ -2260,7 +2264,7 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
                 m.id === assistantId
                   ? {
                       ...m,
-                      content: data?.chat_response || 'I did not receive a response body from tech-agent.',
+                      content: data?.chat_response || copy.errors.noResponse,
                       a2a_payload: payload,
                       runStatus: 'completed',
                       currentNode: null,
@@ -2296,14 +2300,14 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
       });
 
       if (!finalResponse && !streamFailed) {
-        throw new Error('Tech-agent stream ended without a final response.');
+        throw new Error(copy.errors.streamEnded);
       }
     } catch (e) {
-      const message = e instanceof Error ? e.message : 'Failed to reach tech-agent.';
+      const message = e instanceof Error ? e.message : copy.errors.failedReach;
       updateAssistantMessage(assistantId, {
         runStatus: 'failed',
         currentNode: null,
-        content: 'I could not complete this run. Please try again.',
+        content: copy.errors.runFailed,
       });
       setError(message);
     } finally {
@@ -3180,21 +3184,21 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
               <Sparkles className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-extrabold text-foreground tracking-tight">Tech Agent</h2>
-              <p className="text-xs text-muted-foreground">De l&apos;idée à la roadmap technique</p>
+              <h2 className="text-xl font-extrabold text-foreground tracking-tight">{copy.header.title}</h2>
+              <p className="text-xs text-muted-foreground">{copy.header.subtitle}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-widest border-slate-200 bg-white text-slate-500">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Phase: {PHASE_LABELS[projectState?.current_phase] ?? 'Discovery'}</span>
+              <span>{copy.header.phaseLabel}: {PHASE_LABELS[projectState?.current_phase] || copy.phases.discovery}</span>
             </div>
             <button
               className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-black uppercase tracking-widest border-slate-200 bg-white text-slate-500 hover:bg-slate-50 transition-colors cursor-pointer"
               onClick={() => setShowProjectBrief(true)}
             >
               <List className="w-3.5 h-3.5" />
-              <span>Project Brief</span>
+              <span>{copy.header.projectBrief}</span>
             </button>
           </div>
         </div>
@@ -3216,8 +3220,8 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
                  <div style={{ width: '64px', height: '64px', background: 'var(--tech-bg-alt)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', color: 'var(--tech-primary)' }}>
                    <Bot size={32} />
                  </div>
-                 <h2 style={{ fontSize: '24px', fontWeight: 600, marginBottom: '12px' }}>How can I help you today?</h2>
-                 <p style={{ color: 'var(--tech-text-muted)', marginBottom: '32px' }}>Ask me about architecture, scaling, or technical decisions.</p>
+                 <h2 style={{ fontSize: '24px', fontWeight: 600, marginBottom: '12px' }}>{copy.help.title}</h2>
+                 <p style={{ color: 'var(--tech-text-muted)', marginBottom: '32px' }}>{copy.help.subtitle}</p>
                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px', textAlign: 'left' }}>
                     {STARTER_PROMPTS.map((prompt) => (
                       <button key={prompt} onClick={() => setInput(prompt)} className="tech-btn" style={{ justifyContent: 'flex-start', padding: '16px' }}>
@@ -3263,7 +3267,11 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
                           : 'command';
                       return {
                         id: String(opt.id || `${idx}`),
-                        label: String(opt.label || opt.id || `Option ${idx + 1}`),
+                        label: String(
+                          opt.label
+                          || opt.id
+                          || formatTechAgentText(copy.optionLabel, { index: idx + 1 })
+                        ),
                         message: String(opt.message || opt.label || '').trim(),
                         messageType: explicitType || inferredType,
                       };
@@ -3288,9 +3296,9 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
                            {showActivity && (
                              <div style={{ marginBottom: '12px', border: '1px solid var(--tech-border)', borderRadius: '10px', background: 'var(--tech-bg-alt)', padding: '10px 12px' }}>
                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px', marginBottom: hasSteps ? '8px' : 0 }}>
-                                 <span style={{ fontWeight: 600 }}>Agent Activity</span>
+                                 <span style={{ fontWeight: 600 }}>{copy.activity.title}</span>
                                  <span style={{ color: m.runStatus === 'failed' ? '#f43f5e' : 'var(--tech-text-muted)' }}>
-                                   {m.runStatus === 'running' ? 'Running' : m.runStatus === 'failed' ? 'Failed' : 'Completed'}
+                                   {m.runStatus === 'running' ? copy.activity.running : m.runStatus === 'failed' ? copy.activity.failed : copy.activity.completed}
                                  </span>
                                </div>
 
@@ -3307,7 +3315,9 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
                                {m.runStatus === 'running' && (
                                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--tech-text-muted)' }}>
                                    <Loader2 size={13} style={{ animation: 'spin 1.5s linear infinite' }} />
-                                   {m.currentNode ? `Running ${formatNodeName(m.currentNode)}...` : 'Working on your request...'}
+                                   {m.currentNode
+                                     ? formatTechAgentText(copy.activity.runningNode, { node: formatNodeName(m.currentNode) })
+                                     : copy.activity.working}
                                  </div>
                                )}
                              </div>
@@ -3317,7 +3327,7 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
 
                            {interactionOptions.length > 0 && (
                              <div style={{ marginBottom: '12px' }}>
-                               <div className="tech-dashboard-section-title" style={{ marginBottom: '8px' }}>Choose your next step</div>
+                               <div className="tech-dashboard-section-title" style={{ marginBottom: '8px' }}>{copy.interaction.chooseNext}</div>
                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                                {interactionOptions.map((option) => (
                                  <button
@@ -3336,7 +3346,7 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
                            {cleanedContent && <div className="tech-agent-markdown" dangerouslySetInnerHTML={{ __html: renderMarkdownToHtml(cleanedContent) }} />}
                            {showTransitionPrompt && m.transitionPrompt.type === 'phase' && normalizeIntent(m.a2a_payload) !== 'team_building' && (
                              <PhaseTransitionPrompt
-                               title={`✅ ${phaseLabel(m.phaseKey)} phase complete`}
+                               title={formatTechAgentText(copy.format.phaseComplete, { phase: phaseLabel(m.phaseKey) })}
                                summary={m.transitionPrompt.summary}
                                nextPhaseLabel={phaseLabel(m.transitionPrompt.nextPhase)}
                                onContinue={() => continueToPhase(m.transitionPrompt.nextPhase, m.id)}
@@ -3354,16 +3364,16 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
                            )}
                            {(m.content || m.a2a_payload) && (
                              <div style={{ display: 'flex', gap: '8px', marginTop: '16px', alignItems: 'center' }}>
-                               {m.content && <button className="tech-btn tech-btn-icon" onClick={() => copyMessage(m.content)} title="Copy"><Copy size={14} /></button>}
+                               {m.content && <button className="tech-btn tech-btn-icon" onClick={() => copyMessage(m.content)} title={copy.buttons.copy}><Copy size={14} /></button>}
                                {m.a2a_payload && (
                                  <button className="tech-btn" style={{ padding: '4px 8px', fontSize: '12px' }} onClick={() => togglePayload(m.id)}>
-                                   {expandedPayloads[m.id] ? <ChevronUp size={14} /> : <ChevronDown size={14} />} Payload
+                                   {expandedPayloads[m.id] ? <ChevronUp size={14} /> : <ChevronDown size={14} />} {copy.buttons.payload}
                                  </button>
                                )}
                                 {sessionId && m.a2a_payload && (
                                   <>
-                                    <button className={`tech-btn tech-btn-icon ${m.feedback === 'up' ? 'active' : ''}`} style={m.feedback === 'up' ? {color: '#10b981', background: 'rgba(16,185,129,0.1)'} : {}} onClick={() => sendFeedback(m, 'up')} title="Helpful"><ThumbsUp size={14} /></button>
-                                    <button className={`tech-btn tech-btn-icon ${m.feedback === 'down' ? 'active' : ''}`} style={m.feedback === 'down' ? {color: '#f43f5e', background: 'rgba(244,63,94,0.1)'} : {}} onClick={() => sendFeedback(m, 'down')} title="Not Helpful"><ThumbsDown size={14} /></button>
+                                    <button className={`tech-btn tech-btn-icon ${m.feedback === 'up' ? 'active' : ''}`} style={m.feedback === 'up' ? {color: '#10b981', background: 'rgba(16,185,129,0.1)'} : {}} onClick={() => sendFeedback(m, 'up')} title={copy.buttons.helpful}><ThumbsUp size={14} /></button>
+                                    <button className={`tech-btn tech-btn-icon ${m.feedback === 'down' ? 'active' : ''}`} style={m.feedback === 'down' ? {color: '#f43f5e', background: 'rgba(244,63,94,0.1)'} : {}} onClick={() => sendFeedback(m, 'down')} title={copy.buttons.notHelpful}><ThumbsDown size={14} /></button>
                                   </>
                                 )}
                              </div>
@@ -3394,7 +3404,7 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Message Tech Agent..."
+                placeholder={copy.placeholders.input}
                 className="tech-textarea"
                 rows={1}
                />
@@ -3407,7 +3417,7 @@ export default function TechAgentChat({ showHeader = false, onNavigate, initialI
                </button>
             </div>
             <div style={{ textAlign: 'center', marginTop: '8px', fontSize: '12px', color: 'var(--tech-text-muted)' }}>
-              Tech Agent can make mistakes. Consider verifying important information.
+              {copy.notices.caution}
             </div>
           </div>
         </div>
