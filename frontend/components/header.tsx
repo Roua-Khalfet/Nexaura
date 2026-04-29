@@ -12,7 +12,7 @@ export default function Header() {
           <div className="relative w-56 h-14">
             <Image 
               src="/logo.png" 
-              alt="Startify Logo" 
+              alt="Nexaura Logo" 
               fill
               className="object-contain object-left"
               priority

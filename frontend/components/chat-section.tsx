@@ -1,11 +1,13 @@
 'use client'
 
 import { useState, useRef, useEffect, type ChangeEvent } from 'react'
-import { Send, Upload, Sparkles, FileText, CheckCircle2, AlertCircle } from 'lucide-react'
+import { Send, Upload, Sparkles, FileText, CheckCircle2, AlertCircle, Brain, Zap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { sendChatMessage, uploadSourceFile } from '@/lib/api'
 import { motion, AnimatePresence } from 'framer-motion'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 interface Message {
   id: string
@@ -71,6 +73,7 @@ export default function ChatSection() {
   const [isLoading, setIsLoading] = useState(false)
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
   const [isDragging, setIsDragging] = useState(false)
+  const [thinkMode, setThinkMode] = useState(false)
   
   const fileInputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -95,7 +98,8 @@ export default function ChatSection() {
       const result = await sendChatMessage({ 
         message: userMsg.content, 
         mode: hasPdf ? 'notebook' : 'kb', 
-        knowledgeOnly: false // Obsolète mais gardé pour rétrocompatibilité api
+        knowledgeOnly: false,
+        thinkMode: thinkMode,
       })
       
       setMessages(prev => [...prev, {
@@ -220,40 +224,86 @@ export default function ChatSection() {
           <motion.div 
             whileHover={{ rotate: 180, scale: 1.1 }} 
             transition={{ duration: 0.5, type: "spring" }}
-            className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 shrink-0"
+            className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shrink-0 transition-all duration-500 ${
+              thinkMode 
+                ? 'bg-gradient-to-br from-amber-500 to-orange-600 shadow-amber-500/20'
+                : 'bg-gradient-to-br from-indigo-500 to-violet-600 shadow-indigo-500/20'
+            }`}
           >
-            <Sparkles className="w-5 h-5 text-white" />
+            {thinkMode ? <Brain className="w-5 h-5 text-white" /> : <Sparkles className="w-5 h-5 text-white" />}
           </motion.div>
           <div>
-            <h2 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-violet-600">
-              Agent Juridique IA
+            <h2 className={`text-lg font-bold bg-clip-text text-transparent ${
+              thinkMode
+                ? 'bg-gradient-to-r from-amber-500 to-orange-600'
+                : 'bg-gradient-to-r from-indigo-500 to-violet-600'
+            }`}>
+              {thinkMode ? 'Agent IA (Réflexion)' : 'Agent Juridique IA'}
             </h2>
             <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
               <span className="flex items-center gap-1">
                 <motion.span 
                   animate={{ scale: [1, 1.4, 1], opacity: [1, 0.6, 1] }}
                   transition={{ repeat: Infinity, duration: 2 }}
-                  className="w-2 h-2 rounded-full bg-emerald-500 inline-block" 
-                /> Actif
+                  className={`w-2 h-2 rounded-full inline-block transition-colors duration-500 ${
+                    thinkMode ? 'bg-amber-500' : 'bg-emerald-500'
+                  }`}
+                /> En ligne
               </span>
-              <span>•</span>
-              <span>Neo4j + Web + PDF</span>
             </div>
           </div>
         </div>
         
-        {/* Upload Button */}
-        <motion.button
-          whileHover={{ scale: 1.05, y: -1 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => fileInputRef.current?.click()}
-          className="flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-zinc-900 border border-border shadow-sm hover:shadow-md transition-all text-sm font-medium shrink-0"
-        >
-          <Upload className="w-4 h-4 text-indigo-500" />
-          <span className="hidden sm:inline">Analyser un PDF</span>
-          <input ref={fileInputRef} type="file" multiple accept=".pdf" onChange={handleUpload} className="hidden" />
-        </motion.button>
+        <div className="flex items-center gap-3">
+
+          {/* Upload Button */}
+          <motion.button
+            whileHover={{ scale: 1.05, y: -1 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => fileInputRef.current?.click()}
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-zinc-900 border border-border shadow-sm hover:shadow-md transition-all text-sm font-medium shrink-0"
+          >
+            <Upload className="w-4 h-4 text-indigo-500" />
+            <span className="hidden sm:inline">Analyser un PDF</span>
+            <input ref={fileInputRef} type="file" multiple accept=".pdf" onChange={handleUpload} className="hidden" />
+          </motion.button>
+        </div>
       </header>
+
+      {/* Think Mode Active Banner */}
+      <AnimatePresence>
+        {thinkMode && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="z-10 overflow-hidden"
+          >
+            <div className="px-6 py-2.5 bg-gradient-to-r from-amber-50/80 via-orange-50/60 to-amber-50/80 dark:from-amber-950/20 dark:via-orange-950/15 dark:to-amber-950/20 border-b border-amber-200/50 dark:border-amber-800/30 flex items-center justify-center gap-3">
+              <motion.div
+                animate={{ rotate: [0, 10, -10, 0] }}
+                transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+              >
+                <Brain className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+              </motion.div>
+              <span className="text-xs font-semibold text-amber-700 dark:text-amber-300">
+                Think Mode activé — Analyse juridique approfondie
+              </span>
+              <div className="flex gap-1">
+                {[0, 1, 2].map(i => (
+                  <motion.div
+                    key={i}
+                    animate={{ scale: [1, 1.5, 1], opacity: [0.3, 1, 0.3] }}
+                    transition={{ repeat: Infinity, duration: 1.5, delay: i * 0.3 }}
+                    className="w-1.5 h-1.5 rounded-full bg-amber-500"
+                  />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Active Uploads Badge */}
       <AnimatePresence>
@@ -346,7 +396,7 @@ export default function ChatSection() {
             </div>
           </motion.div>
         ) : (
-          <div className="space-y-6 max-w-4xl mx-auto pb-4">
+          <div className="space-y-6 max-w-3xl mx-auto pb-4">
             <AnimatePresence initial={false}>
               {messages.map((msg) => (
                 <motion.div 
@@ -365,9 +415,36 @@ export default function ChatSection() {
                         ? 'bg-gradient-to-br from-indigo-600 to-violet-700 text-white rounded-tr-sm shadow-indigo-500/20' 
                         : 'bg-white dark:bg-zinc-900 border border-border/50 rounded-tl-sm shadow-lg shadow-black/5'
                     }`}>
-                      <p className={`text-[15px] leading-relaxed whitespace-pre-wrap ${msg.role === 'user' ? 'text-white' : 'text-foreground'}`}>
-                        {msg.content}
-                      </p>
+                      <div className={`text-[15px] leading-relaxed ${msg.role === 'user' ? 'text-white' : 'text-foreground'}`}>
+                        {msg.role === 'user' ? (
+                          <p className="whitespace-pre-wrap">{msg.content}</p>
+                        ) : (
+                          <ReactMarkdown
+                            remarkPlugins={[remarkGfm]}
+                            components={{
+                              h1: ({node, ...props}) => <h1 className="text-2xl font-bold text-indigo-700 dark:text-indigo-400 mb-4 mt-6 first:mt-0" {...props} />,
+                              h2: ({node, ...props}) => <h2 className="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mt-6 mb-3 flex items-center gap-2 border-b border-indigo-100 dark:border-indigo-900/50 pb-2" {...props} />,
+                              h3: ({node, ...props}) => <h3 className="text-lg font-medium text-slate-800 dark:text-slate-200 mt-5 mb-2" {...props} />,
+                              p: ({node, ...props}) => <p className="mb-3 last:mb-0 leading-relaxed" {...props} />,
+                              ul: ({node, ...props}) => <ul className="list-disc pl-6 space-y-2 mb-4 marker:text-indigo-500" {...props} />,
+                              ol: ({node, ...props}) => <ol className="list-decimal pl-6 space-y-2 mb-4 marker:text-indigo-600 marker:font-semibold" {...props} />,
+                              li: ({node, ...props}) => <li className="pl-1" {...props} />,
+                              strong: ({node, ...props}) => <strong className="font-semibold text-indigo-900 dark:text-indigo-200" {...props} />,
+                              a: ({node, ...props}) => <a className="text-indigo-600 hover:text-indigo-500 underline underline-offset-4" target="_blank" rel="noopener noreferrer" {...props} />,
+                              blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-indigo-300 dark:border-indigo-700 pl-4 italic text-muted-foreground my-4" {...props} />,
+                              code: ({node, className, children, ...props}: any) => {
+                                const match = /language-(\w+)/.exec(className || '')
+                                const isInline = !match && !className?.includes('language-')
+                                return isInline ? 
+                                  <code className="bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-300 px-1.5 py-0.5 rounded-md text-[13px] font-mono border border-indigo-100 dark:border-indigo-900/50" {...props}>{children}</code> :
+                                  <div className="bg-[#1e1e2e] rounded-xl p-4 my-4 overflow-x-auto border border-white/10 shadow-lg"><code className="text-[#cdd6f4] text-[13px] font-mono" {...props}>{children}</code></div>
+                              }
+                            }}
+                          >
+                            {msg.content}
+                          </ReactMarkdown>
+                        )}
+                      </div>
                     </div>
                     
                     {/* Meta info below bubble */}
@@ -417,30 +494,65 @@ export default function ChatSection() {
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 className="flex justify-start"
               >
-                <div className="bg-white dark:bg-zinc-900 border border-border/50 p-5 rounded-3xl rounded-tl-sm shadow-lg shadow-black/5 flex items-center gap-4">
-                  <div className="flex gap-1.5">
-                    {[0, 1, 2, 3, 4].map((i) => (
-                      <motion.div 
-                        key={i}
-                        animate={{ 
-                          y: [0, -8, 0],
-                          scale: [1, 1.2, 1],
-                        }} 
-                        transition={{ 
-                          repeat: Infinity, 
-                          duration: 0.8, 
-                          delay: i * 0.1,
-                          ease: "easeInOut"
-                        }} 
-                        className={`w-2 h-2 rounded-full ${
-                          i % 3 === 0 ? 'bg-indigo-500' : i % 3 === 1 ? 'bg-violet-500' : 'bg-fuchsia-500'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <span className="text-xs font-semibold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-violet-500">
-                    Analyse en cours...
-                  </span>
+                <div className={`border border-border/50 p-5 rounded-3xl rounded-tl-sm shadow-lg flex items-center gap-4 ${
+                  thinkMode
+                    ? 'bg-gradient-to-r from-amber-50/80 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/10 shadow-amber-500/5 border-amber-200/50 dark:border-amber-800/30'
+                    : 'bg-white dark:bg-zinc-900 shadow-black/5'
+                }`}>
+                  {thinkMode ? (
+                    /* Think mode loading — brain neural animation */
+                    <div className="flex items-center gap-3">
+                      <div className="relative">
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{ repeat: Infinity, duration: 3, ease: 'linear' }}
+                          className="w-8 h-8 rounded-full border-2 border-amber-200 dark:border-amber-800 border-t-amber-500"
+                        />
+                        <motion.div
+                          animate={{ scale: [1, 1.2, 1] }}
+                          transition={{ repeat: Infinity, duration: 1.5 }}
+                          className="absolute inset-0 flex items-center justify-center"
+                        >
+                          <Brain className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                        </motion.div>
+                      </div>
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-xs font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-orange-600">
+                          Réflexion profonde...
+                        </span>
+                        <span className="text-[10px] text-amber-600/60 dark:text-amber-400/50 font-medium">
+                          Analyse des documents en cours
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Normal mode loading — dots */
+                    <>
+                      <div className="flex gap-1.5">
+                        {[0, 1, 2, 3, 4].map((i) => (
+                          <motion.div 
+                            key={i}
+                            animate={{ 
+                              y: [0, -8, 0],
+                              scale: [1, 1.2, 1],
+                            }} 
+                            transition={{ 
+                              repeat: Infinity, 
+                              duration: 0.8, 
+                              delay: i * 0.1,
+                              ease: "easeInOut"
+                            }} 
+                            className={`w-2 h-2 rounded-full ${
+                              i % 3 === 0 ? 'bg-indigo-500' : i % 3 === 1 ? 'bg-violet-500' : 'bg-fuchsia-500'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-xs font-semibold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-violet-500">
+                        Analyse en cours...
+                      </span>
+                    </>
+                  )}
                 </div>
               </motion.div>
             )}
@@ -450,7 +562,7 @@ export default function ChatSection() {
       </div>
 
       {/* Input Area */}
-      <div className="z-20 p-4 bg-gradient-to-t from-background via-background/90 to-transparent pt-8 shrink-0">
+      <div className="z-20 p-4 shrink-0 bg-transparent mb-2">
         <div className="max-w-3xl mx-auto relative group">
           <motion.div 
             animate={{
@@ -458,25 +570,63 @@ export default function ChatSection() {
             }}
             className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-[24px] blur group-focus-within:opacity-50 transition duration-500"
           />
-          <div className="relative bg-white dark:bg-zinc-900 border border-border/50 rounded-3xl p-2 shadow-xl flex items-end gap-2 transition-all group-focus-within:border-indigo-300/50 group-focus-within:shadow-indigo-500/10">
+          <div className="relative bg-white dark:bg-zinc-900 border border-border/50 rounded-3xl shadow-xl flex flex-col transition-all group-focus-within:border-indigo-300/50 group-focus-within:shadow-indigo-500/10">
             <Textarea
-              placeholder="Écrivez votre requête ici..."
+              placeholder="Posez votre question juridique..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend() } }}
-              className="resize-none min-h-[52px] max-h-[150px] border-0 focus-visible:ring-0 px-4 py-3.5 text-[15px] bg-transparent shadow-none"
+              className="resize-none min-h-[60px] max-h-[200px] border-0 focus-visible:ring-0 px-5 pt-4 pb-2 text-[15px] bg-transparent shadow-none"
               rows={1}
             />
-            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="p-1.5 shrink-0">
-              <Button 
-                onClick={handleSend} 
-                disabled={!input.trim() || isLoading} 
-                size="icon"
-                className="h-[44px] w-[44px] rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 shadow-lg disabled:opacity-50"
+            
+            <div className="flex items-center justify-between px-3 pb-3">
+              {/* Think Mode Toggle (Input Area) */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setThinkMode(!thinkMode)}
+                className={`relative flex items-center gap-2 px-3 py-1.5 rounded-2xl transition-all duration-300 border ${
+                  thinkMode 
+                    ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-200/50 text-amber-700 dark:text-amber-300 shadow-sm' 
+                    : 'bg-transparent border-transparent text-muted-foreground hover:bg-secondary/80'
+                }`}
               >
-                <Send className="h-4 w-4 text-white ml-0.5" />
-              </Button>
-            </motion.div>
+                {thinkMode && (
+                  <motion.div
+                    layoutId="think-glow"
+                    className="absolute inset-0 rounded-2xl bg-amber-400/10 blur-sm"
+                  />
+                )}
+                <div className="relative">
+                  <Brain className={`w-4 h-4 transition-colors ${thinkMode ? 'text-amber-600 dark:text-amber-400' : 'text-muted-foreground'}`} />
+                  {thinkMode && (
+                    <motion.div
+                      animate={{ scale: [1, 1.5, 1], opacity: [0, 0.8, 0] }}
+                      transition={{ repeat: Infinity, duration: 2 }}
+                      className="absolute inset-0 bg-amber-400 rounded-full blur-md"
+                    />
+                  )}
+                </div>
+                <span className="text-xs font-semibold">Réflexion profonde</span>
+              </motion.button>
+
+              {/* Send Button */}
+              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="shrink-0">
+                <Button 
+                  onClick={handleSend} 
+                  disabled={!input.trim() || isLoading} 
+                  size="icon"
+                  className={`h-[38px] w-[38px] rounded-xl shadow-md disabled:opacity-50 transition-all duration-500 ${
+                    thinkMode
+                      ? 'bg-gradient-to-br from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700'
+                      : 'bg-gradient-to-br from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700'
+                  }`}
+                >
+                  <Send className="h-4 w-4 text-white ml-0.5" />
+                </Button>
+              </motion.div>
+            </div>
           </div>
         </div>
         <p className="text-center text-[10px] text-muted-foreground/60 mt-4">

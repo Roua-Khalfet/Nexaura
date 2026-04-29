@@ -56,7 +56,7 @@ export default function AppSidebar({ activeSection, onSectionChange, collapsed, 
         >
           <Image 
             src="/logo.png" 
-            alt="Startify Logo" 
+            alt="Nexaura Logo" 
             fill
             className="object-contain"
             priority

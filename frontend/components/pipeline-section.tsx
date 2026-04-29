@@ -413,7 +413,7 @@ export default function PipelineSection({
               <Rocket className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-extrabold text-foreground tracking-tight">Pipeline Startify</h2>
+              <h2 className="text-xl font-extrabold text-foreground tracking-tight">Pipeline Nexaura</h2>
               <p className="text-xs text-muted-foreground">De la description au rapport complet</p>
             </div>
           </div>

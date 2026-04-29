@@ -54,7 +54,7 @@ export default function ReportSection({ projectData, pipelineState }: ReportSect
 
   const downloadReport = () => {
     const lines: string[] = []
-    lines.push(`# Rapport Startify — ${projectData.nom || 'Mon Projet'}`)
+    lines.push(`# Rapport Nexaura — ${projectData.nom || 'Mon Projet'}`)
     lines.push(`> Généré le ${new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}`)
     lines.push('')
     lines.push('---')
@@ -175,14 +175,14 @@ export default function ReportSection({ projectData, pipelineState }: ReportSect
     }
 
     lines.push('---')
-    lines.push(`*Rapport généré par Startify — Plateforme IA pour Startups*`)
+    lines.push(`*Rapport généré par Nexaura — Plateforme IA pour Startups*`)
 
     const content = lines.join('\n')
     const blob = new Blob([content], { type: 'text/markdown' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `rapport-startify-${projectData.nom || 'projet'}.md`
+    a.download = `rapport-nexaura-${projectData.nom || 'projet'}.md`
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -202,7 +202,7 @@ export default function ReportSection({ projectData, pipelineState }: ReportSect
               <ClipboardCheck className="w-6 h-6 text-white" />
             </motion.div>
             <div>
-              <h2 className="text-xl font-black text-slate-900 tracking-tight">Rapport Final Startify</h2>
+              <h2 className="text-xl font-black text-slate-900 tracking-tight">Rapport Final Nexaura</h2>
               <p className="text-xs text-muted-foreground font-medium">Synthèse d'Expertise Juridique & Marketing</p>
             </div>
           </div>
@@ -578,7 +578,7 @@ export default function ReportSection({ projectData, pipelineState }: ReportSect
                    Générer le rapport final
                  </Button>
                </div>
-               <p className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.3em]">Version d'expertise certifiée par Startify AI</p>
+               <p className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.3em]">Version d'expertise certifiée par Nexaura AI</p>
             </motion.div>
           </motion.div>
         )}
