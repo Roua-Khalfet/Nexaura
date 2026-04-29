@@ -55,6 +55,7 @@ class InvokeRequest(BaseModel):
     message_type: str = "user_message"
     session_id: Optional[str] = None
     project_state: Optional[ProjectState] = None
+    preferred_language: Optional[str] = None
 
 
 # Backward-compatible alias used by existing imports.

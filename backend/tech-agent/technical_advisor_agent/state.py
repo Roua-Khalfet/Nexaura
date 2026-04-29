@@ -13,6 +13,7 @@ class AgentState(TypedDict):
     message_type: str
     session_id: str
     conversation_history: List[Dict[str, str]]
+    preferred_language: Optional[str]
     project_state: Optional[Dict[str, Any]]
     updated_project_state: Optional[Dict[str, Any]]
     current_phase: str

@@ -121,6 +121,20 @@ def _fmt_phase_decisions(value: Any) -> str:
     return "{}"
 
 
+def _language_instruction(state: AgentState) -> str:
+    preferred_language = str(state.get("preferred_language") or "fr").strip().lower()
+    if preferred_language in {"en", "eng", "english"}:
+        return (
+            "Language directive: respond in English. Keep the A2A payload structure unchanged, "
+            "and keep any field values concise and natural in English."
+        )
+
+    return (
+        "Language directive: respond in French by default. Keep the A2A payload structure unchanged, "
+        "and keep any field values concise and natural in French."
+    )
+
+
 def _build_project_state_block(state: AgentState, ctx: Any) -> str:
     project_state = state.get("project_state") if isinstance(state.get("project_state"), dict) else {}
 
@@ -248,7 +262,7 @@ def synthesizer(state: AgentState) -> AgentState:
     )
 
     project_state_block = _build_project_state_block(state, ctx)
-    prompt = f"{project_state_block}\n\n{prompt}"
+    prompt = f"{_language_instruction(state)}\n\n{project_state_block}\n\n{prompt}"
 
     history_block = _fmt_history(state.get("conversation_history", []))
     if history_block:

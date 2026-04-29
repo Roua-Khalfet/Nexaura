@@ -142,6 +142,7 @@ def _build_initial_state(
         "message_type": request.message_type,
         "session_id": session_id,
         "conversation_history": conversation_history,
+        "preferred_language": request.preferred_language,
         "project_state": project_state,
         "updated_project_state": project_state,
         "current_phase": str(project_state.get("current_phase") or "discovery"),
