@@ -52,12 +52,14 @@ Nexaura helps founders and HR teams with **regulatory compliance**, **market ana
 - **Email invitations** and outreach tracking  
 - **Analytics dashboard** for HR KPIs    
 
-![TeamBuilder — Dashboard](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195820.png)
+
+![Tech Agent](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195842.png)
+
 
 ### Tech Agent (Technical Advisory Agent)
 - Technical guidance, workflow support, and decision assistance    
 
-![Tech Agent](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195842.png)
+![TeamBuilder — Dashboard](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195820.png)
 
 ---
 
