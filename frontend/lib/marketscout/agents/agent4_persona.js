@@ -120,6 +120,9 @@ function buildAvatarPrompt(persona) {
 
   return [
     `photorealistic portrait of a ${age} year old Tunisian ${genderWord}`,
+    "real human headshot, head-and-shoulders framing, centered composition",
+    "front-facing angle, direct eye contact, natural facial asymmetry",
+    "authentic skin pores and texture, zero beauty retouching",
     skin,
     ageFaceHint,
     clothing,
@@ -127,10 +130,11 @@ function buildAvatarPrompt(persona) {
     expression,
     "natural soft directional lighting",
     "sharp realistic facial features, detailed eyes, realistic skin texture",
-    "high resolution DSLR portrait photography, 85mm lens, shallow depth of field",
+    "high resolution DSLR portrait photography, 85mm lens, shallow depth of field, studio quality",
+    "neutral clean background, no heavy stylization",
     bg,
     "hyperrealistic, photographic, 8K",
-    "no watermark, no text, no blur, no cartoon, no illustration",
+    "no watermark, no text, no blur, no cartoon, no illustration, no CGI, no 3D render, no doll face",
   ].filter(Boolean).join(", ");
 }
 

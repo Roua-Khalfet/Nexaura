@@ -349,6 +349,13 @@ export default function PipelineSection({
     }
   }
 
+  const handleSelectPipelineView = (stepId: PipelineStep) => {
+    setSelectedPipelineView(stepId)
+    if (stepId === 'audit' || stepId === 'green' || stepId === 'marketing') {
+      onNavigate(stepId)
+    }
+  }
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleNextQuestion()
@@ -461,7 +468,7 @@ export default function PipelineSection({
                   <motion.button
                     whileHover={{ scale: 1.08, y: -2 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => setSelectedPipelineView(step.id)}
+                    onClick={() => handleSelectPipelineView(step.id)}
                     className={`relative flex flex-col items-center gap-2 group cursor-pointer transition-all duration-300 ${
                       selectedPipelineView === step.id ? 'z-20' : 'z-10'
                     }`}

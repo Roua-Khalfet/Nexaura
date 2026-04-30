@@ -757,9 +757,9 @@ export default function Pipeline({ projectData: externalProjectData, skipChatbot
       let ctx = createSharedContext(userInput);
 
       setCurrentAgent(1);
-      addLog(1, "Agent 1 — Recherche de concurrents...");
+      addLog(1, "Recherche — identification des concurrents...");
       ctx = await runAgent1(ctx, (msg) => addLog(1, msg));
-      addLog(1, `Agent 1 terminé — ${ctx.competitors.length} concurrents trouvés`);
+      addLog(1, `Recherche terminée — ${ctx.competitors.length} concurrents trouvés`);
 
       console.log("=== Agent 1 URLs (original) ===");
       ctx.competitors.forEach(c => console.log(`${c.name} → ${c.url}`));
@@ -767,14 +767,14 @@ export default function Pipeline({ projectData: externalProjectData, skipChatbot
       setContext({ ...ctx });
 
       setCurrentAgent(2);
-      addLog(2, "Agent 2 + 2B en parallèle...");
+      addLog(2, "Collecte des données — web + avis clients...");
 
       const ctxForAgent2  = JSON.parse(JSON.stringify(ctx));
       const ctxForAgent2B = JSON.parse(JSON.stringify(ctx));
 
       const [result2, result2b] = await Promise.allSettled([
-        runAgent2(ctxForAgent2,  (msg) => addLog(2, `[Scraping] ${msg}`)),
-        runAgent2B(ctxForAgent2B, (msg) => addLog(2, `[Reviews] ${msg}`)),
+        runAgent2(ctxForAgent2,  (msg) => addLog(2, `[Web] ${msg}`)),
+        runAgent2B(ctxForAgent2B, (msg) => addLog(2, `[Avis] ${msg}`)),
       ]);
 
       if (result2.status === "fulfilled") {
@@ -789,16 +789,16 @@ export default function Pipeline({ projectData: externalProjectData, skipChatbot
           return comp;
         });
 
-        addLog(2, `Agent 2 OK — ${ctx.competitors_structured.length} concurrents`);
+        addLog(2, `Collecte web OK — ${ctx.competitors_structured.length} concurrents`);
       } else {
-        addLog(2, `Agent 2 erreur : ${result2.reason?.message}`);
+        addLog(2, `Collecte web en erreur : ${result2.reason?.message}`);
         ctx.competitors_raw        = [];
         ctx.competitors_structured = [];
       }
 
       if (result2b.status === "fulfilled") {
         ctx.reviews_analysis = result2b.value.reviews_analysis || [];
-        addLog(2, `Agent 2B OK — ${ctx.reviews_analysis.length} avis analysés`);
+        addLog(2, `Collecte avis OK — ${ctx.reviews_analysis.length} avis analysés`);
 
         if (ctx.competitors_structured?.length > 0 && ctx.reviews_analysis?.length > 0) {
           ctx.competitors_structured = ctx.competitors_structured.map(comp => {
@@ -818,17 +818,17 @@ export default function Pipeline({ projectData: externalProjectData, skipChatbot
           });
         }
       } else {
-        addLog(2, `Agent 2B erreur : ${result2b.reason?.message}`);
+        addLog(2, `Collecte avis en erreur : ${result2b.reason?.message}`);
         ctx.reviews_analysis = [];
       }
 
-      addLog(2, "Agent 2 + 2B terminé");
+      addLog(2, "Collecte des données terminée");
       setContext({ ...ctx });
 
       setCurrentAgent(3);
-      addLog(3, "Agent 3 SWOT — A2A...");
+      addLog(3, "Génération — SWOT et recommandations...");
       ctx = await runAgent3SWOT(ctx, (msg) => addLog(3, msg));
-      addLog(3, `SWOT terminé`);
+      addLog(3, "Génération terminée");
       setContext({ ...ctx });
 
       setStatus("done");
@@ -938,10 +938,10 @@ export default function Pipeline({ projectData: externalProjectData, skipChatbot
       {/* Progress bar */}
       <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
         {[
-          { n: 1, label: "Recherche" },
-          { n: 2, label: "Scraping + Avis" },
-          { n: 3, label: "SWOT A2A" },
-        ].map(({ n, label }) => (
+          { n: 1, title: "Recherche", label: "Concurrents" },
+          { n: 2, title: "Collecte des données", label: "Web + avis clients" },
+          { n: 3, title: "Génération", label: "SWOT + recommandations" },
+        ].map(({ n, title, label }) => (
           <div key={n} style={{
             flex: 1, padding: "10px", borderRadius: 8,
             textAlign: "center", fontSize: 13, fontWeight: 500,
@@ -950,7 +950,7 @@ export default function Pipeline({ projectData: externalProjectData, skipChatbot
             color: currentAgent === n || (status === "done" && n <= 3) ? "#fff" : "#999",
             transition: "all 0.3s"
           }}>
-            {status === "done" && n <= 3 ? "✓" : `Agent ${n}`}
+            {status === "done" && n <= 3 ? "✓" : title}
             <div style={{ fontSize: 11, fontWeight: 400, marginTop: 2 }}>{label}</div>
           </div>
         ))}
@@ -961,9 +961,9 @@ export default function Pipeline({ projectData: externalProjectData, skipChatbot
         <div style={{ marginBottom: 16, padding: 12, borderRadius: 8,
                       background: "#f0f0ff", border: "1px solid #534AB7",
                       fontSize: 13, color: "#534AB7", fontWeight: 500 }}>
-              {currentAgent === 1 && "Agent 1 — Recherche de concurrents..."}
-              {currentAgent === 2 && "Agent 2 + 2B — Scraping et avis en parallèle..."}
-              {currentAgent === 3 && "Agent 3 — SWOT par A2A..."}
+              {currentAgent === 1 && "Recherche en cours..."}
+              {currentAgent === 2 && "Collecte des données en cours..."}
+              {currentAgent === 3 && "Génération en cours..."}
         </div>
       )}
       {status === "error" && (
@@ -1025,7 +1025,9 @@ export default function Pipeline({ projectData: externalProjectData, skipChatbot
                     display: "flex", alignItems: "center", gap: 8,
                     padding: "9px 15px", borderRadius: 9,
                     cursor: isSaving ? "not-allowed" : "pointer",
-                    border: "0.5px solid rgba(83,74,183,0.25)",
+                    borderTop: "0.5px solid rgba(83,74,183,0.25)",
+                    borderRight: "0.5px solid rgba(83,74,183,0.25)",
+                    borderBottom: "0.5px solid rgba(83,74,183,0.25)",
                     borderLeft: "3px solid #534AB7",
                     background: "var(--color-background-primary, #fff)",
                     color: "#534AB7",
@@ -1055,7 +1057,9 @@ export default function Pipeline({ projectData: externalProjectData, skipChatbot
                   style={{
                     display: "flex", alignItems: "center", gap: 8,
                     padding: "9px 15px", borderRadius: 9, cursor: "pointer",
-                    border: `0.5px solid rgba(83,74,183,${pitchOpen ? "0.5" : "0.3"})`,
+                    borderTop: `0.5px solid rgba(83,74,183,${pitchOpen ? "0.5" : "0.3"})`,
+                    borderRight: `0.5px solid rgba(83,74,183,${pitchOpen ? "0.5" : "0.3"})`,
+                    borderBottom: `0.5px solid rgba(83,74,183,${pitchOpen ? "0.5" : "0.3"})`,
                     borderLeft: "3px solid #534AB7",
                     background: pitchOpen ? "#EEEDFE" : "var(--color-background-primary, #fff)",
                     color: "#534AB7",
@@ -1077,7 +1081,9 @@ export default function Pipeline({ projectData: externalProjectData, skipChatbot
                   style={{
                     display: "flex", alignItems: "center", gap: 8,
                     padding: "9px 15px", borderRadius: 9, cursor: "pointer",
-                    border: "0.5px solid rgba(29,158,117,0.3)",
+                    borderTop: "0.5px solid rgba(29,158,117,0.3)",
+                    borderRight: "0.5px solid rgba(29,158,117,0.3)",
+                    borderBottom: "0.5px solid rgba(29,158,117,0.3)",
                     borderLeft: "3px solid #1D9E75",
                     background: "var(--color-background-primary, #fff)",
                     color: "#0F6E56",
@@ -1102,7 +1108,9 @@ export default function Pipeline({ projectData: externalProjectData, skipChatbot
                     display: "flex", alignItems: "center", gap: 8,
                     padding: "9px 15px", borderRadius: 9,
                     cursor: personaLoading ? "not-allowed" : "pointer",
-                    border: "0.5px solid rgba(217,90,48,0.3)",
+                    borderTop: "0.5px solid rgba(217,90,48,0.3)",
+                    borderRight: "0.5px solid rgba(217,90,48,0.3)",
+                    borderBottom: "0.5px solid rgba(217,90,48,0.3)",
                     borderLeft: "3px solid #D85A30",
                     background: "var(--color-background-primary, #fff)",
                     color: "#993C1D",
@@ -1164,7 +1172,7 @@ export default function Pipeline({ projectData: externalProjectData, skipChatbot
                                              background: "#f5f5f5", border: "1px solid #e5e5e5",
                                              fontSize: 12, display: "flex", gap: 8, flexWrap: "wrap" }}>
                         <span style={badge(msg.from === "agent2_scraping" ? "#1a7a3a" : "#b45309")}>
-                          {msg.from === "agent2_scraping" ? "Agent 2" : "Agent 2B"}
+                          {msg.from === "agent2_scraping" ? "Collecte Web" : "Collecte Avis"}
                         </span>
                         <span style={{ color: "#555", flex: 1 }}>
                           "{msg.question?.slice(0, 70)}..."
