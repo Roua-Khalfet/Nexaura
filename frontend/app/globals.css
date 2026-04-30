@@ -1,6 +1,5 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
-@import '../components/teambuilder/tech-agent/techAgentJourney.css';
 
 @custom-variant dark (&:is(.dark *));
 

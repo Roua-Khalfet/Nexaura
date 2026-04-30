@@ -6,26 +6,57 @@ Nexaura is an **integrated AI platform** that combines **legal compliance, marke
 
 ## Overview
 
-Nexaura helps founders and HR teams with **regulatory compliance**, **market analysis**, **document generation**, **talent acquisition**, and **data-driven decision-making**. It leverages **RAG**, **Knowledge Graphs**, **LLMs**, and **automation** to deliver actionable insights.
+Nexaura helps founders and HR teams with **regulatory compliance**, **market analysis**, **document generation**, **talent acquisition**, and **data-driven decision-making**. It leverages **RAG**, **Knowledge Graphs**, **LLMs**, **A2A orchestration**, and **MCP-ready tools** to deliver actionable insights.
+
+---
+
+## Why Nexaura stands out
+
+- **Multi‑agent A2A** workflows that collaborate on complex market and legal tasks  
+- **RLM‑powered compliance reasoning** for regulatory accuracy and speed  
+- **MCP‑ready architecture** to plug in new tools and data sources fast  
+- **End‑to‑end product**: legal + ESG + market + hiring in one platform  
 
 ---
 
 ## Features
 
-### ComplianceGuard (Legal, ESG & Market Intelligence)
+### ComplianceGuard (Legal Compliance Agents)
 - **GraphRAG + CRAG** hybrid retrieval (Qdrant + Neo4j) for legal Q&A  
+- **RLM** for compliance reasoning and regulatory validation  
 - **Regulatory compliance scoring** tailored to sector and company profile  
 - **Document generation** (statuts, CGU, contracts, Startup Act label)  
-- **Regulatory watch** (veille) on official Tunisian sources  
+- **Regulatory watch** (veille) on official Tunisian sources   
+
+![ComplianceGuard — Legal](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195733.png)
+![ComplianceGuard — Documents](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195742.png)
+
+### Market Scout (Market Intelligence Agents)
 - **Market analysis pipeline**: Recherche → Collecte des données → Génération  
+- Competitive intelligence and market research from web + reviews  
+
+![Market Scout](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195749.png)
+
+### Green Agent (ESG & Sustainability Agents)
 - **Green/ESG analysis** with scoring and recommendations  
+ 
+
+![Green Agent](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195801.png)
 
 ### TeamBuilder (Recruitment & HR Automation)
 - **CV parsing** (PDF/DOCX/images) with AI extraction  
 - **Candidate pool management** and filtering  
 - **AI team recommendations** based on project needs  
 - **Email invitations** and outreach tracking  
-- **Analytics dashboard** for HR KPIs  
+- **Analytics dashboard** for HR KPIs    
+
+![TeamBuilder — Dashboard](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195820.png)
+![TeamBuilder — Candidates](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195829.png)
+
+### Tech Agent (Technical Advisory Agent)
+- Technical guidance, workflow support, and decision assistance    
+
+![Tech Agent](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195842.png)
 
 ---
 
@@ -51,8 +82,11 @@ Nexaura helps founders and HR teams with **regulatory compliance**, **market ana
 AI project/
 ├── complianceguard/          # Core RAG/CRAG engine + legal agents
 ├── backend/                  # Django REST API (ComplianceGuard + services)
+│   ├── green_analysis/        # Green Agent (ESG pipeline)
+│   └── tech-agent/            # Tech Agent service
 ├── backend/teambuilder/      # TeamBuilder backend (HR + recruitment)
 ├── frontend/                 # Next.js UI (ComplianceGuard + TeamBuilder)
+│   └── lib/marketscout/agents # Market Scout agents
 ├── Data/                     # Source legal documents (PDFs)
 ├── screens/                  # UI screenshots for documentation
 ```
@@ -102,15 +136,6 @@ npm run dev
 Open **http://localhost:3000** and navigate:
 - **ComplianceGuard** for legal compliance, ESG analysis, and market intelligence  
 - **TeamBuilder** for recruitment, CV parsing, and AI hiring workflows  
-
----
-
-## Screenshots
-
-![Nexaura Screen 1](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195733.png)
-![Nexaura Screen 2](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195742.png)
-![Nexaura Screen 3](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195749.png)
-![Nexaura Screen 4](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195801.png)
 
 ---
 
