@@ -137,8 +137,7 @@ npm run dev
 ## Usage
 
 Open **http://localhost:3000** and navigate:
-- **ComplianceGuard** for legal compliance, ESG analysis, and market intelligence  
-- **TeamBuilder** for recruitment, CV parsing, and AI hiring workflows  
+  
 
 ---
 
