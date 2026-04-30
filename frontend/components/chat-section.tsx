@@ -80,7 +80,9 @@ export default function ChatSection() {
 
   // Scroll to bottom on new message
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' })
+    }
   }, [messages, isLoading])
 
   const hasPdf = uploadedFiles.some(f => f.status === 'ready')
@@ -278,7 +280,7 @@ export default function ChatSection() {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="z-10 overflow-hidden"
+            className="z-10 overflow-hidden shrink-0"
           >
             <div className="px-6 py-2.5 bg-gradient-to-r from-amber-50/80 via-orange-50/60 to-amber-50/80 dark:from-amber-950/20 dark:via-orange-950/15 dark:to-amber-950/20 border-b border-amber-200/50 dark:border-amber-800/30 flex items-center justify-center gap-3">
               <motion.div
@@ -312,7 +314,7 @@ export default function ChatSection() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="z-10 px-6 py-2 bg-indigo-50/50 dark:bg-indigo-900/10 border-b border-indigo-100 dark:border-indigo-900/50 flex gap-2 overflow-x-auto scrollbar-hide"
+            className="z-10 px-6 py-2 bg-indigo-50/50 dark:bg-indigo-900/10 border-b border-indigo-100 dark:border-indigo-900/50 flex gap-2 overflow-x-auto scrollbar-hide shrink-0"
           >
             {uploadedFiles.map((f, i) => (
               <motion.div 
