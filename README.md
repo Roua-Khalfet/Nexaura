@@ -1,12 +1,12 @@
 # Nexaura — AI Compliance & Growth Platform for Tunisian Startups
 
-Nexaura is an **integrated AI platform** that combines **legal compliance, market intelligence, and recruitment automation** for Tunisian startups. Built at **Esprit School of Engineering**, it merges **ComplianceGuard** (regulatory compliance + ESG analysis) and **TeamBuilder** (AI-powered hiring) into one Next.js + Django solution.
+**Nexaura** is an AI-powered platform that helps entrepreneurs transform ideas into startups by providing legal (Tunisian law) audits, business strategy tools (SWOT, persona, competitors), environmental scoring, tech stack recommendations, and smart team building.
 
 ---
 
 ## Overview
 
-Nexaura helps founders and HR teams with **regulatory compliance**, **market analysis**, **document generation**, **talent acquisition**, and **data-driven decision-making**. It leverages **RAG**, **Knowledge Graphs**, **LLMs**, **A2A orchestration**, and **MCP-ready tools** to deliver actionable insights.
+Nexaura helps founders  with **regulatory compliance**, **market analysis**, **document generation**, **talent acquisition**, and **data-driven decision-making**. It leverages **RAG**, **Knowledge Graphs**, **LLMs**, **A2A orchestration**, and **MCP-ready tools** to deliver actionable insights.
 
 ---
 
