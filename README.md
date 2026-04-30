@@ -20,7 +20,7 @@ Nexaura helps founders and HR teams with **regulatory compliance**, **market ana
 ---
 
 ## Features
-
+![ComplianceGuard — Legal](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195733.png)
 ### ComplianceGuard (Legal Compliance Agents)
 - **GraphRAG + CRAG** hybrid retrieval (Qdrant + Neo4j) for legal Q&A  
 - **RLM** for compliance reasoning and regulatory validation  
@@ -28,7 +28,9 @@ Nexaura helps founders and HR teams with **regulatory compliance**, **market ana
 - **Document generation** (statuts, CGU, contracts, Startup Act label)  
 - **Regulatory watch** (veille) on official Tunisian sources   
 
-![ComplianceGuard — Legal](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195733.png)
+
+![TeamBuilder — Candidates](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195829.png)
+
 ![ComplianceGuard — Documents](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195742.png)
 
 ### Market Scout (Market Intelligence Agents)
@@ -51,7 +53,6 @@ Nexaura helps founders and HR teams with **regulatory compliance**, **market ana
 - **Analytics dashboard** for HR KPIs    
 
 ![TeamBuilder — Dashboard](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195820.png)
-![TeamBuilder — Candidates](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195829.png)
 
 ### Tech Agent (Technical Advisory Agent)
 - Technical guidance, workflow support, and decision assistance    
