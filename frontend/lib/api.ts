@@ -11,6 +11,7 @@ export interface UploadResponse {
 
 export interface ChatResponse {
   response: string
+  reasoning?: string
   sources: string[]
   source_type: string
   metadata?: Record<string, unknown>

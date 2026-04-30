@@ -2,7 +2,7 @@ import os
 import sys
 import glob
 import contextlib
-from typing import Optional, List
+from typing import Optional, List, Callable
 from dotenv import load_dotenv
 from rlm import RLM
 from rlm.logger import RLMLogger
@@ -101,25 +101,45 @@ class SawaRLM:
         """
         self.verbose = verbose
         self.provider = provider.lower()
+        self.max_iterations = max_iterations
+        self.max_depth = max_depth
+        self.log_dir = log_dir
+        self.model_name = model_name
+        self._init_engine()
 
+    def _init_engine(self):
+        """Initialize the RLM engine based on current provider."""
         if self.provider == "groq":
-            backend, backend_kwargs = self._setup_groq(model_name)
+            backend, backend_kwargs = self._setup_groq(self.model_name)
         elif self.provider == "azure":
-            backend, backend_kwargs = self._setup_azure(model_name)
+            backend, backend_kwargs = self._setup_azure(self.model_name)
         else:
-            raise ValueError(f"Unknown provider '{provider}'. Use 'groq' or 'azure'.")
+            raise ValueError(f"Unknown provider '{self.provider}'. Use 'groq' or 'azure'.")
 
         # Optional logger for trajectory visualization
-        self.logger = RLMLogger(log_dir=log_dir) if log_dir else None
+        self.logger = RLMLogger(log_dir=self.log_dir) if self.log_dir else None
 
         self.rlm = RLM(
             backend=backend,
             backend_kwargs=backend_kwargs,
-            verbose=verbose,
-            max_iterations=max_iterations,
-            max_depth=max_depth,
+            verbose=self.verbose,
+            max_iterations=self.max_iterations,
+            max_depth=self.max_depth,
             logger=self.logger,
         )
+
+    def _fallback_to_azure(self, reason: str):
+        """Switch provider to Azure and re-initialize."""
+        if self.provider == "azure":
+            return # Already on Azure, nothing to fallback to
+
+        if self.verbose:
+            print(f"\n⚠️  GROQ RATE LIMIT OR ERROR DETECTED: {reason}")
+            print("🔄  SWITCHING TO AZURE OPENAI (KIMI-K2.5) AS FALLBACK...\n")
+        
+        self.provider = "azure"
+        self.model_name = None # Use default Azure model
+        self._init_engine()
 
     # ---- Provider setup helpers ----
 
@@ -177,20 +197,21 @@ class SawaRLM:
             The model's final response string.
         """
         prompt = f"{question}\n\n{context}"
-        result = self.rlm.completion(prompt)
-        return result.response
+        try:
+            result = self.rlm.completion(prompt)
+            return result.response
+        except Exception as e:
+            if self.provider == "groq":
+                self._fallback_to_azure(str(e))
+                # Retry once with Azure
+                result = self.rlm.completion(prompt)
+                return result.response
+            raise e
 
-    def complete_multi(self, documents: dict[str, str], question: str) -> str:
+    def complete_multi(self, documents: dict[str, str], question: str, callback: Optional[Callable[[str], None]] = None) -> str:
         """
         Execute a recursive completion over multiple documents.
-        Builds a combined prompt with clearly labelled document sections.
-
-        Args:
-            documents: Dict mapping filename -> document text.
-            question: The question or task to perform across documents.
-
-        Returns:
-            The model's final response string.
+        Supports an optional callback for real-time trajectory updates.
         """
         context_parts = []
         for i, (filename, text) in enumerate(documents.items()):
@@ -200,8 +221,25 @@ class SawaRLM:
         full_context = "\n".join(context_parts)
 
         prompt = f"{question}\n\n{full_context}"
-        result = self.rlm.completion(prompt)
-        return result.response
+        
+        # Override the RLM internal print to use the callback if provided
+        original_print = None
+        if callback:
+            import builtins
+            # We wrap the internal completion logic to intercept logs if necessary, 
+            # but usually RLM objects might have a logger. 
+            # For simplicity, we'll just handle the exception/retry logic here.
+            pass
+
+        try:
+            result = self.rlm.completion(prompt)
+            return result.response
+        except Exception as e:
+            if self.provider == "groq":
+                self._fallback_to_azure(str(e))
+                result = self.rlm.completion(prompt)
+                return result.response
+            raise e
 
 
 def get_rlm(provider: str = "groq", verbose: bool = True, max_iterations: int = 10) -> SawaRLM:

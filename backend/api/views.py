@@ -21,6 +21,11 @@ from dotenv import load_dotenv
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from django.http import StreamingHttpResponse, JsonResponse
+import json
+import time
+import queue
+import threading
 
 from .serializers import (
     ChatRequestSerializer,
@@ -933,81 +938,89 @@ def _handle_think_mode(question: str):
             "metadata": {"think_mode": True},
         })
 
-    try:
-        import concurrent.futures
+    # Force la réponse en français
+    question_fr = question + "\n\n(IMPORTANT: L'analyse doit être détaillée et en français.)"
+
+    def stream_reasoning():
+        q = queue.Queue()
         
-        # Force la réponse en français
-        question_fr = question + "\n\n(IMPORTANT: L'analyse doit être détaillée et en français.)"
-        
-        def run_rlm():
-            if documents:
-                return rlm_instance.complete_multi(documents, question_fr)
-            return rlm_instance.complete("", question_fr)
-            
-        def run_scraping():
+        def run_rlm_with_updates():
             try:
+                q.put({"type": "status", "content": "🧠 Initialisation du modèle de raisonnement récursif (RLM)..."})
+                if documents:
+                    q.put({"type": "status", "content": f"📂 Analyse approfondie de {len(documents)} documents juridiques..."})
+                    res = rlm_instance.complete_multi(documents, question_fr)
+                else:
+                    res = rlm_instance.complete("", question_fr)
+                q.put({"type": "reasoning", "content": res})
+                return res
+            except Exception as e:
+                err = f"Erreur RLM: {str(e)}"
+                q.put({"type": "error", "content": err})
+                return err
+
+        def run_scraping_with_updates():
+            try:
+                q.put({"type": "status", "content": "🌐 Recherche web complémentaire en temps réel..."})
                 from complianceguard.ask_question import _web_search
-                # Utilise uniquement le web search, pas de GraphRAG pour éviter l'erreur Neo4j
                 context, sources = _web_search(question_fr)
+                q.put({"type": "status", "content": f"✅ Analyse web terminée : {len(sources)} sources identifiées."})
                 return context, sources
             except Exception as e:
-                print(f"Scraping error in think mode: {e}")
+                print(f"Scraping error: {e}")
                 return "", []
 
-        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
-            future_rlm = executor.submit(run_rlm)
-            future_scraping = executor.submit(run_scraping)
-            
-            rlm_result = future_rlm.result()
-            scraping_result, scraping_sources = future_scraping.result()
-            
-        # Combine les résultats avec Azure
+        rlm_res_container = []
+        scraping_res_container = []
+
+        def thread_rlm():
+            rlm_res_container.append(run_rlm_with_updates())
+            q.put({"type": "done_rlm"})
+
+        def thread_scraping():
+            scraping_res_container.append(run_scraping_with_updates())
+            q.put({"type": "done_scraping"})
+
+        t1 = threading.Thread(target=thread_rlm)
+        t2 = threading.Thread(target=thread_scraping)
+        t1.start()
+        t2.start()
+
+        done_rlm = False
+        done_scraping = False
+        while not (done_rlm and done_scraping):
+            try:
+                msg = q.get(timeout=30)
+                if msg["type"] == "done_rlm": done_rlm = True
+                elif msg["type"] == "done_scraping": done_scraping = True
+                else:
+                    yield f"data: {json.dumps(msg)}\n\n"
+            except queue.Empty:
+                break
+
+        yield f"data: {json.dumps({'type': 'status', 'content': '✨ Synthèse finale de l\'expertise Nexaura...'})}\n\n"
+        
+        final_rlm = rlm_res_container[0] if rlm_res_container else ""
+        final_scraping, final_sources = scraping_res_container[0] if scraping_res_container else ("", [])
+
         try:
             from complianceguard.ask_question import _build_llm
             from langchain_core.messages import SystemMessage, HumanMessage
-            
             azure_llm = _build_llm()
             system_prompt = (
-                "Tu es l'assistant IA juridique ultime. Tu disposes de deux analyses :\n"
-                "1. Une analyse approfondie issue d'un RLM sur des textes de loi.\n"
-                "2. Des informations issues d'une recherche Web (si disponibles).\n"
-                "Combine ces informations en une seule réponse exhaustive, fluide et parfaitement structurée en Markdown.\n"
-                "IMPORTANT: Ne fais AUCUNE mention explicite du type 'Selon le RLM', 'Selon la recherche Web' ou 'Complément d'informations'. Synthétise le tout de manière naturelle.\n"
-                "Rédige la réponse UNIQUEMENT en FRANÇAIS."
+                "Tu es l'assistant IA juridique ultime (Nexaura). Synthétise l'analyse RLM et les informations Web en une réponse exhaustive et fluide en Français. "
+                "Structure la réponse avec un Markdown premium (titres, listes, gras). Ne mentionne pas explicitement tes outils internes (RLM, Scraper)."
             )
-            
-            human_prompt = f"Question de l'utilisateur: {question}\n\n=== Analyse Textes de Loi ===\n{rlm_result}\n\n=== Recherche Web ===\n{scraping_result}"
-            
-            response_llm = azure_llm.invoke([
-                SystemMessage(content=system_prompt),
-                HumanMessage(content=human_prompt)
-            ])
-            final_answer = response_llm.content
+            human_prompt = f"Question: {question}\n\n=== Analyse RLM ===\n{final_rlm}\n\n=== Recherche Web ===\n{final_scraping}"
+            resp = azure_llm.invoke([SystemMessage(content=system_prompt), HumanMessage(content=human_prompt)])
+            final_answer = resp.content
         except Exception as e:
-            print(f"Error combining with Azure: {e}")
-            final_answer = rlm_result
-            if scraping_result:
-                final_answer += f"\n\n---\n\n{scraping_result}"
+            final_answer = final_rlm + (f"\n\n---\n\n{final_scraping}" if final_scraping else "")
 
-        return Response({
-            "response": final_answer,
-            "sources": scraping_sources, # Affiche uniquement les sources web
-            "source_type": "RLM + Web Scraping",
-            "metadata": {
-                "think_mode": True,
-                "provider": rlm_instance.provider,
-                "documents_analyzed": len(documents) if documents else 0,
-            },
-        })
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return Response({
-            "response": f"Erreur Think Mode (RLM): {e}",
-            "sources": [],
-            "source_type": "error",
-            "metadata": {"think_mode": True},
-        })
+        yield f"data: {json.dumps({'type': 'final', 'content': final_answer, 'reasoning': final_rlm, 'sources': final_sources})}\n\n"
+
+    return StreamingHttpResponse(stream_reasoning(), content_type='text-event-stream')
+
 
 
 @api_view(["POST"])

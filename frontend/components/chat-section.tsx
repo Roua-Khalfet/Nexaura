@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, type ChangeEvent } from 'react'
-import { Send, Upload, Sparkles, FileText, CheckCircle2, AlertCircle, Brain, Zap } from 'lucide-react'
+import { Send, Upload, Sparkles, FileText, CheckCircle2, AlertCircle, Brain, Zap, ChevronDown, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { sendChatMessage, uploadSourceFile } from '@/lib/api'
@@ -13,6 +13,7 @@ interface Message {
   id: string
   role: 'user' | 'assistant'
   content: string
+  reasoning?: string
   timestamp: Date
   sourceType?: string
   sources?: string[]
@@ -74,6 +75,7 @@ export default function ChatSection() {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
   const [isDragging, setIsDragging] = useState(false)
   const [thinkMode, setThinkMode] = useState(false)
+  const [thinkStatus, setThinkStatus] = useState<string>('')
   
   const fileInputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -92,30 +94,107 @@ export default function ChatSection() {
     
     const userMsg: Message = { id: Date.now().toString(), role: 'user', content: input.trim(), timestamp: new Date() }
     setMessages(prev => [...prev, userMsg])
+    const currentInput = input.trim()
     setInput('')
     setIsLoading(true)
+    setThinkStatus('')
 
-    try {
-      // Le backend lit mode='notebook' pour déclencher has_pdf=True
-      const result = await sendChatMessage({ 
-        message: userMsg.content, 
-        mode: hasPdf ? 'notebook' : 'kb', 
-        knowledgeOnly: false,
-        thinkMode: thinkMode,
-      })
-      
-      setMessages(prev => [...prev, {
-        id: (Date.now() + 1).toString(), role: 'assistant', content: result.response,
-        timestamp: new Date(), sourceType: result.source_type, sources: result.sources,
-      }])
-    } catch (err) {
-      setMessages(prev => [...prev, {
-        id: (Date.now() + 1).toString(), role: 'assistant',
-        content: err instanceof Error ? err.message : 'Erreur inconnue.',
-        timestamp: new Date(), sourceType: 'Erreur Système',
-      }])
-    } finally {
-      setIsLoading(false)
+    if (thinkMode) {
+      // THINK MODE: Streaming reasoning
+      try {
+        const response = await fetch('http://localhost:8000/api/chat/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: currentInput,
+            thinkMode: true,
+            project_context: "", // Could be passed from parent if needed
+            mode: hasPdf ? 'notebook' : 'kb'
+          })
+        });
+
+        if (!response.body) throw new Error('No body');
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        
+        let assistantId = (Date.now() + 1).toString();
+        let reasoningAccumulator = '';
+        let finalContent = '';
+        let finalSources: string[] = [];
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n');
+          
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.slice(6));
+                
+                if (data.type === 'status') {
+                  setThinkStatus(data.content);
+                } else if (data.type === 'reasoning') {
+                  reasoningAccumulator += data.content;
+                  setMessages(prev => {
+                    const existing = prev.find(m => m.id === assistantId);
+                    if (existing) {
+                      return prev.map(m => m.id === assistantId ? { ...m, reasoning: reasoningAccumulator } : m);
+                    }
+                    return [...prev, {
+                      id: assistantId, role: 'assistant', content: '...', reasoning: reasoningAccumulator,
+                      timestamp: new Date(), sourceType: 'Think Mode'
+                    }];
+                  });
+                } else if (data.type === 'final') {
+                  finalContent = data.content;
+                  finalSources = data.sources || [];
+                  setMessages(prev => prev.map(m => m.id === assistantId ? { 
+                    ...m, content: finalContent, sources: finalSources, sourceType: 'Expertise Nexaura' 
+                  } : m));
+                }
+              } catch (e) {
+                console.error("Parse error", e);
+              }
+            }
+          }
+        }
+      } catch (err) {
+        setMessages(prev => [...prev, {
+          id: (Date.now() + 1).toString(), role: 'assistant',
+          content: err instanceof Error ? err.message : 'Erreur de connexion Think Mode.',
+          timestamp: new Date(), sourceType: 'Erreur Système',
+        }])
+      } finally {
+        setIsLoading(false);
+        setThinkStatus('');
+      }
+    } else {
+      // REGULAR MODE
+      try {
+        const result = await sendChatMessage({ 
+          message: currentInput, 
+          mode: hasPdf ? 'notebook' : 'kb', 
+          knowledgeOnly: false,
+          thinkMode: false,
+        })
+        
+        setMessages(prev => [...prev, {
+          id: (Date.now() + 1).toString(), role: 'assistant', content: result.response,
+          reasoning: result.reasoning,
+          timestamp: new Date(), sourceType: result.source_type, sources: result.sources,
+        }])
+      } catch (err) {
+        setMessages(prev => [...prev, {
+          id: (Date.now() + 1).toString(), role: 'assistant',
+          content: err instanceof Error ? err.message : 'Erreur inconnue.',
+          timestamp: new Date(), sourceType: 'Erreur Système',
+        }])
+      } finally {
+        setIsLoading(false)
+      }
     }
   }
 
@@ -421,8 +500,32 @@ export default function ChatSection() {
                         {msg.role === 'user' ? (
                           <p className="whitespace-pre-wrap">{msg.content}</p>
                         ) : (
-                          <ReactMarkdown
-                            remarkPlugins={[remarkGfm]}
+                          <>
+                            {msg.reasoning && (
+                              <details className="mb-4 group border border-amber-200 dark:border-amber-900/50 rounded-xl overflow-hidden bg-amber-50/50 dark:bg-amber-900/10 transition-all duration-300">
+                                <summary className="flex items-center gap-2 p-3 text-sm font-medium text-amber-700 dark:text-amber-400 cursor-pointer select-none hover:bg-amber-100 dark:hover:bg-amber-900/20 list-none [&::-webkit-details-marker]:hidden">
+                                  <Brain className="w-4 h-4" />
+                                  Processus de réflexion
+                                  <ChevronDown className="w-4 h-4 ml-auto opacity-70 transition-transform duration-200 group-open:rotate-180" />
+                                </summary>
+                                <div className="p-4 pt-0 text-sm text-muted-foreground border-t border-amber-100 dark:border-amber-900/50 max-h-[400px] overflow-y-auto">
+                                  <ReactMarkdown
+                                    remarkPlugins={[remarkGfm]}
+                                    components={{
+                                      p: ({node, ...props}) => <p className="mb-2 last:mb-0" {...props} />,
+                                      ul: ({node, ...props}) => <ul className="list-disc pl-4 space-y-1 mb-2" {...props} />,
+                                      ol: ({node, ...props}) => <ol className="list-decimal pl-4 space-y-1 mb-2" {...props} />,
+                                      li: ({node, ...props}) => <li className="pl-1 text-xs" {...props} />,
+                                      strong: ({node, ...props}) => <strong className="font-semibold text-amber-900 dark:text-amber-200" {...props} />,
+                                    }}
+                                  >
+                                    {msg.reasoning}
+                                  </ReactMarkdown>
+                                </div>
+                              </details>
+                            )}
+                            <ReactMarkdown
+                              remarkPlugins={[remarkGfm]}
                             components={{
                               h1: ({node, ...props}) => <h1 className="text-2xl font-bold text-indigo-700 dark:text-indigo-400 mb-4 mt-6 first:mt-0" {...props} />,
                               h2: ({node, ...props}) => <h2 className="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mt-6 mb-3 flex items-center gap-2 border-b border-indigo-100 dark:border-indigo-900/50 pb-2" {...props} />,
@@ -445,6 +548,7 @@ export default function ChatSection() {
                           >
                             {msg.content}
                           </ReactMarkdown>
+                          </>
                         )}
                       </div>
                     </div>
@@ -520,11 +624,15 @@ export default function ChatSection() {
                       </div>
                       <div className="flex flex-col gap-0.5">
                         <span className="text-xs font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-orange-600">
-                          Réflexion profonde...
+                          {thinkStatus || 'Réflexion profonde...'}
                         </span>
-                        <span className="text-[10px] text-amber-600/60 dark:text-amber-400/50 font-medium">
-                          Analyse des documents en cours
-                        </span>
+                        <motion.span 
+                          animate={{ opacity: [0.4, 1, 0.4] }}
+                          transition={{ repeat: Infinity, duration: 2 }}
+                          className="text-[10px] text-amber-600/60 dark:text-amber-400/50 font-medium"
+                        >
+                          Analyse des documents et du web en cours
+                        </motion.span>
                       </div>
                     </div>
                   ) : (
