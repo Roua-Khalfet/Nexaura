@@ -1,0 +1,11 @@
+{
+  "documents": 56,
+  "chunks": 11036,
+  "articles": 3897,
+  "doc_edges": 1532,
+  "article_edges": 78,
+  "unresolved_mentions": 1112,
+  "llm_mode": "auto",
+  "output_cypher": "Data\\graph_export\\graph_import.cypher",
+  "output_unresolved": "Data\\graph_export\\unresolved_mentions.jsonl"
+}

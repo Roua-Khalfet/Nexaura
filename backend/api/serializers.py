@@ -10,6 +10,7 @@ class ChatRequestSerializer(serializers.Serializer):
     project_context = serializers.CharField(required=False, allow_blank=True)
     sector = serializers.CharField(required=False, allow_blank=True)
     mode = serializers.CharField(required=False, default="kb", allow_blank=True)
+    think_mode = serializers.BooleanField(required=False, default=False)
 
 
 class ChatResponseSerializer(serializers.Serializer):

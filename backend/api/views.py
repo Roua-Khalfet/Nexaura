@@ -37,6 +37,8 @@ sys.path.insert(0, str(PROJECT_ROOT))
 load_dotenv(PROJECT_ROOT / ".env", override=True)
 
 _LOCAL_GRAPHRAG_FUNCTION = None
+_RLM_INSTANCE = None
+_RLM_DOCUMENTS = None
 
 # ============================================================================
 # Import agents (lazy loading to avoid startup errors)
@@ -85,6 +87,42 @@ def get_local_graph_rag_function():
     except Exception as e:
         print(f"ERROR importing local GraphRAG runner: {e}")
         return None
+
+
+def get_rlm_instance():
+    """Lazy-load SawaRLM and associated PDF documents."""
+    global _RLM_INSTANCE, _RLM_DOCUMENTS
+    if _RLM_INSTANCE is not None:
+        return _RLM_INSTANCE, _RLM_DOCUMENTS
+
+    try:
+        from complianceguard.RLM.recursive_language_model import SawaRLM, load_all_pdfs
+        import os
+
+        rlm_data_dir = os.path.join(str(PROJECT_ROOT), "complianceguard", "RLM", "data")
+        # Also check the main Data folder
+        main_data_dir = os.path.join(str(PROJECT_ROOT), "complianceguard", "Data")
+
+        documents = {}
+        for d in [rlm_data_dir, main_data_dir]:
+            if os.path.isdir(d):
+                docs = load_all_pdfs(d)
+                documents.update(docs)
+
+        _RLM_DOCUMENTS = documents
+        _RLM_INSTANCE = SawaRLM(
+            provider="groq",
+            verbose=False,
+            max_iterations=10,
+            log_dir=None,
+        )
+        print(f"[ThinkMode] RLM initialized with {len(documents)} documents")
+        return _RLM_INSTANCE, _RLM_DOCUMENTS
+    except Exception as e:
+        import traceback
+        print(f"ERROR initializing RLM: {e}")
+        traceback.print_exc()
+        return None, None
 
 
 def is_simple_greeting_or_non_question(text: str) -> bool:
@@ -774,7 +812,7 @@ def api_root(request):
 
 @api_view(["POST"])
 def chat(request):
-    """Chat avec l'agent GraphRAG ou le système CRAG."""
+    """Chat avec l'agent GraphRAG ou le système CRAG, ou RLM en Think Mode."""
     serializer = ChatRequestSerializer(data=request.data)
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -783,6 +821,7 @@ def chat(request):
     message = data["message"]
     project_context = data.get("project_context", "")
     mode = data.get("mode", "kb") # "kb" pour GraphRAG, "notebook" pour CRAG uploads
+    think_mode = data.get("think_mode", False)
     
     answer_question_func, crag_func, is_greeting = get_answer_function()
     
@@ -811,11 +850,14 @@ def chat(request):
     
     # Enrich question with context
     enriched_question = message
-    # In notebook mode we keep the raw user question to avoid degrading
-    # CRAG retrieval with UI-level context strings.
     if project_context and mode != "notebook":
         enriched_question = f"Contexte projet: {project_context}\n\nQuestion: {message}"
     
+    # ── THINK MODE: Route through RLM ──────────────────────────────
+    if think_mode:
+        return _handle_think_mode(enriched_question)
+    
+    # ── NORMAL MODE: Graph RAG + Scraping ─────────────────────────
     try:
         from complianceguard.graph_agent import compliance_agent
         
@@ -866,6 +908,105 @@ def chat(request):
             "response": f"Erreur: {error_msg}",
             "sources": [],
             "source_type": "error"
+        })
+
+
+def _handle_think_mode(question: str):
+    """
+    Think Mode — uses Recursive Language Model (RLM) for deep,
+    multi-step reasoning over the full PDF knowledge base.
+    The RLM stores documents in a Python REPL variable and reasons
+    iteratively, so it can handle complex legal questions.
+    """
+    rlm_instance, documents = get_rlm_instance()
+
+    if rlm_instance is None:
+        return Response({
+            "response": (
+                "⚠️ **Think Mode indisponible**\n\n"
+                "Le module RLM n'a pas pu être initialisé. "
+                "Vérifiez que les dépendances RLM sont installées "
+                "(`pip install rlm`) et que `GROQ_API_KEY` est configuré."
+            ),
+            "sources": [],
+            "source_type": "error",
+            "metadata": {"think_mode": True},
+        })
+
+    try:
+        import concurrent.futures
+        
+        # Force la réponse en français
+        question_fr = question + "\n\n(IMPORTANT: L'analyse doit être détaillée et en français.)"
+        
+        def run_rlm():
+            if documents:
+                return rlm_instance.complete_multi(documents, question_fr)
+            return rlm_instance.complete("", question_fr)
+            
+        def run_scraping():
+            try:
+                from complianceguard.ask_question import _web_search
+                # Utilise uniquement le web search, pas de GraphRAG pour éviter l'erreur Neo4j
+                context, sources = _web_search(question_fr)
+                return context, sources
+            except Exception as e:
+                print(f"Scraping error in think mode: {e}")
+                return "", []
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+            future_rlm = executor.submit(run_rlm)
+            future_scraping = executor.submit(run_scraping)
+            
+            rlm_result = future_rlm.result()
+            scraping_result, scraping_sources = future_scraping.result()
+            
+        # Combine les résultats avec Azure
+        try:
+            from complianceguard.ask_question import _build_llm
+            from langchain_core.messages import SystemMessage, HumanMessage
+            
+            azure_llm = _build_llm()
+            system_prompt = (
+                "Tu es l'assistant IA juridique ultime. Tu disposes de deux analyses :\n"
+                "1. Une analyse approfondie issue d'un RLM sur des textes de loi.\n"
+                "2. Des informations issues d'une recherche Web (si disponibles).\n"
+                "Combine ces informations en une seule réponse exhaustive, fluide et parfaitement structurée en Markdown.\n"
+                "IMPORTANT: Ne fais AUCUNE mention explicite du type 'Selon le RLM', 'Selon la recherche Web' ou 'Complément d'informations'. Synthétise le tout de manière naturelle.\n"
+                "Rédige la réponse UNIQUEMENT en FRANÇAIS."
+            )
+            
+            human_prompt = f"Question de l'utilisateur: {question}\n\n=== Analyse Textes de Loi ===\n{rlm_result}\n\n=== Recherche Web ===\n{scraping_result}"
+            
+            response_llm = azure_llm.invoke([
+                SystemMessage(content=system_prompt),
+                HumanMessage(content=human_prompt)
+            ])
+            final_answer = response_llm.content
+        except Exception as e:
+            print(f"Error combining with Azure: {e}")
+            final_answer = rlm_result
+            if scraping_result:
+                final_answer += f"\n\n---\n\n{scraping_result}"
+
+        return Response({
+            "response": final_answer,
+            "sources": scraping_sources, # Affiche uniquement les sources web
+            "source_type": "RLM + Web Scraping",
+            "metadata": {
+                "think_mode": True,
+                "provider": rlm_instance.provider,
+                "documents_analyzed": len(documents) if documents else 0,
+            },
+        })
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return Response({
+            "response": f"Erreur Think Mode (RLM): {e}",
+            "sources": [],
+            "source_type": "error",
+            "metadata": {"think_mode": True},
         })
 
 

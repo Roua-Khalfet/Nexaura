@@ -7,8 +7,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Startify — Plateforme IA pour Startups',
-  description: 'Startify fusionne l\'analyse juridique et la stratégie marketing pour accompagner votre startup de A à Z. Conformité, personas, canaux, rapport complet — tout en un.',
+  title: 'Nexaura — Plateforme IA pour Startups',
+  description: 'Nexaura fusionne l\'analyse juridique et la stratégie marketing pour accompagner votre startup de A à Z. Conformité, personas, canaux, rapport complet — tout en un.',
   generator: 'v0.app',
   icons: {
     icon: '/logo.png',

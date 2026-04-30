@@ -98,6 +98,7 @@ export async function sendChatMessage(params: {
   mode: BackendMode
   projectContext?: string
   knowledgeOnly?: boolean
+  thinkMode?: boolean
 }): Promise<ChatResponse> {
   const endpoint = params.knowledgeOnly ? `${API_BASE}/chat/knowledge/` : `${API_BASE}/chat/`
   const response = await fetch(endpoint, {
@@ -107,6 +108,7 @@ export async function sendChatMessage(params: {
       message: params.message,
       mode: params.mode,
       project_context: params.projectContext || "",
+      think_mode: params.thinkMode || false,
     }),
   })
 
