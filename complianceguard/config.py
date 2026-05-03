@@ -43,11 +43,15 @@ config = Settings()
 # Azure helpers
 def get_azure_llm_kwargs():
     """Returns kwargs for AzureChatOpenAI standard init."""
+    raw_model = os.getenv("model", "")
+    fallback_model = raw_model.replace("azure/", "") if raw_model else "gpt-4o"
+    deployment = config.AZURE_MODEL if config.AZURE_MODEL != "gpt-4o" else fallback_model
+    
     return {
         "azure_endpoint": config.AZURE_API_BASE,
         "api_key": config.AZURE_API_KEY,
         "api_version": config.AZURE_API_VERSION,
-        "azure_deployment": config.AZURE_MODEL,
+        "azure_deployment": deployment,
         "temperature": 0.0,
     }
 

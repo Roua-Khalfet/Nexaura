@@ -279,22 +279,50 @@ def _web_search(query: str) -> tuple[str, list[str]]:
     
     # Scraper les 2 premières URLs pour plus de contexte avec Crawl4AI
     try:
-        from crawl4ai import WebCrawler
-        crawler = WebCrawler()
-        crawler.warmup()
-        
-        for url in web_sources[:2]:
+        try:
+            from crawl4ai import WebCrawler
+            crawler = WebCrawler()
+            crawler.warmup()
+            
+            for url in web_sources[:2]:
+                try:
+                    print(f"[Web] Scraping {url[:50]} avec Crawl4AI...")
+                    result = crawler.run(url=url)
+                    if result.markdown:
+                        # Limiter pour ne pas exploser le contexte LLM
+                        content = result.markdown[:3000]
+                        web_context += f"\n[Contenu complet de {url}]\n{content}\n"
+                    else:
+                        print(f"[Web] Crawl4AI n'a pas pu extraire de texte pour {url}")
+                except Exception as e:
+                    print(f"[Web] Erreur d'extraction pour {url}: {e}")
+        except ImportError:
+            # Fallback for newer crawl4ai versions where WebCrawler is removed
+            from crawl4ai import AsyncWebCrawler
+            import asyncio
+            
+            async def _scrape_urls(urls):
+                ctx = ""
+                async with AsyncWebCrawler() as acrawler:
+                    for u in urls:
+                        try:
+                            print(f"[Web] Scraping {u[:50]} avec Crawl4AI (Async)...")
+                            res = await acrawler.arun(url=u)
+                            if res.markdown:
+                                ctx += f"\n[Contenu complet de {u}]\n{res.markdown[:3000]}\n"
+                            else:
+                                print(f"[Web] Crawl4AI n'a pas pu extraire de texte pour {u}")
+                        except Exception as e:
+                            print(f"[Web] Erreur d'extraction pour {u}: {e}")
+                return ctx
+            
             try:
-                print(f"[Web] Scraping {url[:50]} avec Crawl4AI...")
-                result = crawler.run(url=url)
-                if result.markdown:
-                    # Limiter pour ne pas exploser le contexte LLM
-                    content = result.markdown[:3000]
-                    web_context += f"\n[Contenu complet de {url}]\n{content}\n"
-                else:
-                    print(f"[Web] Crawl4AI n'a pas pu extraire de texte pour {url}")
-            except Exception as e:
-                print(f"[Web] Erreur d'extraction pour {url}: {e}")
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                web_context += loop.run_until_complete(_scrape_urls(web_sources[:2]))
+            finally:
+                loop.close()
+                
     except ImportError:
         if not _CRAWL4AI_MISSING_WARNED:
             print("[Web] crawl4ai non installe: fallback sur snippets Serper uniquement (optionnel: pip install crawl4ai).")

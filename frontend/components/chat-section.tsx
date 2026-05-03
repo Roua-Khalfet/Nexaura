@@ -114,40 +114,50 @@ export default function ChatSection() {
         });
 
         if (!response.body) throw new Error('No body');
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
         
         let assistantId = (Date.now() + 1).toString();
         let reasoningAccumulator = '';
         let finalContent = '';
         let finalSources: string[] = [];
+        
+        // Ensure the assistant message exists right from the start
+        setMessages(prev => [...prev, {
+          id: assistantId, role: 'assistant', content: '...', 
+          timestamp: new Date(), sourceType: 'Think Mode'
+        }]);
 
+        const contentType = response.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const data = await response.json();
+          setMessages(prev => prev.map(m => m.id === assistantId ? { 
+            ...m, content: data.response || data.error || 'Erreur', sources: data.sources || [], sourceType: data.source_type || 'Erreur Système'
+          } : m));
+          return;
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+
+        let buffer = '';
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
           
-          const chunk = decoder.decode(value, { stream: true });
-          const lines = chunk.split('\n');
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || ''; // Keep the last incomplete line in the buffer
           
           for (const line of lines) {
-            if (line.startsWith('data: ')) {
+            const trimmedLine = line.trim();
+            if (trimmedLine.startsWith('data: ')) {
               try {
-                const data = JSON.parse(line.slice(6));
+                const data = JSON.parse(trimmedLine.slice(6));
                 
                 if (data.type === 'status') {
                   setThinkStatus(data.content);
                 } else if (data.type === 'reasoning') {
-                  reasoningAccumulator += data.content;
-                  setMessages(prev => {
-                    const existing = prev.find(m => m.id === assistantId);
-                    if (existing) {
-                      return prev.map(m => m.id === assistantId ? { ...m, reasoning: reasoningAccumulator } : m);
-                    }
-                    return [...prev, {
-                      id: assistantId, role: 'assistant', content: '...', reasoning: reasoningAccumulator,
-                      timestamp: new Date(), sourceType: 'Think Mode'
-                    }];
-                  });
+                  reasoningAccumulator = data.content; // Backend sends the complete reasoning
+                  setMessages(prev => prev.map(m => m.id === assistantId ? { ...m, reasoning: reasoningAccumulator } : m));
                 } else if (data.type === 'final') {
                   finalContent = data.content;
                   finalSources = data.sources || [];
