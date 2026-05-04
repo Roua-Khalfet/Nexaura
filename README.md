@@ -34,8 +34,11 @@ Nexaura helps founders  with **regulatory compliance**, **market analysis**, **d
 ![ComplianceGuard — Documents](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195742.png)
 
 ### Market Scout (Market Intelligence Agents)
-- **Market analysis pipeline**: Recherche → Collecte des données → Génération  
-- Competitive intelligence and market research from web + reviews  
+- **Intelligent multi-agent pipeline** transforming a startup idea into a complete competitive market study  
+- 🔎 Search agents discover competitors and collect data from websites, reviews, maps, and social platforms  
+- 🧠 Analysis agents generate SWOT reports, strategic insights, and priority marketing actions  
+- 👤 Persona agents create realistic customer profiles with AI-generated images  
+- 📊 Automatic generation of presentations, PDF reports, and AI audio pitch for fast decision-making   
 
 ![Market Scout](screens/Capture%20d%27%C3%A9cran%202026-04-30%20195749.png)
 
