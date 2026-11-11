@@ -1,4 +1,4 @@
-# Nexaura — AI Compliance & Growth Platform for Tunisian Startups
+# Nexaura —— AI Compliance & Growth Platform for Tunisian Startups
 
 **Nexaura** is an AI-powered platform that helps entrepreneurs transform ideas into startups by providing legal (Tunisian law) audits, business strategy tools (SWOT, persona, competitors), environmental scoring, tech stack recommendations, and smart team building.
 
